@@ -1,0 +1,35 @@
+  CRITICAL BUGS:
+* Go through a teleporter by sidestepping into it and shoot a grenade instantly after you
+  spawn. All grenades you shoot afterwards will be off the crosshair.
+* Some func_door's do not stop playing their sound for moving, particularly observed in e2m2
+  on the big platform that raises upwards slowly, and in end.bsp where the big spike/crush
+  trap is.
+
+DMM4: 3 minutes.
+Spawns are not random enough.
+Hitsounds are too frequent.
+Fix gibs.
+
+Stats presentation.
+Preserve frags for disconnected players.
+Support some of the generally used KT* commands: /shownick, /list, /whonot, /no_gl, /no_lg, +wp_stats
+Add a randommap function.
+
+NOTE: Somewhat supports mvdsv up until 0.25 except for mapvoting that has to be done with
+      /cmd votemap, 0.26 introduces broken downloads and missing support for
+      KRIMZON_SV_PARSECLIENTCOMMAND
+
+About FPD (from the Qizmo documentation):
+
+1 = Disable %-reporting
+2 = Disable use of powerup timer (obsolete in v2.55)
+4 = Disable use of soundtrigger
+8 = Disable use of lag features
+16 = Make Qizmo report any changes in lag settins
+32 = Silent %e enemy vicinity reporting (reporter doesn't see the message)
+     (always on in v2.55)
+64 = Spectators can't talk to players and vice versa (voice)
+128 = Silent %x and %y (reporter doesn't see the message) (always on in v2.8)
+256 = Disable skin forcing
+512 = Disable color forcing
+

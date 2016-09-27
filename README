@@ -1,0 +1,19 @@
+Features
+--------
+
+* Fast commands downloading
+* Loads of tweaks available to change gameplay
+* Try r_dynamic 1 and ready up
+* Written almost entirely from scratch which makes it easier to fix and extend
+* Supports FTESV fully, MVDSV to some extent but it is not recommended
+* Code is in QC which makes it easier to read than C
+* Heaps of game modes. Duel Arena, Domination and Freeze Tag to name a few.
+* GUI menu
+
+Downloading files from FTESV
+----------------------------
+
+/cmd demolist
+/download demonum/X
+
+/download locs/map.loc

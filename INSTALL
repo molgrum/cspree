@@ -1,0 +1,45 @@
+Only tested with FTEQCC, it is available in many GNU/Linux repos.
+
+Change into a directory for sources and:
+svn checkout svn://svn.code.sf.net/p/gmapn/code/trunk gmapn-code
+
+cd gmapn-code
+
+We recommend getting the latest snapshots of FTESV and FTEQCC:
+
+64-bit:
+wget -O fteqcc http://triptohell.info/moodles/linux_amd64/fteqcc64
+wget -O fteqw.sv http://triptohell.info/moodles/linux_amd64/fteqw-sv64
+
+32-bit:
+wget -O fteqcc http://triptohell.info/moodles/linux_x86/fteqcc32
+wget -O fteqw.sv http://triptohell.info/moodles/linux_x86/fteqw-sv32
+
+chmod +x fteqcc fteqw.sv
+
+Edit Makefile and change INSTALL_DIR to your preference.
+Make this directory.
+
+Make sure fteqcc is in gmapn-code and move fteqw.sv to your INSTALL_DIR.
+
+Change to gmapn-code and do:
+make
+make install
+make install-configs
+
+cd YOUR_SERVER_DIRECTORY
+
+Edit qtv/qtv.cfg, change admin_password (IMPORTANT) and add:
+
+qtv hostname:port
+
+Do this line for each port.
+
+QTV sources: https://github.com/jite/qtv
+
+Copy gmapn.pk3 into gmapn/ directory.
+Copy pak0.pak and pak1.pak into id1/ directory.
+
+If you accidentally overwrite your configuation it saves the old one as .bak
+
+Happy gibbbing!
