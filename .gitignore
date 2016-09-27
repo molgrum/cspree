@@ -1,0 +1,7 @@
+.cvsignore
+.svn
+*~
+*#*#
+fteqcc*
+qwprogs.*
+TAGS
