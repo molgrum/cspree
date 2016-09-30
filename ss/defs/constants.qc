@@ -474,3 +474,38 @@ enum
 
 string DATE = __DATE__;
 string TIME = __TIME__;
+
+const struct
+{
+	int fl;
+	string name;
+} loadouts[] =
+{
+	{0,			"default"},
+	{IT_SUPER_SHOTGUN,	"ssg"},
+	{IT_NAILGUN,		"ng"},
+	{IT_SUPER_NAILGUN,	"sng"},
+	{IT_GRENADE_LAUNCHER,	"gl"},
+	{IT_ROCKET_LAUNCHER,	"rl"},
+	{IT_LIGHTNING_GUN,	"lg"},
+	{IT_RAILGUN,		"rg"},
+	{IT_ARMOR1,		"ga"},
+	{IT_ARMOR2,		"ya"},
+	{IT_ARMOR3,		"ra"},
+#ifdef HAVE_PORTALS
+	{IT_PORTALGUN,		"pg"},
+#endif
+	{IT_RING,		"ring"},
+	{IT_PENT,		"pent"},
+	{IT_SUIT,		"suit"},
+	{IT_QUAD,		"quad"},
+};
+
+const string botskillname[] =
+{
+	"No bots",
+	"Clay Pidgin",
+	"Joke",
+	"Noobs",
+	"Mobile Victims"
+};

@@ -348,32 +348,6 @@ static string menu_dmm(float op)
 
 static string menu_loadout(float op)
 {
-	static const struct
-	{
-		int fl;
-		string name;
-	} loadouts[] =
-	{
-		{0,			"default"},
-		{IT_SUPER_SHOTGUN,	"ssg"},
-		{IT_NAILGUN,		"ng"},
-		{IT_SUPER_NAILGUN,	"sng"},
-		{IT_GRENADE_LAUNCHER,	"gl"},
-		{IT_ROCKET_LAUNCHER,	"rl"},
-		{IT_LIGHTNING_GUN,	"lg"},
-		{IT_RAILGUN,		"rg"},
-		{IT_ARMOR1,		"ga"},
-		{IT_ARMOR2,		"ya"},
-		{IT_ARMOR3,		"ra"},
-#ifdef HAVE_PORTALS
-		{IT_PORTALGUN,		"pg"},
-#endif
-		{IT_RING,		"ring"},
-		{IT_PENT,		"pent"},
-		{IT_SUIT,		"suit"},
-		{IT_QUAD,		"quad"},
-	};
-
 	if (cvar("deathmatch") >= 4)
 		return 0;
 
@@ -520,15 +494,16 @@ static string menu_botskill(float op)
 	}
 	else if (op == MENU_VALUE)
 	{
-		switch(val-1)
-		{
-		case -1: return "No bots";
-		case 0: return "Clay Pidgin";
-		case 1: return "Joke";
-		case 2: return "Noobs";
-		case 3: return "Mobile Victims";
-		default: return "Glitch";
-		}
+		/* switch(val-1) */
+		/* { */
+		/* case -1: return "No bots"; */
+		/* case 0: return "Clay Pidgin"; */
+		/* case 1: return "Joke"; */
+		/* case 2: return "Noobs"; */
+		/* case 3: return "Mobile Victims"; */
+		/* default: return "Glitch"; */
+		/* } */
+		return botskillname[val];
 	}
 	else if (op == MENU_LEFT)
 		setkey("game_botskill", ftos(max(0, val-1)));
@@ -1192,6 +1167,87 @@ string gmapn_menu_rules(float keys)
 	return m;
 }
 
+string gmapn_menu_nondefaults()
+{
+	string str;
+	int i;
+	int loadout;
+
+	if (getkey(game_loadout) != default_game_loadout)
+	{
+		loadout = getkey(game_loadout);
+		for (i = 0; i < loadouts.length; i++)
+			if (loadout == loadouts[i].fl)
+				break;
+		str = strcat(str, "Loadout: axe + sg");
+		str = strcat(str, " + ", loadouts[i].name, "\n");
+	}
+
+	if (cvar("deathmatch") != default_deathmatch)
+	{
+		str = strcat(str, "Deathmatch Mode: ", ftos(cvar("deathmatch")), "\n");
+	}
+
+	if (cvar("timelimit") != default_timelimit)
+	{
+		str = strcat(str, "Timelimit: ", ftos(cvar("timelimit")), "\n");
+	}
+
+	if (getkey(powerups_enabled) != default_powerups_enabled)
+	{
+		str = strcat(str, "Powerups: ");
+		if (getkey(powerups_enabled) == FALSE)
+			str = strcat(str, "Disabled\n");
+		else
+			str = strcat(str, "Enabled\n");
+	}
+
+	if (getkey(game_botskill) != default_game_botskill)
+	{
+		i = getkey(game_botskill);
+		str = strcat(str, "Bot Difficulty: ", botskillname[i], "\n");
+	}
+
+	if (getkey(game_rounds) != default_game_rounds)
+	{
+		str = strcat(str, "Rounds Per Game: ", ftos(getkey(game_rounds)), "\n");
+	}
+
+	if (getkey(minplayers) != default_minplayers)
+	{
+		str = strcat(str, "Minplayers: ", ftos(getkey(minplayers)), "\n");
+	}
+
+	if (getkey(maxplayers) != default_maxplayers)
+	{
+		str = strcat(str, "Maxplayers: ", ftos(getkey(maxplayers)), "\n");
+	}
+
+	if (cvar("sv_antilag") != default_antilag)
+	{
+		str = strcat(str, "Lag Compensation: ");
+		
+		if (cvar("sv_antilag") == FALSE)
+			str = strcat(str, "Off");
+		else
+			str = strcat(str, "On");
+		
+		str = strcat(str, "\n");
+	}
+
+	if (cvar("sv_minping") != default_minping)
+	{
+		str = strcat(str, "Min Ping: ", ftos(cvar("sv_minping")), "\n");
+	}
+
+	if (str != __NULL__)
+	{
+		str = strcat(flash("\nSome non standard settings used\n\n"), redify(str));
+	}
+	
+	return str;
+}
+
 void gmapn_menu_any(float keys)
 {
 	entity p;
@@ -1218,7 +1274,10 @@ void gmapn_menu_any(float keys)
 	m = strcat(m, "\n");
 
 	if (gmapn_serverstate == gmapn_serverstate_countdown)
+	{
 		m = strcat(m, "Game starts in ", ftos(ceil((gmapn_matchstarttimems/1000) - time)), "\n");
+		m = strcat(m, gmapn_menu_nondefaults());
+	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)
 		m = strcat(m, flash("READY UP NOW\n"));
 	else

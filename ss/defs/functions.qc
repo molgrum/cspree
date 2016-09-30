@@ -104,6 +104,7 @@ void() gmapn_help_think;
 void() gmapn_detectserver;
 void() gmapn_init;
 void() gmapn_init_entities;
+void() gmapn_update_defaults;
 void() gmapn_init_test;
 
 /*
