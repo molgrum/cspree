@@ -1,5 +1,24 @@
 #define MAPLIMIT 11
 
+#define MENU_TITLE 0
+#define MENU_VALUE 1
+#define MENU_LEFT 2
+#define MENU_RIGHT 3
+#define MENU_ISNONADMIN 4
+#define MENU_CLIENTCMD 5
+
+#define KEY_NONE 0
+#define KEY_UP 1
+#define KEY_DOWN 2
+#define KEY_RIGHT 4
+#define KEY_LEFT 8
+#define KEY_JUMP 16
+
+#define SUBSEL_MAIN 0
+#define SUBSEL_MAPS 1
+#define SUBSEL_MOD 2
+#define SUBSEL_SERVER 3
+
 string gmapn_menu_matchlist(float keys);
 .float matchfirst;
 .float matchlistquery;
@@ -7,8 +26,11 @@ string gmapn_menu_matchlist(float keys);
 
 .float oldmkeys;
 .float viewingrules;	//timer when it should next be resent
+.float subsel; // current submenu or main menu
 .float rulesel;	//main option on the menu
-.float subsel;	//map or election
+.float mapsel;	//map or election
+.float modsel;  //mod submenu
+.float srvsel;  //advanced submenu
 .float maps[MAPLIMIT]; // list of maps displayed
 string gmapn_menuarg;
 
@@ -32,13 +54,6 @@ static entity findreadyteamplayer(entity last, string theteam)
 	}
 	return world;	//no more
 }
-
-#define MENU_TITLE 0
-#define MENU_VALUE 1
-#define MENU_LEFT 2
-#define MENU_RIGHT 3
-#define MENU_ISNONADMIN 4
-#define MENU_CLIENTCMD 5
 
 static string menu_readyteam(float op)
 {
@@ -191,7 +206,7 @@ static string menu_mapvote(float op)
 	else if (op == MENU_RIGHT)
 	{
 		menu_mapvote_randomize();
-		self.subsel = 1;
+		self.subsel = SUBSEL_MAPS;
 	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";	//anything not null
@@ -523,6 +538,39 @@ static string menu_botskill(float op)
 	return 0;
 };
 
+static string menu_rounds(float op)
+{
+	float val = getkey(game_rounds);
+	float modhasrounds = FALSE;
+
+	switch (gmapn_gamemode)
+	{
+	case GM_DA:
+	case GM_DOMINATION:
+	case GM_FREEZETAG:
+	case GM_LASTMANSTANDING:
+	case GM_ROVER:
+		modhasrounds = TRUE;
+		break;
+	}
+	
+	if (op == MENU_TITLE)
+	{
+		if (modhasrounds == TRUE)
+			return "Rounds per game";
+		else
+			return 0;
+	}
+	else if (op == MENU_VALUE)
+		return ftos(val);
+	else if (op == MENU_LEFT)
+		setkey("game_rounds", ftos(max(1, val-2)));
+	else if (op == MENU_RIGHT)
+		setkey("game_rounds", ftos(min(20, val+2)));
+
+	return 0;
+}
+
 static string menu_powerups(float op)
 {
 	if (gmapn_gamemode == GM_COOP && getkey(powerups_enabled))
@@ -636,7 +684,7 @@ static string menu_pastmatches(float op)
 	if (op == MENU_TITLE)
 		return "Past matches";
 	if (op == MENU_VALUE)
-		return "<show>";
+		return "";
 
 	if (op == MENU_LEFT)
 		;
@@ -646,6 +694,49 @@ static string menu_pastmatches(float op)
 		return ".";	//anything not null
 	return 0;
 };
+
+static string menu_modoptions(float op)
+{
+	if (op == MENU_TITLE)
+		return "Mod options";
+	else if (op == MENU_VALUE)
+		return "";
+	else if (op == MENU_LEFT)
+		;
+	else if (op == MENU_RIGHT)
+		self.subsel = SUBSEL_MOD;
+	else if (op == MENU_ISNONADMIN)
+		return ".";
+	return 0;
+}
+
+static string menu_srvoptions(float op)
+{
+	if (op == MENU_TITLE)
+		return "Server options";
+	else if (op == MENU_VALUE)
+		return "";
+	else if (op == MENU_LEFT)
+		;
+	else if (op == MENU_RIGHT)
+		self.subsel = SUBSEL_SERVER;
+	else if (op == MENU_ISNONADMIN)
+		return ".";
+	return 0;
+}
+
+static string menu_back(float op)
+{
+	if (op == MENU_TITLE)
+		return "Back";
+	else if (op == MENU_VALUE)
+		return "";
+	else if (op == MENU_LEFT)
+		self.subsel = SUBSEL_MAIN;
+	else if (op == MENU_ISNONADMIN)
+		return ".";
+	return 0;
+}
 
 static string menu_spacer(float op)
 {
@@ -660,18 +751,36 @@ static string(float op) rules[] =
 	menu_spacer,
 	menu_gamemode,
 	menu_dmm,
-	menu_loadout,
-	menu_maxplayers,
-	menu_minplayers,
-	menu_botskill,
 	menu_time,
 	menu_powerups,
+	menu_pastmatches,
+	menu_spacer,
+	menu_modoptions,
+	menu_srvoptions
+};
+
+static string(float op) rules_mod[] =
+{
+	menu_maxplayers,
+	menu_minplayers,
+	menu_rounds,
+	menu_botskill,
+	menu_loadout,
+	menu_spacer,
+	menu_back
+};
+
+static string(float op) rules_srv[] =
+{
 	menu_antilag,
 	menu_minping,
-	menu_pastmatches,
+	menu_spacer,
+	menu_back
 };
 
 static float rulechangetime[rules.length];
+static float modchangetime[rules_mod.length];
+static float srvchangetime[rules_srv.length];
 
 void SV_RunClientCommand()
 {
@@ -690,7 +799,7 @@ void SV_RunClientCommand()
 		runstandardplayerphysics(self);
 };
 
-void balancestrings(__inout string left, __inout string right)
+string balancestrings(string left, string separator, string right)
 {
 	float len;
 	float lenr;
@@ -703,6 +812,8 @@ void balancestrings(__inout string left, __inout string right)
 
 	left = strpad(-len, left);
 	right = strpad(len, right);
+
+	return strcat(left, separator, right);
 };
 
 string gmapn_menu_maps(float keys)
@@ -711,29 +822,29 @@ string gmapn_menu_maps(float keys)
 	float lim;
 	string m = 0;
 
-	if (keys & 4)
+	if (keys & KEY_RIGHT)
 	{
 		gmapn_mapvote_removevote();
-		gmapn_mapvote_addvote(infokey(world, strcat("gmapn_map", ftos(self.maps[self.subsel-1]))));
+		gmapn_mapvote_addvote(infokey(world, strcat("gmapn_map", ftos(self.maps[self.mapsel-1]))));
 	}
-	if (keys & 1)
+	if (keys & KEY_UP)
 	{
-		self.subsel -= 1;
-		if (!self.subsel)
+		self.mapsel -= 1;
+		if (!self.mapsel)
 		{
 			//while ("" != infokey(world, strcat("gmapn_map", ftos(self.maps[self.subsel]))))
-				self.subsel+=1;
+				self.mapsel+=1;
 		}
 	}
-	if (keys & 2)
+	if (keys & KEY_DOWN)
 	{
-		self.subsel += 1;
+		self.mapsel += 1;
 		//if ("" == infokey(world, strcat("gmapn_map", ftos(self.maps[self.subsel-1]))))
-		if (self.subsel > MAPLIMIT)
-			self.subsel = 1;
+		if (self.mapsel > MAPLIMIT)
+			self.mapsel = 1;
 	}
 
-	i = self.subsel - (MAPLIMIT / 2);
+	i = self.mapsel - (MAPLIMIT / 2);
 
 	for (lim = (MAPLIMIT / 2); lim > 0; lim--)
 	{
@@ -751,13 +862,13 @@ string gmapn_menu_maps(float keys)
 		string name = infokey(world, strcat("gmapn_map", ftos(self.maps[i-1])));
 		if (name == "")
 			break;
-		if (i == self.subsel)
+		if (i == self.mapsel)
 			name = redify(name);
 		m = strcat(m, name, "\n");
 	}
-	if (keys & (4|8))
+	if (keys & (KEY_RIGHT|KEY_LEFT))
 	{
-		self.subsel = 0;
+		self.subsel = SUBSEL_MAIN;
 		self.viewingrules = time;
 	}
 
@@ -793,6 +904,153 @@ string gmapn_menu_waitingfor(float highlightself)
 	return m;
 };
 
+string gmapn_menu_mod(float keys)
+{
+	int i;
+
+	if (!gmapn_gamemaster)
+		gmapn_evaluategamemaster();
+	
+	if (keys & KEY_RIGHT)
+	{
+		modchangetime[self.modsel] = time + 3;
+		rules_mod[self.modsel](MENU_RIGHT);
+	}
+	
+	if (keys & KEY_LEFT)
+	{
+		modchangetime[self.modsel] = time + 3;
+		rules_mod[self.modsel](MENU_LEFT);
+	}
+	
+	if (keys & KEY_UP)
+	{
+		do
+		{
+			self.modsel -= 1;
+			if (self.modsel < 0)
+				self.modsel = rules_mod.length-1;
+		} while(!rules_mod[self.modsel](0) || (!gmapn_isgamemaster(self) && !rules_mod[self.modsel](4)));
+	}
+	
+	if (keys & KEY_DOWN)
+	{
+		do
+		{
+			self.modsel += 1;
+			if (self.modsel >= rules_mod.length)
+				self.modsel = 0;
+		} while(!rules_mod[self.modsel](0) || (!gmapn_isgamemaster(self) && !rules_mod[self.modsel](4)));
+	}
+
+	string m = "";
+	
+	if (gmapn_serverstate != gmapn_serverstate_countdown)
+	{
+		m = gmapn_menu_waitingfor(gmapn_gamemodeneedsteam(gmapn_gamemode));
+		m = strcat(m, "\n\n");
+	}
+
+	for (i = 0; i < rules_mod.length; i++)
+	{
+		string t, mid, v;
+
+		t = rules_mod[i](MENU_TITLE);
+		if not (t)
+			continue;
+		if (t == "")
+			continue;
+			
+		if (modchangetime[i] >= time)
+			t = alternate(t);
+
+		mid = ":";
+		v = rules_mod[i](MENU_VALUE);
+
+		if (self.modsel == i)
+		{
+			t = redify(t);
+			mid = redify(mid);
+		}
+
+		m = strcat(m, balancestrings(t, mid, v), "\n");
+	}
+
+	return m;
+}
+
+string gmapn_menu_server(float keys)
+{
+	int i;
+	
+	if (keys & KEY_RIGHT)
+	{
+		srvchangetime[self.srvsel] = time + 3;
+		rules_srv[self.srvsel](MENU_RIGHT);
+	}
+	
+	if (keys & KEY_LEFT)
+	{
+		srvchangetime[self.srvsel] = time + 3;
+		rules_srv[self.srvsel](MENU_LEFT);
+	}
+	
+	if (keys & KEY_UP)
+	{
+		do
+		{
+			self.srvsel -= 1;
+			if (self.srvsel < 0)
+				self.srvsel = rules_srv.length-1;
+		} while(!rules_srv[self.srvsel](0) || (!gmapn_isgamemaster(self) && !rules_srv[self.srvsel](4)));
+	}
+	
+	if (keys & KEY_DOWN)
+	{
+		do
+		{
+			self.srvsel += 1;
+			if (self.srvsel >= rules_srv.length)
+				self.srvsel = 0;
+		} while(!rules_srv[self.srvsel](0) || (!gmapn_isgamemaster(self) && !rules_srv[self.srvsel](4)));
+	}
+
+	string m = "";
+	
+	if (gmapn_serverstate != gmapn_serverstate_countdown)
+	{
+		m = gmapn_menu_waitingfor(gmapn_gamemodeneedsteam(gmapn_gamemode));
+		m = strcat(m, "\n\n");
+	}
+
+	for (i = 0; i < rules_srv.length; i++)
+	{
+		string t, mid, v;
+
+		t = rules_srv[i](MENU_TITLE);
+		if not (t)
+			continue;
+		if (t == "")
+			continue;
+			
+		if (srvchangetime[i] >= time)
+			t = alternate(t);
+
+		mid = ":";
+		v = rules_srv[i](MENU_VALUE);
+
+		if (self.srvsel == i)
+		{
+			t = redify(t);
+			mid = redify(mid);
+		}
+
+		m = strcat(m, balancestrings(t, mid, v), "\n");
+	}
+
+	return m;
+}
+
 string gmapn_menu_rules(float keys)
 {
 	int i;
@@ -804,23 +1062,23 @@ string gmapn_menu_rules(float keys)
 	if (getkey(game_lockrules)>0 && !gmapn_gamemodeneedsteam(gmapn_gamemode))
 	{
 		self.rulesel = -1;
-		keys = 0;
+		keys = KEY_NONE;
 	}
 	else if (self.rulesel == -1)
 		self.rulesel = 0;	//don't break
 
-	if (keys & 4)
+	if (keys & KEY_RIGHT)
 	{
 		rulechangetime[self.rulesel] = time+3;
 		rules[self.rulesel](MENU_RIGHT);
 	}
-	if (keys & 8)
+	if (keys & KEY_LEFT)
 	{
 		rulechangetime[self.rulesel] = time+3;
 		rules[self.rulesel](MENU_LEFT);
 	}
 
-	if (keys & 1)
+	if (keys & KEY_UP)
 	{
 		do
 		{
@@ -829,7 +1087,7 @@ string gmapn_menu_rules(float keys)
 				self.rulesel = rules.length-1;
 		} while(!rules[self.rulesel](0) || (!gmapn_isgamemaster(self) && !rules[self.rulesel](4)));
 	}
-	if (keys & 2)
+	if (keys & KEY_DOWN)
 	{
 		do
 		{
@@ -867,8 +1125,7 @@ string gmapn_menu_rules(float keys)
 			}
 		}
 
-		balancestrings(left, right);
-		m = strcat(m, left, " : ", right, "\n");
+		m = strcat(m, balancestrings(left, " : ", right), "\n");
 
 		entity redplayer = findreadyteamplayer(world, "red");
 		entity blueplayer = findreadyteamplayer(world, "blue");
@@ -889,8 +1146,7 @@ string gmapn_menu_rules(float keys)
 			else
 				right= "---";
 
-			balancestrings(left, right);
-			m = strcat(m, left, " : ", right, "\n");
+			m = strcat(m, balancestrings(left, " : ", right), "\n");
 
 			if (redplayer)
 				redplayer = findreadyteamplayer(redplayer, "red");
@@ -930,18 +1186,17 @@ string gmapn_menu_rules(float keys)
 			mid = redify(mid);
 		}
 
-		balancestrings(t, v);
-		m = strcat(m, t, mid, v, "\n");
+		m = strcat(m, balancestrings(t, mid, v), "\n");
 	}
 
 	return m;
-};
+}
 
 void gmapn_menu_any(float keys)
 {
 	entity p;
 
-	if (keys & (4|8))
+	if (keys & (KEY_RIGHT|KEY_LEFT))
 	{
 		for (p = world; (p = find(p, classname, "player")); )
 			p.viewingrules = time;
@@ -987,8 +1242,12 @@ void gmapn_menu_any(float keys)
 
 		m = strcat(m, gmapn_menu_waitingfor((time*2) & 1));	
 	}
-	else if (self.subsel > 0)
+	else if (self.subsel == SUBSEL_MAPS)
 		m = strcat("/P", m, gmapn_menu_maps(keys));
+	else if (self.subsel == SUBSEL_MOD)
+		m = strcat("/P", m, gmapn_menu_mod(keys));
+	else if (self.subsel == SUBSEL_SERVER)
+		m = strcat("/P", m, gmapn_menu_server(keys));
 	else
 		m = strcat("/P", m, gmapn_menu_rules(keys));
 
@@ -1005,22 +1264,22 @@ float gmapn_display_rules()
 	newkeys = 0;
 
 	if (self.movement_x > 100*frametime)
-		newkeys |= 1;
+		newkeys |= KEY_UP;
 	if (self.movement_x < -100*frametime)
-		newkeys |= 2;	
+		newkeys |= KEY_DOWN;
 	if (self.movement_y > 100*frametime)
-		newkeys |= 4;
+		newkeys |= KEY_RIGHT;
 	if (self.movement_y < -100*frametime)
-		newkeys |= 8;
+		newkeys |= KEY_LEFT;
 	if (self.button2 || (self.csqcactive && self.movement))
-		newkeys |= 16;
+		newkeys |= KEY_JUMP;
 
 	if (self.viewingrules <= time)
-		self.oldmkeys &= 4|8;
+		self.oldmkeys &= KEY_RIGHT|KEY_LEFT;
 
 	keys = newkeys & ~self.oldmkeys;	//changed keys
 
-	if (newkeys & 16)
+	if (newkeys & KEY_JUMP)
 	{
 		if (self.movetime < time)
 			self.viewingrules = time;
@@ -1071,13 +1330,13 @@ void Cmd_mkey_s(string s)
 	self.csqcactive = TRUE;
 
 	if (s == "u")
-		gmapn_menu_any(1);
+		gmapn_menu_any(KEY_UP);
 	else if (s == "d")
-		gmapn_menu_any(2);
+		gmapn_menu_any(KEY_DOWN);
 	else if (s == "r")
-		gmapn_menu_any(4);
+		gmapn_menu_any(KEY_RIGHT);
 	else if (s == "l")
-		gmapn_menu_any(8);
+		gmapn_menu_any(KEY_LEFT);
 };
 
 void bar(string T_Text,int array_size)
