@@ -96,6 +96,17 @@ var float gmapn_matchstarttimems;	//global stat that marks the time that the mat
 float  vote_in_progress; // 0 = no voting, ok to start a vote, else don't
 entity evoter;            // set a think function that executes if a vote passes
 
+var float default_game_loadout = 0;
+var float default_game_botskill = 0;
+var float default_game_rounds = 5;
+var float default_minplayers = 0;
+var float default_maxplayers = 12;
+var float default_powerups_enabled = 1;
+var float default_deathmatch = 3;
+var float default_timelimit = 10;
+var float default_antilag = 1;
+var float default_minping = 0;
+
 // FIXME: Remaining unused declarations
 
 /*

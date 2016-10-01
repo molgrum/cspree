@@ -144,38 +144,6 @@ string NULL = __NULL__;
 
 GAMEVARS
 
-#if 0
-const struct
-{
-#undef GVF
-#undef GVS
-#define GVF(n,v,d) float n;
-#define GVS(n,v,d) string n;
-	GAMEVARS
-} gamevars_default = {
-#undef GVF
-#undef GVS
-#define GVF(n,v,d) v,
-#define GVS(n,v,d) v,
-	GAMEVARS
-};
-#endif
-
-#undef GVF
-#undef GVS
-#define GVF(n,v,d) var float default_##n = v;
-#define GVS(n,v,d) var string default_##n = v;
-
-GAMEVARS
-
-var float default_deathmatch = 3;
-var float default_timelimit = 10;
-var float default_antilag = 1;
-var float default_minping = 0;
-
-#undef GVF
-#undef GVS
-
 void setkey(string key, string val)
 {
 	cvar_set(strcat("g_", key), val);
