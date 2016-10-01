@@ -833,10 +833,15 @@ void() player_spike1 = [$nailatt1, player_spike2]
 	float spd;
 	vector dir;
 
-	if (!self.button0 || self.ammo_nails < 1 || (!(self.items & IT_NAILGUN)
-		&& !(self.items & IT_SUPER_NAILGUN))
-		|| (self.weapon == IT_SUPER_NAILGUN && self.ammo_nails < 2))
+	if (!self.button0)
 	{
+		self.weaponframe = 0;
+		return;
+	}
+
+	if (!client_weaponokay())
+	{
+		client_bestweapon();
 		player_run();
 		return;
 	}
@@ -903,10 +908,15 @@ void() player_spike2 = [$nailatt2, player_spike1]
 	float spd;
 	vector dir;
 
-	if (!self.button0 || self.ammo_nails < 1 || (!(self.items & IT_NAILGUN)
-		&& !(self.items & IT_SUPER_NAILGUN))
-		|| (self.weapon == IT_SUPER_NAILGUN && self.ammo_nails < 2))
+	if (!self.button0)
 	{
+		self.weaponframe = 0;
+		return;
+	}
+
+	if (!client_weaponokay())
+	{
+		client_bestweapon();
 		player_run();
 		return;
 	}
@@ -972,7 +982,10 @@ void() player_grenade1 = [$rockatt1, player_grenade2]
 	float spd;
 	vector dir;
 
-	if (!self.button0 || self.ammo_rockets < 1 || !(self.items & IT_GRENADE_LAUNCHER))
+	if (!self.button0)
+		return;
+
+	if (!client_weaponokay())
 	{
 		client_bestweapon();
 		player_run();
@@ -1011,9 +1024,11 @@ void() player_rocket1 = [$rockatt1, player_rocket2]
 	float spd;
 	vector dir;
 
-	if (!self.button0 || self.ammo_rockets < 1 || !(self.items & IT_ROCKET_LAUNCHER))
+	if (!self.button0)
+		return;
+
+	if (!client_weaponokay())
 	{
-	
 		client_bestweapon();
 		player_run();
 		return;
@@ -1113,8 +1128,15 @@ void() player_lightning1 = [$light1, player_lightning2]
 {
 	vector org, dir;
 
-	if (!self.button0 || self.ammo_cells < 1 || !(self.items & IT_LIGHTNING_GUN))
+	if (!self.button0)
 	{
+		self.weaponframe = 0;
+		return;
+	}
+
+	if (!client_weaponokay())
+	{
+		client_bestweapon();
 		player_run();
 		return;
 	}
@@ -1159,8 +1181,15 @@ void() player_lightning2 = [$light2, player_lightning1]
 {
 	vector org, dir;
 
-	if (!self.button0 || self.ammo_cells < 1 || !(self.items & IT_LIGHTNING_GUN))
+	if (!self.button0)
 	{
+		self.weaponframe = 0;
+		return;
+	}
+
+	if (!client_weaponokay())
+	{
+		client_bestweapon();
 		player_run();
 		return;
 	}
