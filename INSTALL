@@ -1,9 +1,9 @@
 Only tested with FTEQCC, it is available in many GNU/Linux repos.
 
 Change into a directory for sources and:
-svn checkout svn://svn.code.sf.net/p/gmapn/code/trunk gmapn-code
+git clone git://git.code.sf.net/p/gmapn/master gmapn-master
 
-cd gmapn-code
+cd gmapn-master
 
 We recommend getting the latest snapshots of FTESV and FTEQCC:
 
@@ -20,9 +20,9 @@ chmod +x fteqcc fteqw.sv
 Edit Makefile and change INSTALL_DIR to your preference.
 Make this directory.
 
-Make sure fteqcc is in gmapn-code and move fteqw.sv to your INSTALL_DIR.
+Make sure fteqcc is in gmapn-master and move fteqw.sv to your INSTALL_DIR.
 
-Change to gmapn-code and do:
+Change to gmapn-master and do:
 make
 make install
 make install-configs
