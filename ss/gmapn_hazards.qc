@@ -1056,7 +1056,7 @@ void hazard_missile_touch()
 		return;
 	}
 
-	if (other.takedamage == DAMAGE_NOT)
+	if (other.takedamage == DAMAGE_NOT || self.classname == "rocket")
 	{
 		WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
 		if (self.classname == "spike") {
@@ -1102,19 +1102,19 @@ void hazard_missile_touch()
 		push = 0;
 	}
 
-		f = gmapn_impact(other, self, damage, push);
+	f = gmapn_impact(other, self, damage, push);
 		
-		if (self.classname == "rocket") {
-			damage += 10; // modifier for original QW behaviour
-			f += gmapn_explosion(self, damage, push, other, DT_ROCKET);
-		}
+	if (self.classname == "rocket") {
+		damage += 10; // modifier for original QW behaviour
+		f += gmapn_explosion(self, damage, push, other, DT_ROCKET);
+	}
 			
-		if (other != world && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			// Save stats during match
+	if (other != world && gmapn_serverstate == gmapn_serverstate_playing)
+	{
+		// Save stats during match
 
-			attacker.stats_hit[W_SNG] += f;
-		}
+		attacker.stats_hit[W_SNG] += f;
+	}
 
 	remove(self);
 

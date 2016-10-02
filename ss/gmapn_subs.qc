@@ -218,7 +218,7 @@ explosions and melee attacks.
 float candamage(entity targ, entity inflictor)
 {
 // bmodels need special checking because their origin is 0,0,0
-	if (targ.movetype == MOVETYPE_PUSH)
+	if (targ.movetype == MOVETYPE_PUSH || targ.movetype == MOVETYPE_NOCLIP)
 	{
 		traceline(inflictor.origin, 0.5 * (targ.absmin + targ.absmax), TRUE, self);
 		if (trace_fraction == 1)
@@ -528,7 +528,7 @@ float gmapn_explosion(entity inflictor, float damage, float push, entity ignore,
 
 	totaldamage = 0;
 	victim = findradius(inflictor.origin, damage + 40);
-	
+
 	while (victim)
 	{
 		if (victim != ignore && victim.takedamage)
