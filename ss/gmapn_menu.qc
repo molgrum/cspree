@@ -518,15 +518,9 @@ static string menu_rounds(float op)
 	float val = getkey(game_rounds);
 	float modhasrounds = FALSE;
 
-	switch (gmapn_gamemode)
+	if (gmapn_gamemode_rounds(gmapn_gamemodefromstring(getkey(game_mode))) > 1)
 	{
-	case GM_DA:
-	case GM_DOMINATION:
-	case GM_FREEZETAG:
-	case GM_LASTMANSTANDING:
-	case GM_ROVER:
 		modhasrounds = TRUE;
-		break;
 	}
 	
 	if (op == MENU_TITLE)
@@ -539,7 +533,7 @@ static string menu_rounds(float op)
 	else if (op == MENU_VALUE)
 		return ftos(val);
 	else if (op == MENU_LEFT)
-		setkey("game_rounds", ftos(max(1, val-2)));
+		setkey("game_rounds", ftos(max(2, val-2)));
 	else if (op == MENU_RIGHT)
 		setkey("game_rounds", ftos(min(20, val+2)));
 
@@ -1173,6 +1167,8 @@ string gmapn_menu_nondefaults()
 	int i;
 	int loadout;
 
+	str = "";
+	
 	if (getkey(game_loadout) != default_game_loadout)
 	{
 		loadout = getkey(game_loadout);

@@ -144,6 +144,9 @@ string NULL = __NULL__;
 
 GAMEVARS
 
+#undef GVF
+#undef GVS
+
 void setkey(string key, string val)
 {
 	cvar_set(strcat("g_", key), val);

@@ -732,14 +732,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 	{
 		client_bestweapon();
 		player_run();
-		return; //FIXME: should choose another weapon, not just return without doing nothing
-	}
-	
-	// If only one shell remains and the weapon is super shotgun, switch to shotgun
-	if (self.ammo_shells == 2 && self.weapon == IT_SUPER_SHOTGUN)
-	{
-		self.weapon = IT_SHOTGUN;
-		player_setweapon();
+		return;
 	}
 	
 	makevectors(self.v_angle);
@@ -776,14 +769,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 		self.attack_finished = time + hasted_reload(getkey(shotgun_reload));
 		
 		spread = getkey(shotgun_spread);
-		if (1 || getkey(bullet_spread) != 0)
-		{
-			hazard_bullets(org, dir, "shotgun");
-		}
-		else
-		{
-			//hazard_bullets(org, dir, '0.04 0.04 0', 8);
-		}
+		hazard_bullets(org, dir, "shotgun");
 
 		sound(self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);
 
@@ -803,14 +789,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 		self.attack_finished = time + hasted_reload(getkey(shotgun2_reload));
 		
 		spread = getkey(shotgun2_spread);
-		if (1 || getkey(bullet_spread) != 0)
-		{
-			hazard_bullets(org, dir, "supershotgun");
-		}
-		else
-		{
-			//hazard_bullets(org, dir, '0.14 0.08 0', 20);
-		}
+		hazard_bullets(org, dir, "supershotgun");
 
 		sound(self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);
 
