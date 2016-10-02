@@ -139,7 +139,6 @@ void func_button()
 	if (self.health)
 	{
 		self.max_health = self.health;
-		self.movetype = MOVETYPE_NOCLIP;
 		self.takedamage = DAMAGE_TRIGGER;
 		self.use = button_push;
 	}

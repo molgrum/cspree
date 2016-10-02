@@ -218,7 +218,7 @@ explosions and melee attacks.
 float candamage(entity targ, entity inflictor)
 {
 // bmodels need special checking because their origin is 0,0,0
-	if (targ.movetype == MOVETYPE_PUSH || targ.movetype == MOVETYPE_NOCLIP)
+	if (targ.movetype == MOVETYPE_PUSH)
 	{
 		traceline(inflictor.origin, 0.5 * (targ.absmin + targ.absmax), TRUE, self);
 		if (trace_fraction == 1)
