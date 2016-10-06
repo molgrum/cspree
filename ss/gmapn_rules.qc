@@ -682,15 +682,13 @@ void gmapn_rules_handleconnect()
 	case GM_DA:	//new players should be spectators rather than instantly a challenger. because it would be unfair
 		dospec = 1;
 		break;
-	case GM_HIDENSEEK://semi spectator
-		gmapn_setteamandcolour(self, gmapn_team_seekers, self.topcolor, self.bottomcolor);
-		break;
 	case GM_DUEL:	//standard game modes allows players to join a running game if it needs player
 	case GM_2ON2:
 	case GM_TDEATHMATCH:
 		if (totalplayers >= getkey(maxplayers))
 			dospec = 1; // all player slots full
 		break;
+	case GM_HIDENSEEK:
 	case GM_DOMINATION:
 	case GM_CTF:
 	case GM_FREEZETAG:
