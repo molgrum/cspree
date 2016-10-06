@@ -90,6 +90,8 @@ string gmapn_team_blue;
 
 string gmapn_team_hiders;  // For use with Hide & Seek
 string gmapn_team_seekers; // ^^^^^^^^^^^^^^^^^^^^^^^^
+float gmapn_flag_found;
+entity gmapn_flag_carrier;
 
 var float gmapn_matchstarttimems;	//global stat that marks the time that the match started at, for more reliable client-side gameclocks.
 

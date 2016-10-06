@@ -514,7 +514,7 @@ float game_is_tied()
 	return FALSE;
 };
 
-void spawnfake()
+/*void spawnfake()
 {
 	entity p, oself;
 	vector pos;
@@ -555,31 +555,46 @@ void spawnfake()
 	player_stand();
 
 	self = oself;
-};
+	};*/
 
 void gmapn_hideandseek_check()
 {
-	float allfound, alldead;
+	float alldead, seekers, hiders;
 
 	self.nextthink = time + 1;
 
-	allfound = TRUE;
+	seekers = 0;
+	hiders = 0;
+	for (entity e = world; (e = find(e, classname, "player")); )
+	{
+		if (e.teamname == gmapn_team_seekers)
+			seekers += 1;
+		else if (e.teamname == gmapn_team_hiders)
+			hiders += 1;
+	}
+
+	if (seekers == 0 || hiders == 0)
+	{
+		for (entity e = world; (e = find(e, classname, "player")); )
+		{
+			centerprint(e, "Waiting for more players to join...");
+		}
+
+		return;
+	}
+	
 	alldead = TRUE;
 	for (entity e = world; (e = find(e, classname, "player")); )
 	{
-		if (e.teamname == gmapn_team_hiders && e.found == FALSE)
-		{
-			allfound = FALSE;
-		}
-		if (e.deadflag == DEAD_NO && e.maxspeed > 0)
+		if (e.teamname == gmapn_team_seekers && e.deadflag == DEAD_NO)
 		{
 			alldead = FALSE;
 		}
 	}
 
-	if (allfound == TRUE)
+	if (gmapn_flag_found == TRUE)
 	{
-		bprintln(PRINT_HIGH, sprintf("All hiders dead, team %s wins!", gmapn_team_seekers));
+		bprintln(PRINT_HIGH, sprintf("The documents have been found, team %s wins!", gmapn_team_seekers));
 		for (entity e = world; (e = find(e, classname, "player")); )
 		{
 			if (e.teamname == gmapn_team_seekers)
@@ -593,7 +608,7 @@ void gmapn_hideandseek_check()
 	}
 	else if (alldead == TRUE)
 	{
-		bprintln(PRINT_HIGH, "Round is a tie, all players dead.");
+		bprintln(PRINT_HIGH, "Round is a over, all seekers dead.");
 		gmapn_round_end();
 	}
 	else
@@ -614,6 +629,41 @@ void gmapn_hideandseek_check()
 	}
 };
 
+void gmapn_hideandseek_report()
+{
+	gmapn_flag_found = TRUE;
+}
+
+void gmapn_hideandseek_touch()
+{
+	if (other.teamname != gmapn_team_seekers)
+		return;
+	
+	stuffcmd(other, "bf\n");
+	centerprint(other, "Picked up documents, reporting to HQ...");
+	self.model = string_null;
+	self.touch = func_null;
+	self.nextthink = time + 5;
+	self.think = gmapn_hideandseek_report;
+}
+
+void gmapn_hideandseek_drop()
+{
+	entity docs;
+	
+	docs = spawn();
+	docs.classname = "item_documents";
+	docs.solid = SOLID_TRIGGER;
+	docs.touch = gmapn_hideandseek_touch;
+	
+	setorigin(docs, self.origin);
+	setmodel(docs, "progs/backpack.mdl");
+	setsize(docs, VEC_HULL_MIN, VEC_HULL_MAX);
+
+	centerprint(self, "Documents stashed.");
+	self.maxspeed = 320;
+}
+
 void gmapn_hideandseek_start()
 {
 	entity e, oself;
@@ -621,18 +671,15 @@ void gmapn_hideandseek_start()
 	bprintln(PRINT_HIGH, sprintf("Go team %s!", gmapn_team_seekers));
 	for (e = world; (e = find(e, classname, "player")); )
 	{
-		if (e.teamname == gmapn_team_hiders)
+		if (e == gmapn_flag_carrier)
 		{
+			centerprint(e, "Dropping documents.");
 			e.maxspeed = 0;
-			centerprint(e, "Locking position.");
+			e.nextthink = time + 3;
+			e.think = gmapn_hideandseek_drop;
 		}
 		else
 		{
-			for (int i = 0; i < 5; i++)
-			{
-				// spawn five fakes for every seeker
-				spawnfake();
-			}
 			oself = self;
 			self = e;
 			self.dimension_seen = 1;
@@ -640,7 +687,7 @@ void gmapn_hideandseek_start()
 			client_clearsemispectator(self);
 			respawn_living();
 			self = oself;
-			centerprint(e, "Start searching for enemies!");
+			centerprint(e, "Start searching for the documents!");
 		}
 	}
 };
@@ -739,12 +786,7 @@ void gmapn_round_start()
 		}
 
 		float swapteams;
-		swapteams = TRUE;
-		for (e = world; (e = find(e, classname, "player")); )
-		{
-			if (e.teamname == gmapn_team_hiders && e.found == FALSE)
-				swapteams = FALSE;
-		}
+		swapteams = gmapn_flag_found;
 
 		if (swapteams != FALSE)
 		{
@@ -760,30 +802,53 @@ void gmapn_round_start()
 			}
 		}
 
-		gmapn_countdown_start(30, gmapn_hideandseek_start, gmapn_countdown_style_game);
-		bprintln(PRINT_HIGH, sprintf("Team %s is up, start hiding!", gmapn_team_hiders));
+		gmapn_flag_found = FALSE;
 
+		gmapn_countdown_start(15, gmapn_hideandseek_start, gmapn_countdown_style_game);
+		bprintln(PRINT_HIGH, sprintf("Team %s is up!", gmapn_team_hiders));
+
+		float count = 0;
+
+		for (e = world; (e = find(e, classname, "player")); )
+		{
+			if (e.teamname == gmapn_team_hiders)
+			{
+				count += 1;
+			}
+		}
+
+		rnd = floor(random() * count);
+	   
 		for (e = world; (e = find(e, classname, "player")); )
 		{
 			e.maxspeed = autocvar(sv_maxspeed, 320);
 			if (e.teamname == gmapn_team_hiders)
 			{
 				self = e;
+				self.deadflag = DEAD_NO;
 				self.found = FALSE;
 				self.dimension_seen = 1;
 				self.dimension_see = 1;
 				client_clearsemispectator(self);
 				respawn_living();
 				stuffcmd(e, "bf 1 1 1 0.5 0.5\n");
-				centerprint(e, "You're up, hide somewhere!");
+				
+				if (rnd == 0)
+				{
+					gmapn_flag_carrier = e;
+					centerprint(e, "You're up, hide the documents!");
+				}
+
+				rnd -= 1;
 			}
 			else
 			{
 				self = e;
+				self.deadflag = DEAD_NO;
 				self.dimension_seen = 0;
 				self.dimension_see = 0;
 				client_setsemispectator(self);
-				centerprint(self, "Waiting for enemies to hide...");
+				centerprint(self, "Giving hiders a head start...");
 			}
 		}
 	}
@@ -837,13 +902,6 @@ void gmapn_round_restart()
 	else
 	{
 		remove(self);
-		if (gmapn_gamemode == GM_HIDENSEEK)
-		{
-			for (entity p = world; (p = find(p, classname, "fakeplayer")); )
-			{
-				remove(p);
-			}
-		}
 		gmapn_round_start();
 		gmapn_countdown_start(timelimit, gmapn_round_end, gmapn_countdown_style_game);
 	}
@@ -872,6 +930,13 @@ void gmapn_round_end()
 	other = find(world, classname, "gmapn_round_check");
 	if (other)
 		remove(other);
+
+	if (gmapn_gamemode == GM_HIDENSEEK)
+	{
+		other = find(world, classname, "item_documents");
+		if (other)
+			remove(other);
+	}
 	
 	if (gmapn_roundslimit == gmapn_roundnum)
 		gmapn_game_end();

@@ -906,7 +906,6 @@ void client_clearsemispectator(entity player)
 {
 	player.solid = SOLID_SLIDEBOX;
 	player.takedamage = DAMAGE_BLEED;
-	player.deadflag = DEAD_NO;
 	player.movetype = MOVETYPE_WALK;
 	player.dimension_seen = 1;
 };
@@ -915,7 +914,6 @@ void client_setsemispectator(entity player)
 {
 	player.solid = SOLID_NOT;
 	player.takedamage = DAMAGE_NO;
-	player.deadflag = DEAD_DEAD;
 	player.movetype = MOVETYPE_NOCLIP;
 	player.armortype = 0;
 	player.armorvalue = 0;

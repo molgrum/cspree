@@ -356,7 +356,7 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 	}
 	if (gmapn_gamemode == GM_HEADHUNTER)
 		return;	//headhunter only awards frags when you capture the heads.
-	if (gmapn_gamemode == GM_HIDENSEEK)
+/*	if (gmapn_gamemode == GM_HIDENSEEK)
 	{
 		if (victim.teamname == gmapn_team_hiders && victim.found == FALSE && killer != world && killer != victim)
 		{
@@ -365,7 +365,7 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 		}
 
 		return; //only award frags if all hidden players are killed
-	}
+		}*/
 	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_FREEZETAG)
 	{
 		gmapn_checklastplayer(victim.teamname);
