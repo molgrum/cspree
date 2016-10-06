@@ -683,6 +683,7 @@ void gmapn_rules_handleconnect()
 		dospec = 1;
 		break;
 	case GM_HIDENSEEK://semi spectator
+		gmapn_setteamandcolour(self, gmapn_team_seekers, self.topcolor, self.bottomcolor);
 		dospec = 2;
 		break;
 	case GM_DUEL:	//standard game modes allows players to join a running game if it needs player
