@@ -36,6 +36,7 @@ string nextmap;
 
 float	intermission_running;
 float	intermission_exittime;
+float   intermission_mapchange;
 
 //we only write/read parms in coop.
 //health will be 0 if the player has not transferred from the previous coop map
@@ -179,7 +180,7 @@ void IntermissionThink()
 		gmapn_recording = FALSE;
 	}
 
-	if (!self.button0 && !self.button1 && !self.button2 && !getkey(runtests))
+	if (!self.button0 && !self.button1 && !self.button2 && !getkey(runtests) && time < intermission_mapchange)
 		return;
 
 	//kick bots before we change the map. this prevents them from tagging along onto the next map.
@@ -240,6 +241,7 @@ void execute_changelevel()
 	
 // enforce a wait time before allowing changelevel
 	intermission_exittime = time + 5;
+	intermission_mapchange = time + 10;
 
 	other = find(world, classname, "player");
 	while(other != world)
