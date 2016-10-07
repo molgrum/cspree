@@ -1,4 +1,4 @@
-QCC = ../fteqcc
+QCC = ../../fteqcc
 
 INSTALL_DIR = ~/quake/gmapn
 
