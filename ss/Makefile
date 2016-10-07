@@ -61,12 +61,12 @@ SRC = \
 	frikbot/bot_way.qc \
 	models/player.qc
 
-../qwprogs.dat: $(SRC)
+../../gmapn/qwprogs.dat: $(SRC)
 	$(QCC)
 
-install: ../qwprogs.dat
+install: ../../gmapn/qwprogs.dat
 	mkdir -p $(INSTALL_DIR)
-	cp ../qwprogs.dat $(INSTALL_DIR)
+	cp ../../gmapn/qwprogs.dat $(INSTALL_DIR)
 
 ctags: $(SRC)
 	ctags $^
@@ -75,5 +75,5 @@ etags: $(SRC)
 	etags $^
 
 clean:
-	rm -f ../qwprogs.dat ../qwprogs.lno
+	rm -f ../../gmapn/qwprogs.dat ../../gmapn/qwprogs.lno
 

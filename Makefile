@@ -3,11 +3,11 @@
 INSTALL_DIR = ~/quake
 
 all:
-	$(MAKE) -C ss -f Makefile ../qwprogs.dat
+	$(MAKE) -C ss -f Makefile ../../gmapn/qwprogs.dat
 #	$(MAKE) -C cs -f Makefile csprogs.dat
 
-install:
-	$(MAKE) -C ss -f Makefile install
+#install:
+#	$(MAKE) -C ss -f Makefile install
 #	$(MAKE) -C cs -f Makefile install
 
 CFGS := $(shell find . -name '*.cfg' -print)
