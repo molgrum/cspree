@@ -522,7 +522,11 @@ float gmapn_handle_usercmd(float argc)
 		}
 		else
 		{
-			if (gmapn_serverstate == gmapn_serverstate_prewar || gmapn_serverstate == gmapn_serverstate_intermission)
+			if (getkey(maprotation) != "")
+			{
+				sprint(self, PRINT_HIGH, "Cannot change map while playing with maprotation.\n");
+			}
+			else if (gmapn_serverstate == gmapn_serverstate_prewar || gmapn_serverstate == gmapn_serverstate_intermission)
 			{
 				mapstr = argv(1);
 				gmapn_mapvote_addvote(mapstr);
