@@ -174,6 +174,7 @@ void() gmapn_evaluategamemaster;
 void(entity killer, entity victim, float delta) gmapn_scorefrags;
 void(entity victim, float delta) gmapn_suicidefrags;
 void(entity killer, entity victim, float delta) gmapn_teamkillfrags;
+string() gmapn_nextmap;
 
 void() domination_startup;
 void() headhunter_startup;

@@ -39,6 +39,7 @@ string NULL = __NULL__;
 	GVF(game_record,		1,	"Record an mvd, if enabled.")\
 	GVF(game_itemtimers,		1,	"Displays timers at item locations that display how long until the item respawns.")\
 	GVF(game_rounds,		5,	NULL)\
+	GVS(maprotation,		"",	"Optional list of maps to rotate on the server, space separated.")\
 	GVF(minplayers,			0,	NULL)\
 	GVF(maxplayers,			12,	NULL)\
 	GVF(minteamsize,		0,	NULL)\

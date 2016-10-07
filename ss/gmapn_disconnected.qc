@@ -23,7 +23,8 @@
 
 */
 
-void(entity disconnected_player) gmapn_disconnected_player {
+void gmapn_disconnected_player(entity disconnected_player)
+{
 	entity e, oldest, newstatpreserver;
 	float numstatpreservers;
 

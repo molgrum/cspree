@@ -165,7 +165,26 @@ float gmapn_gamemode_allowed(float mode)
 			return TRUE;
 	}
 	return FALSE;
-};
+}
+
+string gmapn_nextmap()
+{
+	float maps = tokenize(getkey(maprotation));
+	string nextmaprotate = argv(0);
+
+	if (!maps)
+		return __NULL__;
+
+	for (int i = 0; i < maps - 1; i++)
+	{
+		if (mapname == argv(i))
+		{
+			nextmaprotate = argv(i + 1);
+		}
+	}
+
+	return nextmaprotate;
+}
 
 void gmapn_updatemaxclients()
 {

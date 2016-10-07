@@ -189,7 +189,9 @@ void IntermissionThink()
 			dropclient(e);
 	}
 
-	if (coop && nextmap)
+	if (getkey(maprotation) != "")
+		changelevel(gmapn_nextmap());
+	else if (coop && nextmap)
 		changelevel(nextmap);
 	else
 		changelevel(mapname);
