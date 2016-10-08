@@ -16,16 +16,27 @@ For those that want to play custom maps but cannot decide what to pick, there is
 built in randomizer that selects ten maps that you can vote for.
 
 # Installation
-Right now the best way to install is by Git. From INSTALL:
+Right now the best way to install is by Git:
+
+- Change into you Quake directory.
 ```
-Change into you Quake directory.
 git clone https://github.com/molgrum/gmapn.git gmapn
 cd gmapn
 ./updatebinaries.sh
 make
-Copy gmapn.pk3 into gmapn/ directory.
-Happy gibbbing!
 ```
+- Copy gmapn.pk3 into gmapn/ directory.
+- Happy gibbbing!
+
+Windows admins do this:
+
+- Download the [zip](https://github.com/molgrum/gmapn/archive/master.zip)
+- Extract into your Quake directory.
+- Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into gmapn directory)
+- Download server [64-bit](http://triptohell.info/moodles/win64/fteqwsv64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqwsv32.exe) (put into quake directory)
+- Run QCC exe.
+- Happy gibbing!
+
 # Wiki
 Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 
