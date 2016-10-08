@@ -18,7 +18,7 @@ built in randomizer that selects ten maps that you can vote for.
 # Installation
 Right now the best way to install is by Git:
 
-- Change into you Quake directory.
+- Change into your Quake directory.
 ```
 git clone https://github.com/molgrum/gmapn.git gmapn
 cd gmapn
