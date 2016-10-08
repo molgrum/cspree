@@ -31,6 +31,7 @@ SRC = \
 	ss/defs/builtins.qc \
 	ss/defs/constants.qc \
 	ss/defs/fields.qc \
+	ss/defs/fteextensions.qc \
 	ss/defs/functions.qc \
 	ss/defs/globals.qc \
 	ss/defs/system.qc \
@@ -57,7 +58,25 @@ SRC = \
 	ss/frikbot/bot_move.qc \
 	ss/frikbot/bot_phys.qc \
 	ss/frikbot/bot_way.qc \
-	ss/models/player.qc
+	ss/models/player.qc \
+	ss/monsters/ai.qc \
+	ss/monsters/boss.qc \
+	ss/monsters/demon.qc \
+	ss/monsters/dog.qc \
+	ss/monsters/enforcer.qc \
+	ss/monsters/fight.qc \
+	ss/monsters/fish.qc \
+	ss/monsters/hknight.qc \
+	ss/monsters/knight.qc \
+	ss/monsters/monsters.qc \
+	ss/monsters/ogre.qc \
+	ss/monsters/oldone.qc \
+	ss/monsters/shalrath.qc \
+	ss/monsters/shambler.qc \
+	ss/monsters/soldier.qc \
+	ss/monsters/tarbaby.qc \
+	ss/monsters/wizard.qc \
+	ss/monsters/zombie.qc
 
 ../gmapn/qwprogs.dat: $(SRC)
 	$(QCC)
