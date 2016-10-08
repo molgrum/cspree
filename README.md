@@ -24,6 +24,7 @@ git clone https://github.com/molgrum/gmapn.git gmapn
 cd gmapn
 ./updatebinaries.sh
 make
+./start_servers.sh
 ```
 - Happy gibbbing!
 
