@@ -25,7 +25,6 @@ cd gmapn
 ./updatebinaries.sh
 make
 ```
-- Copy gmapn.pk3 into gmapn/ directory.
 - Happy gibbbing!
 
 Windows admins do this:
@@ -34,6 +33,7 @@ Windows admins do this:
 - Extract into your Quake directory.
 - Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into gmapn directory)
 - Download server [64-bit](http://triptohell.info/moodles/win64/fteqwsv64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqwsv32.exe) (put into quake directory)
+- Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into gmapn directory)
 - Run QCC exe.
 - Happy gibbing!
 
