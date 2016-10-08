@@ -2,6 +2,7 @@
 
 QCC=./fteqcc
 SRV=../fteqw.sv
+PAK=gmapn.pk3
 
 if [ `getconf LONG_BIT` = "64" ]; then
 	wget -O ${QCC} http://triptohell.info/moodles/linux_amd64/fteqcc64
@@ -13,3 +14,5 @@ fi
 
 chmod +x ${QCC}
 chmod +x ${SRV}
+
+wget -O ${PAK} http://triptohell.info/moodles/junk/${PAK}
