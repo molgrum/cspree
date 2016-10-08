@@ -1,6 +1,6 @@
 #!/bin/sh
 
-QCC=../fteqcc
+QCC=./fteqcc
 SRV=../fteqw.sv
 
 if [ `getconf LONG_BIT` = "64" ]; then
