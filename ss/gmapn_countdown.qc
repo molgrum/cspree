@@ -75,22 +75,9 @@ void gmapn_countdown_think()
 
 	if (self.cnt)
 	{
-		if (self.cnt >= 60)
+		if (gmapn_serverstate == gmapn_serverstate_countdown)
 		{
-			if (floor(self.cnt/60)*60 == self.cnt)
-			{
-				if (self.cnt > 61)
-					plural = "s";
-				else
-					plural = "";
-
-				bprint(PRINT_MEDIUM, ftos(self.cnt/60), " minute", plural, " remaining.\n");
-			}
-		}
-		else if (self.cnt <= 5 || self.cnt == 30 || self.cnt == 15 || self.cnt == 10)
-			bprint(PRINT_MEDIUM, ftos(self.cnt), "...\n");
-
-			if (gmapn_serverstate == gmapn_serverstate_countdown && self.cnt <= 5)
+			if (self.cnt <= 5)
 			{
 				entity p;
 
@@ -102,6 +89,28 @@ void gmapn_countdown_think()
 					p = find(p, classname, "player");
 				}
 			}
+		}
+		else if (self.cnt >= 60)
+		{
+			if (floor(self.cnt/60)*60 == self.cnt)
+			{
+				if (self.cnt > 61)
+					plural = "s";
+				else
+					plural = "";
+
+				bprint(PRINT_MEDIUM, chr2str(0x90), goldnmbr(ftos(self.cnt/60)), chr2str(0x91), " minute", plural, " remaining\n");
+			}
+		}
+		else if (self.cnt <= 5 || self.cnt == 30 || self.cnt == 15 || self.cnt == 10)
+		{
+			if (self.cnt > 1)
+				plural = "s";
+			else
+				plural = "";
+			
+			bprint(PRINT_MEDIUM, chr2str(0x90), goldnmbr(ftos(self.cnt)), chr2str(0x91), " second", plural, "\n");
+		}
 	}
 	else
 	{

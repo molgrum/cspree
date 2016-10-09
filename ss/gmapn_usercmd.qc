@@ -102,7 +102,7 @@ void cmd_ready()
 		{
 			if (self.teamname == "")
 			{
-				sprintln(self, PRINT_HIGH, "Set your team first!");
+				sprintln(self, PRINT_HIGH, _("Set your team first!"));
 				return;
 			}
 			gmapn_find_teamnames();
@@ -155,11 +155,11 @@ void cmd_ready()
 		case GM_CTF:
 		case GM_HIDENSEEK:
 			if (count_red+count_blue+count_other > getkey(maxteamsize)*2)
-				sprint(self, PRINT_HIGH, "There are too many people to begin a game.\n");	
+				sprint(self, PRINT_HIGH, _("There are too many people to begin a game.\n"));	
 			else if (count_red > getkey(maxteamsize))
-				sprint(self, PRINT_HIGH, sprintf("There are too many people on %s team.\n", gmapn_team_red));
+				sprint(self, PRINT_HIGH, sprintf(_("There are too many people on %s team.\n"), gmapn_team_red));
 			else if (count_blue > getkey(maxteamsize))
-				sprint(self, PRINT_HIGH, sprintf("There are too many people on %s team.\n", gmapn_team_blue));	
+				sprint(self, PRINT_HIGH, sprintf(_("There are too many people on %s team.\n"), gmapn_team_blue));	
 			else
 			{
 				break;
@@ -178,12 +178,16 @@ void cmd_ready()
 
 		if (!self.ready)
 		{
-			bprint(PRINT_HIGH, self.netname, " is ready");
 			self.ready = 1;
+			bprint(PRINT_HIGH, self.netname, redify(_(" is ready")));
+
+			// clan information
+			if (cvar("teamplay") && !cvar("coop"))
+				bprint(PRINT_HIGH, " ", chr2str(0x90), self.teamname, chr2str(0x91));
 
 			if (playersready < playersneeded)
 			{
-				bprint(PRINT_HIGH, " - ", ftos(playersneeded-playersready), " to go.\n");
+				bprint(PRINT_HIGH, " - ", chr2str(0x90), goldnmbr(ftos(playersneeded-playersready)), chr2str(0x91), _(" to go\n"));
 			}
 			else
 			{
@@ -192,7 +196,7 @@ void cmd_ready()
 		}
 		else
 		{
-			sprint(self, PRINT_HIGH, "You're already ready.\n");
+			sprint(self, PRINT_HIGH, _("You're already ready.\n"));
 		}
 
 		if (gmapn_serverstate != gmapn_serverstate_forcestart && playersready >= playersneeded)
@@ -201,12 +205,12 @@ void cmd_ready()
 			{
 				if (count_red < getkey(minteamsize))
 				{
-					sprint(self, PRINT_HIGH, sprintf("There are too few people on team %s.\n", gmapn_team_red));
+					sprint(self, PRINT_HIGH, sprintf(_("There are too few people on team %s\n"), gmapn_team_red));
 					return;
 				}
 				else if (count_blue < getkey(minteamsize))
 				{
-					sprint(self, PRINT_HIGH, sprintf("There are too few people on team %s.\n", gmapn_team_blue));
+					sprint(self, PRINT_HIGH, sprintf(_("There are too few people on team %s\n"), gmapn_team_blue));
 					return;
 				}
 			}
@@ -217,7 +221,7 @@ void cmd_ready()
 	{
 		if (self.ready == 0)
 		{
-			bprint(PRINT_HIGH, self.netname, " withdraws his vote for stopping the match.\n");
+			bprint(PRINT_HIGH, self.netname, _(" withdraws his vote for stopping the match\n"));
 
 			self.ready = 1;
 		}
@@ -233,16 +237,16 @@ void cmd_break()
 	{
 		if (self.ready)
 		{
-			bprint(PRINT_HIGH, self.netname, " is not ready.\n");
+			bprint(PRINT_HIGH, self.netname, _(" is not ready\n"));
 		}
 		else
 		{
-			sprint(self, PRINT_HIGH, "You're not ready yet, cannot break.\n");
+			sprint(self, PRINT_HIGH, _("You're not ready yet, cannot break\n"));
 		}
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_countdown)
 	{
-		bprint(PRINT_HIGH, self.netname, " aborts the countdown.\n");
+		bprint(PRINT_HIGH, self.netname, _(" aborts the countdown\n"));
 		self.ready = 0;
 
 		gmapn_game_endpregamecountdown();
@@ -265,16 +269,16 @@ void cmd_break()
 
 			playersready--;
 
-			bprint(PRINT_HIGH, self.netname, " votes for stopping the match.");
+			bprint(PRINT_HIGH, self.netname, _(" votes for stopping the match"));
 
 			if (playersready != 0)
 			{
-				bprint(PRINT_HIGH, " - ", ftos(playersready), " to go.\n");
+				bprint(PRINT_HIGH, " - ", chr2str(0x90), goldnmbr(ftos(playersready)), chr2str(0x91), " to go\n");
 			}
 			else
 			{
 				bprint(PRINT_HIGH, "\n");
-				bprint(PRINT_HIGH, "The match is stopped!\n");
+				bprint(PRINT_HIGH, _("The match is stopped!\n"));
 
 				gmapn_game_end();
 				serverflags &= ~SV_MATCHLESS;	//make sure the menus come back
@@ -292,7 +296,7 @@ void cmd_forcestart()
 
 	if (gmapn_serverstate == gmapn_serverstate_forcestart)
 	{
-		sprintln(self, PRINT_HIGH, "Forcestart is already in effect!");
+		sprintln(self, PRINT_HIGH, _("Forcestart is already in effect!"));
 		return;
 	}
 
@@ -306,11 +310,11 @@ void cmd_forcestart()
 
 	if (totalplayers < getkey(minplayers))
 	{
-		sprintln(self, PRINT_HIGH, "Not enough players to start a game.");
+		sprintln(self, PRINT_HIGH, _("Not enough players to start a game."));
 		return;
 	}
 
-	bprintln(PRINT_HIGH, "Forcestart initialized, ready up!");
+	bprintln(PRINT_HIGH, _("Forcestart initialized, ready up!"));
 	gmapn_forcestart();
 };
 
@@ -335,7 +339,7 @@ void cmd_rndmap()
 		return;
 	}
 
-	bprintln(PRINT_HIGH, sprintf("%s votes for random map!", self.netname));
+	bprintln(PRINT_HIGH, sprintf(_("%s votes for random map!"), self.netname));
 
 	stuffcmd(self, "cmd votemap ");
 	stuffcmd(self, infokey(world, strcat("gmapn_map", ftos(rnd))));
@@ -401,7 +405,7 @@ void cmd_rulemaker(string nick)
 
 		if (nick == string_null || self == target)
 		{
-			sprintln(self, PRINT_HIGH, "You are already a rulemaker!");
+			sprintln(self, PRINT_HIGH, _("You are already a rulemaker!"));
 			return;
 		}
 		else if (target)
@@ -420,7 +424,7 @@ void cmd_rulemaker(string nick)
 
 	if (nick != string_null)
 	{
-		sprintln(self, PRINT_HIGH, "You cannot pass rulemaker status without being one!");
+		sprintln(self, PRINT_HIGH, _("You cannot pass rulemaker status without being one!"));
 		return;
 	}
 
