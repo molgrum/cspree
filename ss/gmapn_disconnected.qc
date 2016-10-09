@@ -90,7 +90,7 @@ float gmapn_reconnected_player(entity reconnected_player)
 		{
 			matchedip = statpreserver;
 		}
-		else if (statpreserver.netname == reconnected_player.netname)
+		if (statpreserver.netname == reconnected_player.netname)
 		{
 			matchedplayer = statpreserver;
 			break;
@@ -102,14 +102,19 @@ float gmapn_reconnected_player(entity reconnected_player)
 	{
 		// No netname match, check IP match instead (to allow nickname change)
 		if (matchedip != world)
+		{
 			matchedplayer = matchedip; // OK found an entry
+		}
 		else
+		{
+			dprintln("Didn't find a match for disconnected player");
 			return FALSE; // No netname or IP matched
+		}
 	}
 
 	reconnected_player.frags = matchedplayer.frags;
 	//reconnected_player.teamname = matchedplayer.teamname;
-	gmapn_setteamandcolour(reconnected_player, matchedplayer.teamname, matchedplayer.topcolor, matchedplayer.bottomcolor);
+	//gmapn_setteamandcolour(reconnected_player, matchedplayer.teamname, matchedplayer.topcolor, matchedplayer.bottomcolor);
 
 	reconnected_player.stats_kills = matchedplayer.stats_kills;
 	reconnected_player.stats_deaths = matchedplayer.stats_deaths;

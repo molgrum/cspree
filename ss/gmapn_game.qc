@@ -232,6 +232,8 @@ void gmapn_game_endpregamecountdown()
 
 void gmapn_game_end()
 {
+	entity disconnected_player;
+	
 	localcmd("serverinfo status standby\n");
 	
 	entity e = find(world, classname, "gmapn_round_check");
@@ -241,7 +243,7 @@ void gmapn_game_end()
 	e = find(world, classname, "gmapn_disconnected_player");
 	while (e)
 	{
-		entity disconnected_player = spawnclient();
+		disconnected_player = spawnclient();
 
 		disconnected_player.classname = "player";
 		disconnected_player.netname = e.netname;
