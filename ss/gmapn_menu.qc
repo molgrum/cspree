@@ -733,7 +733,6 @@ static string(float op) rules_mod[] =
 	menu_maxplayers,
 	menu_minplayers,
 	menu_rounds,
-	menu_botskill,
 	menu_loadout,
 	menu_spacer,
 	menu_back
@@ -743,6 +742,7 @@ static string(float op) rules_srv[] =
 {
 	menu_antilag,
 	menu_minping,
+	menu_botskill,
 	menu_spacer,
 	menu_back
 };
@@ -1295,7 +1295,8 @@ void gmapn_menu_any(float keys)
 		if (self.ready || self.movement || self.button0 || self.button2)
 			self.movetime = time + 3;
 
-		m = strcat(m, gmapn_menu_waitingfor((time*2) & 1));	
+		if (gmapn_serverstate != gmapn_serverstate_countdown)
+			m = strcat(m, gmapn_menu_waitingfor((time*2) & 1));
 	}
 	else if (self.subsel == SUBSEL_MAPS)
 		m = strcat("/P", m, gmapn_menu_maps(keys));

@@ -230,18 +230,22 @@ void gmapn_init_entities()
 	ctf_enableflags(gmapn_gamemode == GM_CTF);
 }
 
-void gmapn_update_defaults()
+void gmapn_update_defaults_mod()
 {
 	dbgprintln("=== gmapn_update_defaults() ===");
 
 	default_game_loadout = getkey(game_loadout);
-	default_game_botskill = getkey(game_botskill);
 	default_game_rounds = getkey(game_rounds);
 	default_minplayers = getkey(minplayers);
 	default_maxplayers = getkey(maxplayers);
 	default_powerups_enabled = getkey(powerups_enabled);
 	default_deathmatch = cvar("deathmatch");
 	default_timelimit = cvar("timelimit");
+}
+
+void gmapn_update_defaults_srv()
+{
+	default_game_botskill = getkey(game_botskill);
 	default_antilag = cvar("sv_antilag");
 	default_minping = cvar("sv_minping");
 }

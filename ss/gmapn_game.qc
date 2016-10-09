@@ -249,7 +249,7 @@ void gmapn_game_end()
 		disconnected_player.netname = e.netname;
 		if (gmapn_reconnected_player(disconnected_player) == TRUE)
 		{
-			disconnected_player.netname = strcat("(", disconnected_player.netname, ")");
+			disconnected_player.netname = strcat(chr2str(0x87), " ", disconnected_player.netname);
 			e = find(world, classname, "gmapn_disconnected_player");
 		}
 		else

@@ -31,7 +31,7 @@ void gmapn_config_update()
 	if (stof(infokey(world, "gmapn_config_version")) == gmapn_config_version)
 	{
 		gmapn_init_entities();
-		gmapn_update_defaults();
+		gmapn_update_defaults_mod();
 		remove(self);
 		return;
 	}
