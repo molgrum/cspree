@@ -2340,8 +2340,6 @@ void ClientConnect()
 		SendIntermissionToPlayer(self);
 	}
 
-	gmapn_sql_welcome();
-
 	self.connectedtime = time;
 	self.challengertime = time;	//make sure we can't bypass duel queues by just reconnecting
 };
@@ -2379,9 +2377,15 @@ void PutClientInServer()
 		self.stats_midair[i] = 0;
 	}
 
-	gmapn_print_version();
 	if (gmapn_reconnected_player(self) == TRUE)
+	{
 		bprintln(PRINT_HIGH, sprintf("%s reconnects with %s frags", self.netname, ftos(self.frags)));
+	}
+	else
+	{
+		gmapn_print_version();
+		gmapn_sql_welcome();
+	}
 
 	gmapn_rules_handleconnect();
 
@@ -2398,6 +2402,8 @@ called when a player disconnects from a server
 void ClientDisconnect()
 {
 	entity e;
+
+	dbgprintln("=== ClientDisconnect() ===");
 	
 	// Let everyone else know
 	if (gmapn_serverstate == gmapn_serverstate_playing)

@@ -65,7 +65,14 @@ called when a spectator disconnects from a server
 */
 void SpectatorDisconnect()
 {
-	bprint (PRINT_MEDIUM, sprintf(_("Spectator %s left the game\n"), self.netname));
+	if (infokey(self, "*spectator") == "2")
+	{
+		ClientDisconnect();
+	}
+	else
+	{
+		bprint (PRINT_MEDIUM, sprintf(_("Spectator %s left the game\n"), self.netname));
+	}
 };
 
 /*
