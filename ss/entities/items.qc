@@ -232,15 +232,7 @@ void item_pickup(float respawn_time)
 	// Display bonus flash
 	stuffcmd(other, "bf\n");
 
-	if (deathmatch == 4)
-	{
-		// FIXME: Play pent sound
-	}
-	else
-	{
-		// Play pickup sound
-		sound(other, self.channel, self.noise, 1, self.attenuation);
-	}
+	sound(other, self.channel, self.noise, 1, self.attenuation);
 
 	// A negative respawn time causes the item to never spawn again
 	if (respawn_time < 0)

@@ -49,7 +49,8 @@ string stufflist[] =
 	"alias abstain cmd abstain\n",
 	"alias dontcare cmd dontcare\n",
 	"alias rulemaker cmd rulemaker\n",
-	"alias rndmap cmd rndmap\n"
+	"alias rndmap cmd rndmap\n",
+	"alias shownick cmd shownick\n"
 };
 
 void() gmapn_aliasstuffer_think;

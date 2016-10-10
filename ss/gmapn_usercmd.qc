@@ -438,7 +438,23 @@ void cmd_rulemaker(string nick)
 
 	if (gmapn_vote_init() == FALSE)
 		remove(evoter);
-};
+}
+
+void cmd_shownick()
+{
+	if (gmapn_serverstate != gmapn_serverstate_prewar)
+		return;
+	if (self.movetime < time)
+		return; // don't clotter the menu
+
+	makevectors(self.angles);
+	traceline(self.origin, self.origin + v_forward*512, FALSE|MOVE_LAGGED, self);
+	if (trace_fraction != 1.0 && trace_ent.classname == "player")
+	{
+		self.menutime = time + 1; // hide the menu for a short period
+		centerprint(self, trace_ent.netname);
+	}
+}
 
 float gmapn_handle_usercmd(float argc)
 {
@@ -615,6 +631,11 @@ float gmapn_handle_usercmd(float argc)
 	if (cmd == "rulemaker")
 	{
 		cmd_rulemaker(argv(1));
+		return 1;
+	}
+	if (cmd == "shownick")
+	{
+		cmd_shownick();
 		return 1;
 	}
 	if (cmd == "dmm")

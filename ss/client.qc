@@ -1559,12 +1559,16 @@ void client_pack_throw()
 	pack.channel = CHAN_ITEM;
 	pack.classname = "backpack";
 	pack.movetype = MOVETYPE_TOSS;
-	pack.noise = "weapons/lock4.wav";
 	pack.solid = SOLID_TRIGGER;
 	pack.touch = client_pack_touch;
 	
 	pack.nextthink = time + 60*2;
 	pack.think = (void()){remove(self);};
+
+	if (deathmatch < 4)
+		pack.noise = "weapons/lock4.wav";
+	else
+		pack.noise = "items/protect3.wav";
 
 	//determine the weapon to put in the backpack
 	switch(getkey(game_fairpacks))

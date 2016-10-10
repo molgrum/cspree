@@ -36,6 +36,7 @@ string gmapn_menuarg;
 
 .float csqcactive;	//our csprogs is running on this client. yay.
 .float movetime;	//the time until the menu remains mostly hidden.
+.float menutime;	//for hiding the menu completely
 
 entity gmapn_gamemaster;	//this is the player who is currently nominated to be the leader.
 entity gmapn_monarchofthemound;
@@ -1315,6 +1316,9 @@ float gmapn_display_rules()
 	float newkeys, keys;
 
 	if (time < 1)	//can do weird things on loading screens
+		return TRUE;
+
+	if (time < self.menutime)
 		return TRUE;
 
 	newkeys = 0;

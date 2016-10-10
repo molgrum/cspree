@@ -451,7 +451,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	if (victim.deathtype == DT_TELEFRAG || victim.deathtype == DT_TELEFRAG_PENT || victim.deathtype == DT_TELEFRAG_PENT_BOTH || victim.deathtype == DT_TEAMREFLECT)
 	{}	//telefrag always does full damage, even to team members.
 	else if (victim == attacker)
-		hthdmg *= getkey(game_selfdamage);	//multiplier to reduce damage to yourself.
+		hthdmg *= (deathmatch == 5) ? 0 : getkey(game_selfdamage);	//multiplier to reduce damage to yourself.
 	else if (teamplay && victim.classname == "player" && attacker.classname == "player" && (coop||victim.teamname == attacker.teamname))
 	{	//you can destroy a teammate's armour, but any health damage will be inflicted upon you instead (and ignores your armour).
 		reflect = hthdmg * getkey(game_teamdamage_reflect);
