@@ -59,24 +59,24 @@ void gmapn_config_load()
 	gametype = getkey(game_mode);
 
 	//localcmd("exec configs/default.cfg\n");
-	gmapn_config_exec("cfgs/default.conf");
+	getkey_parseconfig("cfgs/default.conf");
 
 	str = strcat("cfgs/rules/", gametype);
 	str = strcat(str, ".conf");
 	//localcmd(str);
-	gmapn_config_exec(str);
+	getkey_parseconfig(str);
 
 	str = strcat("cfgs/maps/", mapname);
 	str = strcat(str, "/default.conf");
 	//localcmd(str);
-	gmapn_config_exec(str);
+	getkey_parseconfig(str);
 
 	str = strcat("cfgs/maps/", mapname);
 	str = strcat(str, "/");
 	str = strcat(str, gametype);
 	str = strcat(str, ".conf");
 	//localcmd(str);
-	gmapn_config_exec(str);
+	getkey_parseconfig(str);
 
 	gmapn_config_version+= 1;
 	if (gmapn_config_version == 65536)
@@ -97,10 +97,20 @@ void gmapn_config_load()
 
 void gmapn_config_exec(string cfg)
 {
-	if (getkey_parseconfig(cfg) == FALSE)
+	filestream fs = fopen(cfg, FILE_READ);
+	string line;
+	
+	if (fs < 0)
 	{
 		dprint("couldn't exec config ");
 		dprint(cfg);
 		dprint("\n");
+		return;
+	}
+
+	while ((line = fgets(fs)))
+	{
+		localcmd(line);
+		localcmd("\n");
 	}
 }

@@ -1272,7 +1272,7 @@ string gmapn_menu_nondefaults()
 
 	if (str != __NULL__)
 	{
-		str = strcat(flash("\nSome non standard settings used\n\n"), redify(str));
+		str = strcat(flash("\nSome modified settings are used\n\n"), redify(str));
 	}
 	
 	return str;

@@ -232,7 +232,7 @@ void gmapn_init_entities()
 
 void gmapn_update_defaults_mod()
 {
-	dbgprintln("=== gmapn_update_defaults() ===");
+	dbgprintln("=== gmapn_update_defaults_mod() ===");
 
 	default_game_loadout = getkey(game_loadout);
 	default_game_rounds = getkey(game_rounds);
@@ -245,6 +245,8 @@ void gmapn_update_defaults_mod()
 
 void gmapn_update_defaults_srv()
 {
+	dbgprintln("=== gmapn_update_defaults_srv() ===");
+	
 	default_game_botskill = getkey(game_botskill);
 	default_antilag = cvar("sv_antilag");
 	default_minping = cvar("sv_minping");
