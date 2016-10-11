@@ -108,7 +108,7 @@ string NULL = __NULL__;
 	GVF(shotgun2_reload,		0.7,	NULL)\
 	GVF(shotgun2_spread,		0.015,	NULL)\
 	GVF(spawn_drop,			0,	"0 = Original position of spawns\n1 = Drop the spawn to floor")\
-	GVF(spawn_mode,			0,	"0 = Random spawns (normal qw)\n1 = Far enemy spawns (spawn the furthest from enemies)\n2 = Self select spawns (select spawn yourself)\n3 = weighted spawn chances")\
+	GVF(spawn_mode,			1,	"1 = Fair spawns (avoid duplicate spawn spots)\n2 = Competitive spawns (perhaps mercilessly spawn on the same spot)")\
 	GVF(spawn_telefrag,		1,	"0 = Avoid telefrags by waiting a few seconds until spawning\n1 = Telefrag merciless (original QW)")\
 	GVF(spike_damage,		9,	NULL)\
 	GVF(spike_push,			1.0,	NULL)\

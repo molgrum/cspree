@@ -395,18 +395,16 @@ entity client_spawnpoint()
 	float cur_distance, max_distance;
 	float spawnmode;
 	float spawns, occupiedspots;
-	float f, rnd; // spawn mode 3
+	float force_rnd, nice_rnd; // spawn mode 3
 	string team1, team2;
 	string spotclass;
 	vector spawnpos, playerpos;
 	float ignoreoccupied;
 
-	bestspawn = world;
-	
+	bestspawn = world;	
 	spawnmode = getkey(spawn_mode);
-	
-	ignoreoccupied = 1;
 	spotclass = "info_player_deathmatch";
+	
 	if (coop && gmapn_serverstate == gmapn_serverstate_playing)
 		spotclass = "info_player_coop";
 	
@@ -424,59 +422,18 @@ entity client_spawnpoint()
 				spotclass = team2;
 		}
 	}
-	
-	if (spawnmode == 1)
+
+	ignoreoccupied = FALSE;
+
+	// ignore occupied spots at each round start
+	if (gmapn_serverstate == gmapn_serverstate_playing && self.lastroundnum < gmapn_roundnum)
 	{
-		// Find a spawn point as far from the enemy as possible
-		max_distance = 0;
-		spawnp = find(world, classname, spotclass);
-		while (spawnp)
-		{
-			// Find the nearest enemy
-			cur_distance = 0;
-			player = find(world, classname, "player");
-			while (player)
-			{
-				team1 = player.teamname;
-				team2 = self.teamname;
-				// Is it an enemy?
-				if (team1 != team2)
-				{
-					spawnpos = spawnp.origin;
-					playerpos = player.origin;
-					if (!cur_distance || vlen(playerpos - spawnpos) < cur_distance)
-					{
-						cur_distance = vlen(playerpos - spawnpos);
-					}
-				}
-				player = find(player, classname, "player");
-			}
-			// Is this distance the longest?
-			if (cur_distance >= max_distance)
-			{
-				max_distance = cur_distance;
-				bestspawn = spawnp;
-			}
-			cur_distance = 0;
-			spawnp = find(spawnp, classname, spotclass);
-		}
+		ignoreoccupied = TRUE;
+		self.lastroundnum = gmapn_roundnum;
 	}
-	else if (spawnmode == 3)
+	
+	if (spawnmode == 1) // fair spawns (avoid spawning several times on the same spot)
 	{
-		//dprint("FIXME: spawn mode 3 is probably buggy\n");
-		ignoreoccupied = 0;
-
-		// Some stuff to ignore occupied spots at each round start
-		if (0 && gmapn_serverstate != gmapn_serverstate_playing)
-		{
-			self.lastroundnum = 0;
-		}
-		else if (gmapn_serverstate == gmapn_serverstate_playing && self.lastroundnum < gmapn_roundnum)
-		{
-			ignoreoccupied = 1;
-			self.lastroundnum = gmapn_roundnum;
-		}
-
 		// Count the number of spawns
 		spawns = 0;
 		occupiedspots = 0;
@@ -492,17 +449,17 @@ entity client_spawnpoint()
 				trace_startsolid = FALSE;
 
 			if (trace_startsolid)
-				occupiedspots++;
+				occupiedspots++; // yes it is
 
+			// possibly ignore this spot when picking
 			spawnp.voided = trace_startsolid;
-
 
 			// Go to the next spawn in the chain
 			spawnp = find(spawnp, classname, spotclass);
 		}
 
-		f = random() * (SP_WEIGHT*(spawns));
-		rnd = floor(random() * (spawns - occupiedspots)); // for use if all spots are occupied
+		force_rnd = random() * (SP_WEIGHT*(spawns)); // random spot with telefrag
+		nice_rnd = floor(random() * (spawns - occupiedspots)); // when not telefragging
 
 		// Get a random spawn point
 		spawnp = find(world, classname, spotclass);
@@ -510,19 +467,34 @@ entity client_spawnpoint()
 		while (spawnp)
 		{
 			// If all spots are occupied, just get a random spot
-			if (occupiedspots == spawns && rnd >= 0)
+			if (occupiedspots == spawns)
+			{
+				if (force_rnd < 0)
+					break; // done fetching spots
+
 				bestspawn = spawnp;
+				force_rnd -= spawnp.cnt;
+				spawnp = find(spawnp, classname, spotclass);
+				continue;
+			}
 
-			if ((ignoreoccupied && !spawnp.voided && rnd >= 0) || !ignoreoccupied)
-				bestspawn = spawnp;
+			// rule to not spawn on players typically on round start
+			if (ignoreoccupied)
+			{
+				if (spawnp.voided) // true if occupied
+					nice_rnd--; // skip it
+				else
+					bestspawn = spawnp;
 
-			f = f - spawnp.cnt;
-			if (!ignoreoccupied && f < 0)
-				break;
-
-			if (!spawnp.voided)
-				rnd--;
-
+				spawnp = find(spawnp, classname, spotclass);
+				continue;
+			}
+			
+			if (force_rnd < 0)
+				break; // done fetching and will telefrag mercilessly
+			
+			bestspawn = spawnp; // fetch it because it is ok
+			force_rnd = force_rnd - spawnp.cnt;
 			spawnp = find(spawnp, classname, spotclass);
 		}
 		
@@ -542,7 +514,7 @@ entity client_spawnpoint()
 			spawnp = find(spawnp, classname, spotclass);
 		}
 	}
-	else
+	else if (spawnmode == 2) // competitive spawns (might spawn several times on the same spot)
 	{
 		// Count the number of spawns
 		spawns = 0;
@@ -587,6 +559,46 @@ entity client_spawnpoint()
 		}
 		
 		bestspawn = spawnp;
+	}
+	else if (0) // FIXME: furthest away is probably not a good algorithm
+	{
+		// Find a spawn point as far from the enemy as possible
+		max_distance = 0;
+		spawnp = find(world, classname, spotclass);
+		while (spawnp)
+		{
+			// Find the nearest enemy
+			cur_distance = 0;
+			player = find(world, classname, "player");
+			while (player)
+			{
+				team1 = player.teamname;
+				team2 = self.teamname;
+				// Is it an enemy?
+				if (team1 != team2)
+				{
+					spawnpos = spawnp.origin;
+					playerpos = player.origin;
+					if (!cur_distance || vlen(playerpos - spawnpos) < cur_distance)
+					{
+						cur_distance = vlen(playerpos - spawnpos);
+					}
+				}
+				player = find(player, classname, "player");
+			}
+			// Is this distance the longest?
+			if (cur_distance >= max_distance)
+			{
+				max_distance = cur_distance;
+				bestspawn = spawnp;
+			}
+			cur_distance = 0;
+			spawnp = find(spawnp, classname, spotclass);
+		}
+	}
+	else
+	{
+		// FIXME: implement some mode for 0 etc
 	}
 
 	if (bestspawn)

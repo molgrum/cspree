@@ -648,6 +648,38 @@ static string menu_minping(float op)
 	return 0;
 };
 
+static string menu_spawnmode(float op)
+{
+	float spawnmode = getkey(spawn_mode);
+	
+	if (op == MENU_TITLE)
+		return "Spawn mode";
+	
+	if (op == MENU_VALUE)
+	{
+		if (spawnmode == 1)
+			return "Fair";
+		else if (spawnmode == 2)
+			return "Competitive";
+		else
+			return "UNKNOWN";
+	}
+
+	if (op == MENU_LEFT)
+	{
+		spawnmode -= 1;
+		setkey("spawn_mode", ftos(max(1, spawnmode)));
+	}
+
+	if (op == MENU_RIGHT)
+	{
+		spawnmode += 1;
+		setkey("spawn_mode", ftos(min(2, spawnmode)));
+	}
+
+	return 0;
+}
+
 void gmapn_menu_showmatches(void);
 static string menu_pastmatches(float op)
 {
@@ -744,6 +776,7 @@ static string(float op) rules_srv[] =
 	menu_antilag,
 	menu_minping,
 	menu_botskill,
+	menu_spawnmode,
 	menu_spacer,
 	menu_back
 };
