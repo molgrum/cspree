@@ -87,16 +87,16 @@ void SetNewParms()
 //player has already been given their defaults
 void DecodeLevelParms()
 {
-	if (!coop || gmapn_serverstate != gmapn_serverstate_playing)
+		if ((!coop && gmapn_serverstate != gmapn_serverstate_playing) || (coop && gmapn_serverstate == gmapn_serverstate_playing))
 	{
-		// when voting maps
+		// FIXME: this triggers on prewar, countdown, intermission, forcestart. maybe it shouldn't
 		setspawnparms(self);
 		if (parm10)
 		{
 			if (gmapn_gamemaster != self)
 			{
 				gmapn_gamemaster = self;
-				bprintln(PRINT_HIGH, sprintf("%s gets rule maker rights from previous session", self.netname));
+				bprintln(PRINT_HIGH, sprintf(_("%s gets rule maker rights from previous session"), self.netname));
 			}
 		}
 
