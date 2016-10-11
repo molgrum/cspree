@@ -58,6 +58,7 @@ void() gmapn_detect_fast_angles;
  */
 
 void() gmapn_config_load;
+void(string cfg) gmapn_config_exec;
 
 /*
  * gmapn_countdown.qc

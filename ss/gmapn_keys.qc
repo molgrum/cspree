@@ -207,19 +207,19 @@ void getkey_reset()
 	string modename = gmapn_gamemodetostring(gmapn_gamemode);
 
 	//global defaults
-	getkey_parseconfig("configs/rules/default.cfg");
+	getkey_parseconfig("cfgs/rules/default.conf");
 
 	//dmm overrides
-	getkey_parseconfig(sprintf("configs/rules/dmm%g.cfg", deathmatch));
+	getkey_parseconfig(sprintf("cfgs/rules/dmm%g.conf", deathmatch));
 
 	//mode-specific overrides
-	if (!getkey_parseconfig(sprintf("configs/rules/%s.cfg", modename)))
-		dprint(sprintf("could not read configs/rules/%s.cfg\n", modename));
+	if (!getkey_parseconfig(sprintf("cfgs/rules/%s.conf", modename)))
+		dprint(sprintf("could not read cfgs/rules/%s.conf\n", modename));
 	
 	//map-specific overrides
-	getkey_parseconfig(sprintf("configs/maps/%s.cfg", mapname));
+	getkey_parseconfig(sprintf("cfgs/maps/%s.conf", mapname));
 	//map-mode-specific settings...
-	getkey_parseconfig(sprintf("configs/maps/%s/%s.cfg", modename, mapname));
+	getkey_parseconfig(sprintf("cfgs/maps/%s/%s.conf", modename, mapname));
 
 	gmapn_update_defaults_mod();
 	gmapn_update_defaults_srv();

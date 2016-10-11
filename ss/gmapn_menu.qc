@@ -325,12 +325,12 @@ static string menu_dmm(float op)
 		{
 		case 0:		return "Coop";
 		default:
-		case 1:		return "dmm1";
+		case 1:		return "Normal";
 		case 2:		return "dmm2";
-		case 3:		return "dmm3";
-		case 4:		return "dmm4";
-		case 5:		return "midair";
-		case 6:		return "instagib";
+		case 3:		return "Weaponstay";
+		case 4:		return "Stacked";
+		case 5:		return "Midair";
+		case 6:		return "Instagib";
 		}
 	}
 	else if (op == MENU_LEFT)
