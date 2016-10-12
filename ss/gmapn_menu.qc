@@ -326,7 +326,7 @@ static string menu_dmm(float op)
 		case 0:		return "Coop";
 		default:
 		case 1:		return "Normal";
-		case 2:		return "dmm2";
+		case 2:		return "Unplayed"; // :D
 		case 3:		return "Weaponstay";
 		case 4:		return "Stacked";
 		case 5:		return "Midair";
@@ -336,11 +336,15 @@ static string menu_dmm(float op)
 	else if (op == MENU_LEFT)
 	{
 		val = max((gmapn_gamemode == GM_COOP)?0:1, cvar("deathmatch")-1);
+		if (val == 2)
+			val -= 1; // skip dmm2
 		cvar_set("deathmatch", ftos(val));
 	}
 	else if (op == MENU_RIGHT)
 	{
 		val = min(6, cvar("deathmatch")+1);
+		if (val == 2)
+			val += 1; // skip dmm2
 		cvar_set("deathmatch", ftos(val));
 	}
 	gmapn_powerups_setitems(cvar("deathmatch") < 4);

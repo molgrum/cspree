@@ -44,6 +44,7 @@ string NULL = __NULL__;
 	GVF(maxplayers,			12,	NULL)\
 	GVF(minteamsize,		0,	NULL)\
 	GVF(maxteamsize,		4,	NULL)\
+	GVS(noweapon,			"gl",	"List of disabled weapons in Stacked deathmatch.")\
 	GVF(armor_accumulate,		0,	"Allows you to continue collecting armour, with the amount stacking")\
 	GVF(armor1_absorb,		0.30,	NULL)\
 	GVF(armor1_amount,		100,	NULL)\

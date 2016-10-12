@@ -678,7 +678,10 @@ void client_spawn(float sameplace)
 	// in prewar and dmm4, give everything
 	if (gmapn_serverstate == gmapn_serverstate_prewar || deathmatch == 4)
 	{
-		self.items = IT_AXE | IT_SHOTGUN;
+		float noweapons;
+
+		self.items = self.items | IT_AXE;
+		self.items = self.items | IT_SHOTGUN;
 		self.items = self.items | IT_SUPER_SHOTGUN;
 		self.items = self.items | IT_NAILGUN;
 		self.items = self.items | IT_SUPER_NAILGUN;
@@ -687,6 +690,26 @@ void client_spawn(float sameplace)
 		self.items = self.items | IT_LIGHTNING_GUN;
 //		self.items = self.items | IT_RAILGUN;
 //		self.items = self.items | IT_PORTALGUN;
+
+		noweapons = tokenize(getkey(noweapon));
+
+		while (noweapons --> 0)
+		{
+			switch (argv(noweapons))
+			{
+			case "axe": self.items &~= IT_AXE; break;
+			case "sg": self.items &~= IT_SHOTGUN; break;
+			case "ssg": self.items &~= IT_SUPER_SHOTGUN; break;
+			case "ng": self.items &~= IT_NAILGUN; break;
+			case "sng": self.items &~= IT_SUPER_NAILGUN; break;
+			case "gl": self.items &~= IT_GRENADE_LAUNCHER; break;
+			case "rl": self.items &~= IT_ROCKET_LAUNCHER; break;
+			case "lg": self.items &~= IT_LIGHTNING_GUN; break;
+			case "rg": self.items &~= IT_RAILGUN; break;
+			case "pg": self.items &~= IT_PORTALGUN; break;
+			}
+		}
+
 		// in prewar and dmm4, give starting ammo
 		self.ammo_shells = self.max_ammo_shells;
 		self.ammo_nails = self.max_ammo_nails;
@@ -708,7 +731,7 @@ void client_spawn(float sameplace)
 	else if (deathmatch == DMM_MIDAIR)
 	{	//midair
 		self.ammo_rockets = self.max_ammo_rockets;
-		self.items = IT_GRENADE_LAUNCHER|IT_ROCKET_LAUNCHER;	// Starting items
+		self.items = IT_ROCKET_LAUNCHER;	// Starting items
 		client_setweapon(IT_ROCKET_LAUNCHER);			// Starting weapon
 	}
 	else
