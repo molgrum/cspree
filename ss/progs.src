@@ -77,6 +77,7 @@ gmapn_misc.qc
 gmapn_powerups.qc
 gmapn_reset.qc
 gmapn_rpickup.qc
+gmapn_stats.qc
 gmapn_qsg.qc
 gmapn_usercmd.qc
 gmapn_vote.qc

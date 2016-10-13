@@ -23,6 +23,7 @@ SRC = \
 	ss/gmapn_rpickup.qc \
 	ss/gmapn_rules.qc \
 	ss/gmapn_usercmd.qc \
+	ss/gmapn_stats.qc \
 	ss/gmapn_subs.qc \
 	ss/gmapn_vote.qc \
 	ss/gmapn_votefuncs.qc \

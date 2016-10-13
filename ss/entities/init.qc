@@ -513,10 +513,21 @@ void path_corner()
 //
 //	FIXME: these are often used for void-zones.
 //======================================================================
+void trigger_hurt_touch()
+{
+	gmapn_impact(other, world, self.dmg, 1.0);
+}
+
 void trigger_hurt()
 {
-	remove(self);
-};
+	self.solid = SOLID_TRIGGER;
+	self.movetype = MOVETYPE_NONE;
+	setorigin(self, self.origin);
+	setmodel(self, self.model);
+	self.modelindex = 0;
+	self.model = "";
+	self.touch = trigger_hurt_touch;
+}
 
 //======================================================================
 //
