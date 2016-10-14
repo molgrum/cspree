@@ -107,6 +107,8 @@ void worldspawn()
 		precache_vwep_model ("-");
 	}
 
+	precache_sound("buttons/switch02.wav"); //countdown sound
+
 	precache_sound("items/itembk2.wav");	//item respawn sound
 	precache_sound("items/r_item2.wav");	// mega health
 	precache_sound("misc/h2ohit1.wav");

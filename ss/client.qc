@@ -481,10 +481,14 @@ entity client_spawnpoint()
 			// rule to not spawn on players typically on round start
 			if (ignoreoccupied)
 			{
-				if (spawnp.voided) // true if occupied
-					nice_rnd--; // skip it
-				else
+				if (nice_rnd < 0)
+					break; // the nice spot has been selected
+				
+				if (!spawnp.voided) // not occupied so pick it and continue
+				{
 					bestspawn = spawnp;
+					nice_rnd -= 1;
+				}
 
 				spawnp = find(spawnp, classname, spotclass);
 				continue;
@@ -871,7 +875,7 @@ void client_spawn(float sameplace)
 			}
 			
 			gmapn_telefrag_check(self, org);
-		}
+			}
 		else
 		{
 			// Telefrag players occupying the spot

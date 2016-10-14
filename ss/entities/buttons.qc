@@ -121,7 +121,8 @@ void func_button()
 	}
 	if (self.sounds == 2)
 	{
-		precache_sound("buttons/switch02.wav");
+		// Used for countdown
+		//precache_sound("buttons/switch02.wav");
 		self.noise = "buttons/switch02.wav";
 	}
 	if (self.sounds == 3)

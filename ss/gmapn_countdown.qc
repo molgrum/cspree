@@ -67,6 +67,7 @@ void gmapn_countdown_stop()
 
 void gmapn_countdown_think()
 {
+	entity p;
 	string plural;
 
 	self.cnt-= 1;
@@ -79,13 +80,21 @@ void gmapn_countdown_think()
 		{
 			if (self.cnt <= 5)
 			{
-				entity p;
-
+				sound(self, CHAN_VOICE, "buttons/switch02.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 				// Play countdown sound for each player
 				p = find(world, classname, "player");
 				while (p)
 				{
-					stuffcmd(p, "play buttons/switch02\n");
+					p = find(p, classname, "player");
+				}
+			}
+			
+			if (self.cnt == 10)
+			{
+				sound(self, CHAN_VOICE, "items/protect2.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0); // everyone hears the start of countdown
+				p = find(world, classname, "player");
+				while (p)
+				{
 					p = find(p, classname, "player");
 				}
 			}
