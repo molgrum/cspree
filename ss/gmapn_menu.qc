@@ -1198,85 +1198,122 @@ string gmapn_menu_rules(float keys)
 
 	return m;
 }
-
-string gmapn_menu_nondefaults()
+/*
+string gmapn_menu_settings()
 {
-	string str;
-	int i;
-	int loadout;
+	string str, mid;
+
+	str = "\n";
+	mid = ":";
+	str = strcat(str, balancestrings(redify("Deathmatch Mode"), mid, goldnmbr(ftos(cvar("deathmatch")))), "\n");
+	str = strcat(str, balancestrings(redify("Timelimit"), mid, goldnmbr(ftos(cvar("timelimit")))), "\n");
+	str = strcat(str, balancestrings(redify("Powerups"), mid, (getkey(powerups_enabled) == 0 ? "Disabled" : "Enabled")), "\n");
+
+	return str;
+}
+*/
+string gmapn_menu_settings()
+{
+	string str, mid, modified, loadout;
+	int i, n;
+	float printmodified;
 
 	str = "";
-	
+	mid = ":";
+	printmodified = FALSE;
+
+	n = getkey(game_loadout);
+	for (i = 0; i < loadouts.length; i++)
+		if (n == loadouts[i].fl)
+			break;
+	loadout = (n ? sprintf("axe + sg + %s", loadouts[i].name) : "axe + sg");
+	modified = "";
 	if (getkey(game_loadout) != default_game_loadout)
 	{
-		loadout = getkey(game_loadout);
-		for (i = 0; i < loadouts.length; i++)
-			if (loadout == loadouts[i].fl)
-				break;
-		str = strcat(str, "Loadout: axe + sg");
-		str = strcat(str, " + ", loadouts[i].name, "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Loadout")), mid, loadout), "\n");
 
+	modified = "";
 	if (cvar("deathmatch") != default_deathmatch)
 	{
-		str = strcat(str, "Deathmatch Mode: ", ftos(cvar("deathmatch")), "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Deathmatch Mode")), mid, goldnmbr(ftos(cvar("deathmatch")))), "\n");
 
+	modified = "";
 	if (cvar("timelimit") != default_timelimit)
 	{
-		str = strcat(str, "Timelimit: ", ftos(cvar("timelimit")), "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Timelimit")), mid, goldnmbr(ftos(cvar("timelimit")))), "\n");	
 
+	modified = "";
 	if (getkey(powerups_enabled) != default_powerups_enabled)
 	{
-		str = strcat(str, "Powerups: ");
-		if (getkey(powerups_enabled) == FALSE)
-			str = strcat(str, "Disabled\n");
-		else
-			str = strcat(str, "Enabled\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Powerups")), mid, (getkey(powerups_enabled) ? "Enabled" : "Disabled")), "\n");
 
+	modified = "";
 	if (getkey(game_botskill) != default_game_botskill)
 	{
-		i = getkey(game_botskill);
-		str = strcat(str, "Bot Difficulty: ", botskillname[i], "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Bot Difficulty")), mid, botskillname[getkey(game_botskill)]), "\n");
 
+	modified = "";
 	if (getkey(game_rounds) != default_game_rounds)
 	{
-		str = strcat(str, "Rounds Per Game: ", ftos(getkey(game_rounds)), "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Rounds Per Game")), mid, ftos(getkey(game_rounds))), "\n");
 
+	modified = "";
 	if (getkey(minplayers) != default_minplayers)
 	{
-		str = strcat(str, "Minplayers: ", ftos(getkey(minplayers)), "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Minplayers")), mid, ftos(getkey(minplayers))), "\n");
 
+	modified = "";
 	if (getkey(maxplayers) != default_maxplayers)
 	{
-		str = strcat(str, "Maxplayers: ", ftos(getkey(maxplayers)), "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Maxplayers")), mid, ftos(getkey(maxplayers))), "\n");
 
+	modified = "";
 	if (cvar("sv_antilag") != default_antilag)
 	{
-		str = strcat(str, "Lag Compensation: ");
-		
-		if (cvar("sv_antilag") == FALSE)
-			str = strcat(str, "Off");
-		else
-			str = strcat(str, "On");
-		
-		str = strcat(str, "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Lag Compensation")), mid, (cvar("sv_antilag") ? "On" : "Off")), "\n");
 
+	modified = "";
 	if (cvar("sv_minping") != default_minping)
 	{
-		str = strcat(str, "Min Ping: ", ftos(cvar("sv_minping")), "\n");
+		modified = chr2str(0x87);
+		printmodified = TRUE;
 	}
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Min Ping")), mid, ftos(cvar("sv_minping"))), "\n");
 
-	if (str != __NULL__)
+	if (printmodified == TRUE)
 	{
-		str = strcat(flash("\nSome modified settings are used\n\n"), redify(str));
+		str = strcat(flash("\nSome modified settings are used\n\n"), str);
+	}
+	else
+	{
+		str = strcat("\n\n\n\n", str);
 	}
 	
 	return str;
@@ -1309,8 +1346,8 @@ void gmapn_menu_any(float keys)
 
 	if (gmapn_serverstate == gmapn_serverstate_countdown)
 	{
-		m = strcat(m, "Game starts in ", ftos(ceil((gmapn_matchstarttimems/1000) - time)), "\n");
-		m = strcat(m, gmapn_menu_nondefaults());
+		m = sprintf("\n\n%s starts in %s\n\n", redify(gmapn_gamemodetostring(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
+		m = strcat(m, gmapn_menu_settings());
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)
 		m = strcat(m, flash("READY UP NOW\n"));
