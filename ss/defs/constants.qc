@@ -509,3 +509,21 @@ const string botskillname[] =
 	"Noobs",
 	"Mobile Victims"
 };
+
+const string dmmname[] =
+{
+	"Coop",
+	"Normal",
+	"Never played",
+	"Weaponstay",
+	"Stacked",
+	"Midair",
+	"Instagib"
+};
+
+const string spawnname[] =
+{
+	"N/A",
+	"Fair",
+	"Competitive"
+};

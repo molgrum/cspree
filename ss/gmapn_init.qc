@@ -262,6 +262,8 @@ void gmapn_update_defaults_srv()
 {
 	dbgprintln("=== gmapn_update_defaults_srv() ===");
 
+	if (infokey(world, "gmapn_spawn_mode") == "")
+		forceinfokey(world, "gmapn_spawn_mode", ftos(getkey(spawn_mode)));
 	if (infokey(world, "gmapn_game_botskill") == "")
 		forceinfokey(world, "gmapn_game_botskill", ftos(getkey(game_botskill)));
 	if (infokey(world, "gmapn_antilag") == "")
