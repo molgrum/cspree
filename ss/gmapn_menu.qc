@@ -1228,7 +1228,7 @@ string gmapn_menu_settings()
 			break;
 	loadout = (n ? sprintf("axe + sg + %s", loadouts[i].name) : "axe + sg");
 	modified = "";
-	if (getkey(game_loadout) != default_game_loadout)
+	if (getkey(game_loadout) != stof(infokey(world, "gmapn_game_loadout")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1236,7 +1236,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Loadout")), mid, loadout), "\n");
 
 	modified = "";
-	if (cvar("deathmatch") != default_deathmatch)
+	if (cvar("deathmatch") != stof(infokey(world, "gmapn_deathmatch")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1244,7 +1244,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Deathmatch Mode")), mid, goldnmbr(ftos(cvar("deathmatch")))), "\n");
 
 	modified = "";
-	if (cvar("timelimit") != default_timelimit)
+	if (cvar("timelimit") != stof(infokey(world, "gmapn_timelimit")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1252,7 +1252,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Timelimit")), mid, goldnmbr(ftos(cvar("timelimit")))), "\n");	
 
 	modified = "";
-	if (getkey(powerups_enabled) != default_powerups_enabled)
+	if (getkey(powerups_enabled) != stof(infokey(world, "gmapn_powerups_enabled")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1260,7 +1260,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Powerups")), mid, (getkey(powerups_enabled) ? "Enabled" : "Disabled")), "\n");
 
 	modified = "";
-	if (getkey(game_botskill) != default_game_botskill)
+	if (getkey(game_botskill) != stof(infokey(world, "gmapn_game_botskill")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1268,7 +1268,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Bot Difficulty")), mid, botskillname[getkey(game_botskill)]), "\n");
 
 	modified = "";
-	if (getkey(game_rounds) != default_game_rounds)
+	if (getkey(game_rounds) != stof(infokey(world, "gmapn_game_rounds")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1276,7 +1276,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Rounds Per Game")), mid, ftos(getkey(game_rounds))), "\n");
 
 	modified = "";
-	if (getkey(minplayers) != default_minplayers)
+	if (getkey(minplayers) != stof(infokey(world, "gmapn_minplayers")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1284,7 +1284,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Minplayers")), mid, ftos(getkey(minplayers))), "\n");
 
 	modified = "";
-	if (getkey(maxplayers) != default_maxplayers)
+	if (getkey(maxplayers) != stof(infokey(world, "gmapn_maxplayers")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1292,7 +1292,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Maxplayers")), mid, ftos(getkey(maxplayers))), "\n");
 
 	modified = "";
-	if (cvar("sv_antilag") != default_antilag)
+	if (cvar("sv_antilag") != stof(infokey(world, "gmapn_antilag")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;
@@ -1300,7 +1300,7 @@ string gmapn_menu_settings()
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Lag Compensation")), mid, (cvar("sv_antilag") ? "On" : "Off")), "\n");
 
 	modified = "";
-	if (cvar("sv_minping") != default_minping)
+	if (cvar("sv_minping") != stof(infokey(world, "gmapn_minping")))
 	{
 		modified = chr2str(0x87);
 		printmodified = TRUE;

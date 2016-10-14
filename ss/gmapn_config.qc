@@ -78,6 +78,9 @@ void gmapn_config_load()
 	//localcmd(str);
 	getkey_parseconfig(str);
 
+	if (gmapn_config_version == 0)
+		gmapn_update_defaults_srv();
+	
 	gmapn_config_version+= 1;
 	if (gmapn_config_version == 65536)
 		gmapn_config_version = 0;

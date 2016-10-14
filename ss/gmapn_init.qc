@@ -230,10 +230,21 @@ void gmapn_init_entities()
 	ctf_enableflags(gmapn_gamemode == GM_CTF);
 }
 
+/*
+  Updates on every rulechange.
+*/
 void gmapn_update_defaults_mod()
 {
 	dbgprintln("=== gmapn_update_defaults_mod() ===");
 
+	forceinfokey(world, "gmapn_game_loadout", ftos(getkey(game_loadout)));
+	forceinfokey(world, "gmapn_game_rounds", ftos(getkey(game_rounds)));
+	forceinfokey(world, "gmapn_minplayers", ftos(getkey(minplayers)));
+	forceinfokey(world, "gmapn_maxplayers", ftos(getkey(maxplayers)));
+	forceinfokey(world, "gmapn_powerups_enabled", ftos(getkey(powerups_enabled)));
+	forceinfokey(world, "gmapn_deathmatch", ftos(cvar("deathmatch")));
+	forceinfokey(world, "gmapn_timelimit", ftos(cvar("timelimit")));
+	/*
 	default_game_loadout = getkey(game_loadout);
 	default_game_rounds = getkey(game_rounds);
 	default_minplayers = getkey(minplayers);
@@ -241,13 +252,25 @@ void gmapn_update_defaults_mod()
 	default_powerups_enabled = getkey(powerups_enabled);
 	default_deathmatch = cvar("deathmatch");
 	default_timelimit = cvar("timelimit");
+	*/
 }
 
+/*
+  Used for saving settings on server start that should be treated as default.
+*/
 void gmapn_update_defaults_srv()
 {
 	dbgprintln("=== gmapn_update_defaults_srv() ===");
-	
+
+	if (infokey(world, "gmapn_game_botskill") == "")
+		forceinfokey(world, "gmapn_game_botskill", ftos(getkey(game_botskill)));
+	if (infokey(world, "gmapn_antilag") == "")
+		forceinfokey(world, "gmapn_antilag", ftos(cvar("sv_antilag")));
+	if (infokey(world, "gmapn_minping") == "")
+		forceinfokey(world, "gmapn_minping", ftos(cvar("sv_minping")));
+	/*
 	default_game_botskill = getkey(game_botskill);
 	default_antilag = cvar("sv_antilag");
 	default_minping = cvar("sv_minping");
+	*/
 }
