@@ -39,6 +39,7 @@ void() respawn_living;
 float() client_weaponokay;
 void(entity player) client_setsemispectator;
 void(entity player) client_clearsemispectator;
+void(float flag) client_setweapon;
 
 /*
  * gmapn_aliasstuffer.qc
@@ -108,6 +109,7 @@ void() gmapn_init_entities;
 void() gmapn_update_defaults_mod;
 void() gmapn_update_defaults_srv;
 void() gmapn_init_test;
+void() gmapn_readconfig;
 
 /*
  * gmapn_latency.qc

@@ -181,6 +181,7 @@ void hazard_bullet(vector org, vector dir)
 	}
 	else {
 		trace_ent.dmg += getkey(bullet_damage);
+		trace_ent.cnt += 1;
 	}
 	/* else if (trace_ent.takedamage) */
 	/* { */
@@ -275,6 +276,7 @@ void hazard_bullets(vector org, vector dir, string type)
 		for (f = 0; f < sg_ents.length; f++) {
 			if (sg_ents[f] != __NULL__) {
 				g = gmapn_impact(sg_ents[f], self, sg_ents[f].dmg, push);
+				sg_ents[f].cnt = 0;
 				if (gmapn_serverstate == gmapn_serverstate_playing) {
 					self.stats_hit[W_SG] += g;
 				}
@@ -308,6 +310,7 @@ void hazard_bullets(vector org, vector dir, string type)
 		for (f = 0; f < ssg_ents.length; f++) {
 			if (ssg_ents[f] != __NULL__) {
 				g = gmapn_impact(ssg_ents[f], self, ssg_ents[f].dmg, push);
+				ssg_ents[f].cnt = 0;
 				if (gmapn_serverstate == gmapn_serverstate_playing) {
 					self.stats_hit[W_SSG] += g;
 				}

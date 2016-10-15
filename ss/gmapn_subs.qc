@@ -451,7 +451,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	if (victim.deathtype == DT_TELEFRAG || victim.deathtype == DT_TELEFRAG_PENT || victim.deathtype == DT_TELEFRAG_PENT_BOTH || victim.deathtype == DT_TEAMREFLECT)
 	{}	//telefrag always does full damage, even to team members.
 	else if (victim == attacker)
-		hthdmg *= (deathmatch == 5) ? 0 : getkey(game_selfdamage);	//multiplier to reduce damage to yourself.
+		hthdmg *= (deathmatch == DMM_MIDAIR) ? 0 : getkey(game_selfdamage);	//multiplier to reduce damage to yourself.
 	else if (teamplay && victim.classname == "player" && attacker.classname == "player" && (coop||victim.teamname == attacker.teamname))
 	{	//you can destroy a teammate's armour, but any health damage will be inflicted upon you instead (and ignores your armour).
 		reflect = hthdmg * getkey(game_teamdamage_reflect);
@@ -461,7 +461,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	victim.health = victim.health - hthdmg;
 
 	// FIXME: maybe should check DMM_INSTAGIB || DMM_MIDAIR
-	if (deathmatch > 4 && inflictor != world && (hthdmg || amrdmg))
+	if ((deathmatch == DMM_MIDAIR || deathmatch == DMM_INSTAGIB) && inflictor != world && (hthdmg || amrdmg))
 	{	//instagib and midair
 		float midairheight = victim.origin_z - attacker.origin_z;
 		if (!(deathmatch == DMM_MIDAIR && midairheight < 190))
@@ -514,7 +514,6 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 		attacker.deathtype = DT_TEAMREFLECT;
 		gmapn_impact(attacker, victim, reflect, push);
 	}
-
 
 	return damage;
 };
@@ -603,7 +602,7 @@ void gmapn_blood(entity inflictor)
 	{
 		WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
 		WriteByte(MSG_MULTICAST, TE_BLOOD);
-		WriteByte(MSG_MULTICAST, 1);
+		WriteByte(MSG_MULTICAST, trace_ent.cnt);
 		WriteCoord(MSG_MULTICAST, trace_endpos_x);
 		WriteCoord(MSG_MULTICAST, trace_endpos_y);
 		WriteCoord(MSG_MULTICAST, trace_endpos_z);
@@ -710,3 +709,29 @@ entity is_occupied(vector spot)
 	return list;
 };
 
+float weaponnum(float weaponflag)
+{
+	if (weaponflag & IT_AXE)
+		return 1;
+	if (weaponflag & IT_SHOTGUN)
+		return 2;
+	if (weaponflag & IT_SUPER_SHOTGUN)
+		return 3;
+	if (weaponflag & IT_NAILGUN)
+		return 4;
+	if (weaponflag & IT_SUPER_NAILGUN)
+		return 5;
+	if (weaponflag & IT_GRENADE_LAUNCHER)
+		return 6;
+	if (weaponflag & IT_ROCKET_LAUNCHER)
+		return 7;
+	if (weaponflag & IT_LIGHTNING_GUN)
+		return 8;
+	return 0;
+}
+
+void switchweapon(float old, float new, float maxswitch)
+{
+	if (weaponnum(old) < weaponnum(new) && maxswitch >= weaponnum(new))
+		client_setweapon(new);
+}

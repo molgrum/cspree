@@ -461,6 +461,107 @@ void cmd_shownick()
 	}
 }
 
+void cmd_placespot()
+{
+	entity pointer;
+
+	pointer = find(world, classname, "gmapn_pointer");
+	if (!pointer)
+		pointer = spawn();
+	pointer.classname = "gmapn_pointer";
+	setorigin(pointer, self.origin);
+	setmodel(pointer, "progs/lavaball.mdl");
+}
+
+void cmd_printspot()
+{
+	entity pointer;
+
+	pointer = find(world, classname, "gmapn_pointer");
+	if (!pointer)
+		sprintln(self, PRINT_HIGH, "No spot exists, place with /cmd placespot");
+	else
+		bprint(PRINT_HIGH, "coords: ", vtos(pointer.origin), "\n");
+}
+
+void cmd_setaltar()
+{
+	entity pointer, altar;
+
+	pointer = find(world, classname, "gmapn_pointer");
+	if (pointer)
+	{
+		altar = find(world, classname, "info_altar");
+		if (altar)
+		{
+			sprintln(self, PRINT_HIGH, "Overriding existing altar...");
+		}
+		else
+		{
+			sprintln(self, PRINT_HIGH, "Setting new altar...");
+			altar = spawn();
+		}
+		altar.classname = "info_altar";
+		setorigin(altar, pointer.origin);
+		setmodel(altar, "progs/v_spike.mdl");
+		remove(pointer);
+		return;
+	}
+	sprintln(self, PRINT_HIGH, "No spot exists, place with /cmd placespot");
+}
+
+void cmd_setcontrol()
+{
+	entity pointer, controlpoint;
+
+	pointer = find(world, classname, "gmapn_pointer");
+	if (pointer)
+	{
+		controlpoint = find(world, classname, "info_controlpoint");
+		if (controlpoint)
+		{
+			sprintln(self, PRINT_HIGH, "Adding new control point...");
+		}
+		else
+		{
+			sprintln(self, PRINT_HIGH, "Setting first control point...");
+			controlpoint = spawn();
+		}
+		controlpoint.classname = "info_controlpoint";
+		setorigin(controlpoint, pointer.origin);
+		setmodel(controlpoint, "progs/v_spike.mdl");
+		remove(pointer);
+		return;
+	}
+	sprintln(self, PRINT_HIGH, "No spot exists, place with /cmd placespot");	
+}
+
+void cmd_writeconfig()
+{
+	entity e;
+	filestream f;
+
+	f = fopen("entities.conf", FILE_WRITE);
+	if (f < 0)
+		return;
+
+	e = find(world, classname, "info_altar");
+	if (e)
+	{
+		bprintln(PRINT_HIGH, vtos(e.origin));
+		fputs(f, sprintf("info_altar %g %g %g\n", ftos(e.origin_x), ftos(e.origin_y), ftos(e.origin_z)));
+	}
+
+	e = find(world, classname, "info_controlpoint");
+	while (e)
+	{
+		fputs(f, sprintf("info_controlpoint %g %g %g\n", ftos(e.origin_x), ftos(e.origin_y), ftos(e.origin_z)));
+		e = find(e, classname, "info_controlpoint");
+	}
+	fclose(f);
+	sprintln(self, PRINT_HIGH, "Wrote config.");
+}
+
 float gmapn_handle_usercmd(float argc)
 {
 	string cmd;
@@ -849,6 +950,31 @@ float gmapn_handle_usercmd(float argc)
 			gmapn_rpickup_countvotes();
 		}
 
+		return 1;
+	}
+	if (cmd == "placespot")
+	{
+		cmd_placespot();
+		return 1;
+	}
+	if (cmd == "printspot")
+	{
+		cmd_printspot();
+		return 1;
+	}
+	if (cmd == "setaltar")
+	{
+		cmd_setaltar();
+		return 1;
+	}
+	if (cmd == "setcontrol")
+	{
+		cmd_setcontrol();
+		return 1;
+	}
+	if (cmd == "writeconfig")
+	{
+		cmd_writeconfig();
 		return 1;
 	}
 

@@ -99,6 +99,8 @@ void player_setweapon()
 {
 	string vwep;
 
+	self.weapon = self.newweapon;
+	
 	if (deathmatch < 4)
 		self.items = self.items - (self.items & (IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS));
 
@@ -192,6 +194,8 @@ void player_setweapon()
 		vwep = "-";
 	}
 
+	self.oldweapon = self.weapon;
+
 	if (gmapn_qsg_has_zq_vwep)
 		self.vw_index = precache_vwep_model(vwep);
 };
@@ -231,13 +235,16 @@ void() player_stand = [$axstnd1, player_stand]
 		player_run();
 		return;
 	}
+/*
+	if (self.oldweapon != self.weapon && self.attack_finished < time)
+	{
+		// Non attacking animation
+		self.weaponframe = 0;
 
-	// Non attacking animation
-	self.weaponframe = 0;
-
-	// Not running a firing animation, set the weapon model
-	player_setweapon();
-	
+		// Not running a firing animation, set the weapon model
+		player_setweapon();
+	}
+*/	
 	// Special animation for axe and gun respectively
 	if (self.weapon == IT_AXE)
 	{
@@ -280,13 +287,16 @@ void() player_run = [$rockrun1, player_run]
 		player_stand();
 		return;
 	}
-	
-	self.weaponframe = 0;
-	
-	// Not running a firing animation, set the weapon model and change weapon
+/*
+	if (self.oldweapon != self.weapon && self.attack_finished < time)
+	{
+		// Non attacking animation
+		self.weaponframe = 0;
 
-	player_setweapon();
-
+		// Not running a firing animation, set the weapon model
+		player_setweapon();
+	}
+*/
 	// Animation
 
 	if (self.walkframe >= 6)
@@ -456,6 +466,21 @@ void player_headhunter_respawned()
 		self.touch = 0;
 	}
 };
+
+void player_ammo_decrease(float ammotype, float amount)
+{
+	if (deathmatch == 4 || gmapn_serverstate != gmapn_serverstate_playing)
+		return;
+
+	if (ammotype & IT_SHELLS)
+		self.ammo_shells -= amount;
+	if (ammotype & IT_NAILS)
+		self.ammo_nails -= amount;
+	if (ammotype & IT_ROCKETS)
+		self.ammo_rockets -= amount;
+	if (ammotype & IT_CELLS)
+		self.ammo_cells -= amount;
+}
 
 void(string gibname, float dm) ThrowGib;
 vector(float dm) VelocityForDamage;
@@ -730,7 +755,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 	// If no ammo, choose another weapon
 	if (!client_weaponokay())
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
@@ -762,10 +787,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 	{	
 		// Shotgun
 
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			self.ammo_shells = self.ammo_shells - 1;
-		}
+		player_ammo_decrease(IT_SHELLS, 1);
 		self.attack_finished = time + hasted_reload(getkey(shotgun_reload));
 		
 		spread = getkey(shotgun_spread);
@@ -782,10 +804,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 	{
 		// Super shotgun
 
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			self.ammo_shells = self.ammo_shells - 2;
-		}
+		player_ammo_decrease(IT_SHELLS, 2);
 		self.attack_finished = time + hasted_reload(getkey(shotgun2_reload));
 		
 		spread = getkey(shotgun2_spread);
@@ -820,7 +839,7 @@ void() player_spike1 = [$nailatt1, player_spike2]
 
 	if (!client_weaponokay())
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
@@ -841,10 +860,7 @@ void() player_spike1 = [$nailatt1, player_spike2]
 			self.velocity = self.velocity - v_forward * 48; // recoil
 		}
 
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			self.ammo_nails = self.ammo_nails - 1;
-		}
+		player_ammo_decrease(IT_NAILS, 1);
 		self.attack_finished = time + hasted_reload(getkey(spike_reload));
 		spd = getkey(spike_velocity);
 		dir = aim(self, spd);
@@ -864,10 +880,7 @@ void() player_spike1 = [$nailatt1, player_spike2]
 			self.velocity = self.velocity - v_forward * 64; // recoil
 		}
 
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			self.ammo_nails = self.ammo_nails - 2;
-		}
+		player_ammo_decrease(IT_NAILS, 2);
 		self.attack_finished = time + hasted_reload(getkey(spike2_reload));
 		spd = getkey(spike2_velocity);
 		dir = aim(self, spd);
@@ -895,7 +908,7 @@ void() player_spike2 = [$nailatt2, player_spike1]
 
 	if (!client_weaponokay())
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
@@ -915,10 +928,7 @@ void() player_spike2 = [$nailatt2, player_spike1]
 			self.velocity = self.velocity - v_forward * 48; // recoil
 		}
 
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			self.ammo_nails = self.ammo_nails - 1;
-		}
+		player_ammo_decrease(IT_NAILS, 1);
 		self.attack_finished = time + hasted_reload(getkey(spike_reload));
 		spd = getkey(spike_velocity);
 		dir = aim(self, spd);
@@ -938,10 +948,7 @@ void() player_spike2 = [$nailatt2, player_spike1]
 			self.velocity = self.velocity - v_forward * 64; // recoil
 		}
 
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			self.ammo_nails = self.ammo_nails - 2;
-		}
+		player_ammo_decrease(IT_NAILS, 2);
 		self.attack_finished = time + hasted_reload(getkey(spike2_reload));
 		spd = getkey(spike2_velocity);
 		dir = aim(self, spd);
@@ -966,16 +973,12 @@ void() player_grenade1 = [$rockatt1, player_grenade2]
 
 	if (!client_weaponokay())
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
 
-	// if not dmm4
-	if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-	{
-		self.ammo_rockets = self.ammo_rockets - 1;
-	}
+	player_ammo_decrease(IT_ROCKETS, 1);
 
 	spd = getkey(grenade_velocity);
 	dir = aim(self, spd);
@@ -1008,16 +1011,12 @@ void() player_rocket1 = [$rockatt1, player_rocket2]
 
 	if (!client_weaponokay())
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
 
-	// if not dmm4
-	if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-	{
-		self.ammo_rockets = self.ammo_rockets - 1;
-	}
+	player_ammo_decrease(IT_ROCKETS, 1);
 
 	spd = getkey(rocket_velocity);
 	dir = aim(self, spd);
@@ -1047,16 +1046,12 @@ void() player_railgun1 = [$rockatt1, player_railgun2]
 
 	if (!self.button0 || self.ammo_cells < 10 || !(self.items & IT_RAILGUN))
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
 
-	// if not dmm4
-	if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-	{
-		self.ammo_cells = self.ammo_cells - 10;
-	}
+	player_ammo_decrease(IT_CELLS, 10);
 
 	spd = 10000;
 	dir = aim(self, spd);
@@ -1086,7 +1081,7 @@ void() player_portal1 = [$rockatt1, player_rocket2]
 
 	if (!self.button0 || !(self.items & IT_PORTALGUN))
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
@@ -1115,7 +1110,7 @@ void() player_lightning1 = [$light1, player_lightning2]
 
 	if (!client_weaponokay())
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
@@ -1130,11 +1125,7 @@ void() player_lightning1 = [$light1, player_lightning2]
 	}
 	else
 	{
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			// not dmm4
-			self.ammo_cells = self.ammo_cells - 1;
-		}
+		player_ammo_decrease(IT_CELLS, 1);
 		
 		self.attack_finished = time + hasted_reload(getkey(lightning_reload));
 		
@@ -1168,7 +1159,7 @@ void() player_lightning2 = [$light2, player_lightning1]
 
 	if (!client_weaponokay())
 	{
-		client_bestweapon();
+		client_setweapon(client_bestweapon());
 		player_run();
 		return;
 	}
@@ -1183,11 +1174,7 @@ void() player_lightning2 = [$light2, player_lightning1]
 	}
 	else
 	{
-		// if not dmm4
-		if (deathmatch != 4 && gmapn_serverstate == gmapn_serverstate_playing)
-		{
-			self.ammo_cells = self.ammo_cells - 1;
-		}
+		player_ammo_decrease(IT_CELLS, 1);
 
 		self.attack_finished = time + hasted_reload(getkey(lightning_reload));
 

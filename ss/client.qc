@@ -285,10 +285,13 @@ void respawn_living()
 
 void client_setweapon(float flag)
 {
+	if (self.newweapon == flag)
+		return;
+
 	// Weapon is recognized so we can set the weaponflag
-	self.weapon = flag;
+	self.newweapon = flag;
 	//self.weaponframe = 0;
-	player_setweapon();
+	//player_setweapon();
 };
 
 float client_checkammo()
@@ -316,29 +319,21 @@ float client_bestweapon()
 	if (deathmatch == DMM_INSTAGIB)
 		return IT_COILGUN;
 	else if (self.waterlevel <= 1 && self.ammo_cells >= 1 && (self.items & IT_LIGHTNING_GUN))
-	{
 		return IT_LIGHTNING_GUN;
-	}
+	else if (self.ammo_rockets >= 1 && (self.items & IT_ROCKET_LAUNCHER))
+		return IT_ROCKET_LAUNCHER;
 	else if (self.ammo_nails >= 2 && (self.items & IT_SUPER_NAILGUN))
-	{
 		return IT_SUPER_NAILGUN;
-	}
 	else if (self.ammo_shells >= 2 && (self.items & IT_SUPER_SHOTGUN))
-	{
 		return IT_SUPER_SHOTGUN;
-	}
+	else if (self.ammo_rockets >= 1 && (self.items & IT_GRENADE_LAUNCHER))
+		return IT_GRENADE_LAUNCHER;
 	else if(self.ammo_nails >= 1 && (self.items & IT_NAILGUN))
-	{
 		return IT_NAILGUN;
-	}
 	else if (self.ammo_shells >= 1 && (self.items & IT_SHOTGUN))
-	{
 		return IT_SHOTGUN;
-	}
 	else
-	{
 		return IT_AXE;
-	}
 };
 
 void client_cycleweapon(float forward)
@@ -613,6 +608,41 @@ entity client_spawnpoint()
 	return bestspawn;
 };
 
+void giveallweapons()
+{
+	float noweapons;
+
+	self.items = self.items | IT_AXE;
+	self.items = self.items | IT_SHOTGUN;
+	self.items = self.items | IT_SUPER_SHOTGUN;
+	self.items = self.items | IT_NAILGUN;
+	self.items = self.items | IT_SUPER_NAILGUN;
+	self.items = self.items | IT_GRENADE_LAUNCHER;
+	self.items = self.items | IT_ROCKET_LAUNCHER;
+	self.items = self.items | IT_LIGHTNING_GUN;
+//		self.items = self.items | IT_RAILGUN;
+//		self.items = self.items | IT_PORTALGUN;
+
+	noweapons = tokenize(getkey(noweapon));
+
+	while (noweapons --> 0)
+	{
+		switch (argv(noweapons))
+		{
+		case "axe": self.items &~= IT_AXE; break;
+		case "sg": self.items &~= IT_SHOTGUN; break;
+		case "ssg": self.items &~= IT_SUPER_SHOTGUN; break;
+		case "ng": self.items &~= IT_NAILGUN; break;
+		case "sng": self.items &~= IT_SUPER_NAILGUN; break;
+		case "gl": self.items &~= IT_GRENADE_LAUNCHER; break;
+		case "rl": self.items &~= IT_ROCKET_LAUNCHER; break;
+		case "lg": self.items &~= IT_LIGHTNING_GUN; break;
+		case "rg": self.items &~= IT_RAILGUN; break;
+		case "pg": self.items &~= IT_PORTALGUN; break;
+		}
+	}
+}
+
 void client_spawn(float sameplace)
 {
 	float  f;
@@ -682,38 +712,8 @@ void client_spawn(float sameplace)
 	// in prewar and dmm4, give everything
 	if (gmapn_serverstate == gmapn_serverstate_prewar || deathmatch == 4)
 	{
-		float noweapons;
-
-		self.items = self.items | IT_AXE;
-		self.items = self.items | IT_SHOTGUN;
-		self.items = self.items | IT_SUPER_SHOTGUN;
-		self.items = self.items | IT_NAILGUN;
-		self.items = self.items | IT_SUPER_NAILGUN;
-		self.items = self.items | IT_GRENADE_LAUNCHER;
-		self.items = self.items | IT_ROCKET_LAUNCHER;
-		self.items = self.items | IT_LIGHTNING_GUN;
-//		self.items = self.items | IT_RAILGUN;
-//		self.items = self.items | IT_PORTALGUN;
-
-		noweapons = tokenize(getkey(noweapon));
-
-		while (noweapons --> 0)
-		{
-			switch (argv(noweapons))
-			{
-			case "axe": self.items &~= IT_AXE; break;
-			case "sg": self.items &~= IT_SHOTGUN; break;
-			case "ssg": self.items &~= IT_SUPER_SHOTGUN; break;
-			case "ng": self.items &~= IT_NAILGUN; break;
-			case "sng": self.items &~= IT_SUPER_NAILGUN; break;
-			case "gl": self.items &~= IT_GRENADE_LAUNCHER; break;
-			case "rl": self.items &~= IT_ROCKET_LAUNCHER; break;
-			case "lg": self.items &~= IT_LIGHTNING_GUN; break;
-			case "rg": self.items &~= IT_RAILGUN; break;
-			case "pg": self.items &~= IT_PORTALGUN; break;
-			}
-		}
-
+		giveallweapons();
+		
 		// in prewar and dmm4, give starting ammo
 		self.ammo_shells = self.max_ammo_shells;
 		self.ammo_nails = self.max_ammo_nails;
@@ -725,6 +725,19 @@ void client_spawn(float sameplace)
 		if (gmapn_serverstate != gmapn_serverstate_prewar && deathmatch == 4) // Give pent in dmm4
 			self.items |= IT_PENT;
 		client_setweapon(IT_SHOTGUN);			// Starting weapon
+	}
+	else if (deathmatch == DMM_LIMITED)
+	{
+		giveallweapons();
+
+		self.ammo_shells = 30;
+		self.ammo_nails = 70;
+		self.ammo_rockets = 20;
+		self.ammo_cells = 50;
+		self.health = 100;
+		self.items = self.items | IT_ARMOR3;
+
+		client_setweapon(IT_ROCKET_LAUNCHER);
 	}
 	else if (deathmatch == DMM_INSTAGIB)
 	{	//instagib
@@ -1010,28 +1023,30 @@ float client_weaponokay()
 void client_impulses()
 {	
 	// Weapon change impulses can only be used if we're not shooting
+	/*
 	if (self.impulse >= 1 && self.impulse <= 12 || self.impulse == 22)
 	{
 		if (self.attack_finished > time)
  			return;
 	}
-	
+	*/
+
 	if (self.impulse == 1 && (self.items & IT_AXE))
 	{
-		self.weapon = IT_AXE;
+		client_setweapon(IT_AXE);
 	}
 	else if (self.impulse == 2 && ((self.items & IT_SHOTGUN) || (self.items & IT_COILGUN)))
 	{
 		// coilgun is bound to shotgun
 		if (self.items & IT_COILGUN)
-			self.weapon = IT_COILGUN;
+			client_setweapon(IT_COILGUN);
 		else if (self.ammo_shells >= 1)
 		{
-			self.weapon = IT_SHOTGUN;
+			client_setweapon(IT_SHOTGUN);
 		}
 		else
 		{
-			self.weapon = client_bestweapon();
+			client_setweapon(client_bestweapon());
 		}
 	}
 	else if (self.impulse == 3 && (self.items & IT_SUPER_SHOTGUN))
@@ -1039,11 +1054,11 @@ void client_impulses()
 		// Change weapon to Super Shotgun
 		if (self.ammo_shells >= 2)
 		{
-			self.weapon = IT_SUPER_SHOTGUN;
+			client_setweapon(IT_SUPER_SHOTGUN);
 		}
 		else
 		{
-			self.weapon = client_bestweapon();
+			client_setweapon(client_bestweapon());
 		}
 	}
 	else if (self.impulse == 4 && (self.items & IT_NAILGUN))
@@ -1051,11 +1066,11 @@ void client_impulses()
 		// Change weapon to Nailgun
 		if (self.ammo_nails >= 1)
 		{
-			self.weapon = IT_NAILGUN;
+			client_setweapon(IT_NAILGUN);
 		}
 		else
 		{
-			self.weapon = client_bestweapon();
+			client_setweapon(client_bestweapon());
 		}
 	}
 	else if (self.impulse == 5 && (self.items & IT_SUPER_NAILGUN))
@@ -1063,11 +1078,11 @@ void client_impulses()
 		// Change weapon to Super Nailgun
 		if (self.ammo_nails >= 2)
 		{
-			self.weapon = IT_SUPER_NAILGUN;
+			client_setweapon(IT_SUPER_NAILGUN);
 		}
 		else
 		{
-			self.weapon = client_bestweapon();
+			client_setweapon(client_bestweapon());
 		}
 	}
 	else if (self.impulse == 6 && (self.items & IT_GRENADE_LAUNCHER))
@@ -1075,11 +1090,11 @@ void client_impulses()
 		// Change weapon to Greande Launcher
 		if (self.ammo_rockets >= 1)
 		{
-			self.weapon = IT_GRENADE_LAUNCHER;
+			client_setweapon(IT_GRENADE_LAUNCHER);
 		}
 		else
 		{
-			self.weapon = client_bestweapon();
+			client_setweapon(client_bestweapon());
 		}
 	}
 	else if (self.impulse == 7 && (self.items & IT_ROCKET_LAUNCHER))
@@ -1087,11 +1102,11 @@ void client_impulses()
 		// Change weapon to Rocket Launcher
 		if (self.ammo_rockets >= 1)
 		{
-			self.weapon = IT_ROCKET_LAUNCHER;
+			client_setweapon(IT_ROCKET_LAUNCHER);
 		}
 		else
 		{
-			self.weapon = client_bestweapon();
+			client_setweapon(client_bestweapon());
 		}
 	}
 	else if (self.impulse == 8 && (self.items & IT_LIGHTNING_GUN))
@@ -1099,11 +1114,11 @@ void client_impulses()
 		// Change weapon to Lightning Gun
 		if (self.ammo_cells >= 1)
 		{
-			self.weapon = IT_LIGHTNING_GUN;
+			client_setweapon(IT_LIGHTNING_GUN);
 		}
 		else
 		{
-			self.weapon = client_bestweapon();
+			client_setweapon(client_bestweapon());
 		}
 	}
 	else if (self.impulse == 9)
@@ -1111,18 +1126,18 @@ void client_impulses()
 		// If railgun is disabled, set to Coilgun instead
 		if (getkey(rail) == 0 && (self.items & IT_COILGUN))
 		{
-			self.weapon = IT_COILGUN;
+			client_setweapon(IT_COILGUN);
 		}
 		else if (self.items & IT_RAILGUN)
 		{
 			// Change weapon to Railgun
 			if (self.ammo_cells >= 4)
 			{
-				self.weapon = IT_RAILGUN;
+				client_setweapon(IT_RAILGUN);
 			}
 			else
 			{
-				self.weapon = client_bestweapon();
+				client_setweapon(client_bestweapon());
 			}
 		}
 	}
@@ -1144,7 +1159,6 @@ void client_impulses()
 		}
 	}
 
-	client_setweapon(self.weapon);
 	self.impulse = 0;
 };
 
@@ -1567,6 +1581,8 @@ void client_pack_touch()
 		return;
 	}
 
+	float b_switch = stof(infokey(other, "b_switch"));
+
 	if (deathmatch == 4)
 	{
 		other.health += 10;
@@ -1576,7 +1592,17 @@ void client_pack_touch()
 		ammo_add();
 	}
 
+	entity oself = self;
+	float w = self.weapon;
+	self = other;
+	float bestwep = client_bestweapon();
+	self = oself;
+	
 	item_pickup(-1);
+
+	self = other;
+	switchweapon(bestwep, w, b_switch);
+	self = oself;
 };
 
 // Throw a backpack from this player
@@ -2183,6 +2209,10 @@ void PlayerPreThink()
 	if (self.deadflag == DEAD_DYING)
 		return; // dying, so do nothing
 
+	if (self.attack_finished < time && self.weapon != self.newweapon)
+	{
+		player_setweapon();
+	}
 	client_attack();
 
 	if (self.button2)

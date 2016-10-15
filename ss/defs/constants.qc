@@ -432,8 +432,9 @@ vector VEC_HULL2_MAX			= '32 32 64';
 float  SP_WEIGHT				= 0.5;
 
 #define DMM_NORESPAWNS 0
-#define DMM_MIDAIR	5
-#define DMM_INSTAGIB	6
+#define DMM_LIMITED 5
+#define DMM_MIDAIR	6
+#define DMM_INSTAGIB	7
 
 //#define HAVE_PORTALS
 
@@ -516,7 +517,8 @@ const string dmmname[] =
 	"Normal",
 	"Never played",
 	"Weaponstay",
-	"Stacked",
+	"Stacked (unlimited)",
+	"Stacked (limited)",
 	"Midair",
 	"Instagib"
 };

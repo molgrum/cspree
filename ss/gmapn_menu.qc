@@ -345,7 +345,7 @@ static string menu_dmm(float op)
 	}
 	else if (op == MENU_RIGHT)
 	{
-		val = min(6, cvar("deathmatch")+1);
+		val = min(7, cvar("deathmatch")+1);
 		if (val == 2)
 			val += 1; // skip dmm2
 		cvar_set("deathmatch", ftos(val));
@@ -1357,7 +1357,7 @@ void gmapn_menu_any(float keys)
 
 	if (gmapn_serverstate == gmapn_serverstate_countdown)
 	{
-		m = sprintf("\n\n%s starts in %s\n\n", redify(gmapn_gamemodetostring(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
+		m = sprintf("\n\n%s starts in %s\n\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
 		m = strcat(m, gmapn_menu_settings());
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)

@@ -211,6 +211,31 @@ void gmapn_init_test()
 	gmapn_game_beginpregamecountdown(10);
 }
 
+void gmapn_readconfig()
+{
+	filestream f;
+	string s;
+	float args;
+
+	f = fopen("entities.conf", FILE_READ);
+	if (f < 0)
+		return;
+	while ((s = fgets(f)))
+	{
+		args = tokenize(s);
+		if (args >= 2)
+		{
+			entity e = spawn();
+			e.classname = argv(0);
+			e.origin_x = stof(argv(1));
+			e.origin_y = stof(argv(2));
+			e.origin_z = stof(argv(3));
+			setorigin(e, e.origin);
+		}
+	}
+	fclose(f);
+}
+
 //called at map start or config change.
 void gmapn_init_entities()
 {

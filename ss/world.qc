@@ -53,6 +53,7 @@ void worldspawn()
 	entity test;
 	
 	dbgprintln("=== worldspawn() ===");
+	gmapn_readconfig();
 	BotInit();
 	gmapn_init();
 
@@ -68,6 +69,8 @@ void worldspawn()
 	{
 		cvar_set ("sv_gravity", "800");
 	}
+
+	precache_model("progs/lavaball.mdl"); // spot marker
 
 	precache_model("progs/player.mdl"); // Visible player
 	precache_model("progs/eyes.mdl");	// Invisible player

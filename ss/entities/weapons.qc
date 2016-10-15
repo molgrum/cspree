@@ -25,12 +25,14 @@
 
 void weapon_touch()
 {
+	float w_switch = stof(infokey(other, "w_switch"));
+	
 	if (other.deadflag || other.classname != "player" || gmapn_serverstate != gmapn_serverstate_playing)
 	{
 		return;				// Only live players can pickup weapons and only in a game
 	}
 
-	if (deathmatch > 2 && (other.items & self.items == self.items))
+	if (deathmatch > 2 && ((other.items & self.items) == self.items))
 	{
 		return;				// Deathmatch modes 3 and 4 uses static weapons
 	}
@@ -42,6 +44,12 @@ void weapon_touch()
 		ammo_add();
 	}
 
+	entity oself = self;
+	float w = self.weapon;
+	self = other;
+	float bestwep = client_bestweapon();
+	self = oself;
+	
 	if (deathmatch == 2)
 	{
 		item_pickup(getkey(respawn_weapon_dmm2));	 // Hide and wait for respawn
@@ -50,6 +58,10 @@ void weapon_touch()
 	{
 		item_pickup(getkey(respawn_weapon_dmm1));	 // Hide and wait for respawn
 	}
+
+	self = other;
+	switchweapon(bestwep, w, w_switch);
+	self = oself;
 };
 
 /*
