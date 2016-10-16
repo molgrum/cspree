@@ -835,9 +835,11 @@ void gmapn_round_restart()
 	{
 		for (entity e = world; (e = find(e, classname, "player")); )
 			centerprint(e, "Next round starts in ", ftos(self.cnt), " seconds");
+		sound(self, CHAN_VOICE, sprintf("announcer/%g.wav", self.cnt), 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 	}
 	else
 	{
+		sound(self, CHAN_VOICE, "announcer/fight.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 		remove(self);
 		gmapn_round_start();
 		gmapn_countdown_start(timelimit, gmapn_round_end, gmapn_countdown_style_game);
@@ -883,7 +885,7 @@ void gmapn_round_end()
 		other.classname = "gmapn_round_check";
 		other.think = gmapn_round_restart;
 		other.nextthink = time + 2;
-		other.cnt = 5-2;
+		other.cnt = 4;
 	}
 };
 

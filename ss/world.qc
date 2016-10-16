@@ -233,6 +233,13 @@ void worldspawn()
 	precache_sound("rune/rune4.wav");
 	particleeffectnum("gmapn.tr_flag_red");
 	particleeffectnum("gmapn.tr_flag_blue");
+
+	// announcer for duel arena and such modes
+	precache_sound("announcer/1.wav");
+	precache_sound("announcer/2.wav");
+	precache_sound("announcer/3.wav");
+	precache_sound("announcer/fight.wav");
+	
 	//instagib
 	precache_model("progs/v_coil.mdl");
 	precache_sound("weapons/coilgun.wav");
