@@ -731,10 +731,10 @@ void client_spawn(float sameplace)
 	{
 		giveallweapons();
 
-		self.ammo_shells = 30;
-		self.ammo_nails = 70;
-		self.ammo_rockets = 20;
-		self.ammo_cells = 50;
+		self.ammo_shells = getkey(dmm5_shells);
+		self.ammo_nails = getkey(dmm5_nails);
+		self.ammo_rockets = getkey(dmm5_rockets);
+		self.ammo_cells = getkey(dmm5_cells);
 		self.health = 100;
 		self.items = self.items | IT_ARMOR3;
 

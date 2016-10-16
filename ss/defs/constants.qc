@@ -25,7 +25,7 @@
 */
 
 /* MOD VERSION */
-string VERSION = "GMAPN 0.1 alpha";
+string VERSION = "GMAPN 1.0 dev";
 
 ///////////////////////////////////////////////////////////////////////////////
 //                       Q U A K E   C O N S T A N T S                       //

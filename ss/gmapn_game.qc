@@ -403,7 +403,7 @@ static void duelcheck()
 				if (e == liveplayer)
 					centerprint(e, "You are victorious!");
 				else
-					centerprint(e, liveplayer.netname, " is victorious!\n", ftos(liveplayer.health), " health and ", ftos(liveplayer.armorvalue), " armor left");
+					centerprint(e, liveplayer.netname, " is victorious!\n", goldnmbr(ftos(liveplayer.health)), " health and ", goldnmbr(ftos(liveplayer.armorvalue)), " armor left");
 			}
 		}
 		else
@@ -834,7 +834,7 @@ void gmapn_round_restart()
 	if (self.cnt > 0)
 	{
 		for (entity e = world; (e = find(e, classname, "player")); )
-			centerprint(e, sprintf(_("Round %s/%s starts in "), goldnmbr(ftos(gmapn_roundnum+1)), goldnmbr(ftos(getkey(game_rounds)))), goldnmbr(ftos(self.cnt)), " seconds");
+			centerprint(e, sprintf(_("Round %s of %s starts in "), goldnmbr(ftos(gmapn_roundnum+1)), goldnmbr(ftos(getkey(game_rounds)))), goldnmbr(ftos(self.cnt)), " seconds");
 		sound(self, CHAN_VOICE, sprintf("announcer/%g.wav", self.cnt), 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 	}
 	else

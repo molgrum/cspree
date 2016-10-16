@@ -128,6 +128,10 @@ string NULL = __NULL__;
 	GVF(rail_damage,		110,	NULL)\
 	GVF(rail_push,			1.0,	NULL)\
 	GVF(rail_reload,		0.8,	NULL)\
+	GVF(dmm5_shells,		30,		NULL)\
+	GVF(dmm5_nails,			70,		NULL)\
+	GVF(dmm5_rockets,		20,		NULL)\
+	GVF(dmm5_cells,			50,		NULL)\
 	GVF(ctf_returntime,		20,	"Length of time until the flag is returned after being dropped.")\
 	GVF(ctf_returnscore,		0,	"Points rewarded for returning your own flag.")\
 	GVF(ctf_grabscore,		0,	"Points rewarded for grabbing an enemy flag.")\
