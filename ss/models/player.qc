@@ -194,6 +194,7 @@ void player_setweapon()
 		vwep = "-";
 	}
 
+	self.weaponframe = 0;
 	self.oldweapon = self.weapon;
 
 	if (gmapn_qsg_has_zq_vwep)

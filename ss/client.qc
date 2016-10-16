@@ -625,7 +625,7 @@ void giveallweapons()
 
 	noweapons = tokenize(getkey(noweapon));
 
-	while (noweapons --> 0)
+	while (gmapn_serverstate != gmapn_serverstate_prewar && noweapons --> 0)
 	{
 		switch (argv(noweapons))
 		{
@@ -1611,9 +1611,9 @@ void client_pack_throw()
 	entity pack;
 	string mdl;
 
-	if (gmapn_serverstate != gmapn_serverstate_playing)
+	if (gmapn_serverstate != gmapn_serverstate_playing || deathmatch == DMM_LIMITED)
 	{
-		// Only spawn backpacks during games
+		// Only spawn backpacks during games and without dmm5
 
 		return;
 	}
