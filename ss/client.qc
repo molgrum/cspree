@@ -675,6 +675,7 @@ void client_spawn(float sameplace)
 	self.health = self.max_health;			// Set out health to the maximum
 	self.pausetime = 0;
 	self.show_hostile = 0;
+	self.weaponframe = 0; // reset shooting animation on respawn
 	if (spectatormode == 1 || spectatormode == 2)
 	{
 		self.solid = SOLID_NOT;

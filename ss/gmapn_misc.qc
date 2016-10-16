@@ -149,6 +149,12 @@ void gmapn_reset_entities(string classnamestr)
 			controlpoint_reset();
 			self = oself;
 		}
+		else // items
+		{
+			e.model = e.mdl;
+			e.nextthink = 0;
+			e.solid = SOLID_TRIGGER;
+		}
 
 		e = find(e, classname, classnamestr);
 	}

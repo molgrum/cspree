@@ -350,7 +350,7 @@ static string menu_dmm(float op)
 			val += 1; // skip dmm2
 		cvar_set("deathmatch", ftos(val));
 	}
-	gmapn_powerups_setitems(cvar("deathmatch") < 4);
+	gmapn_powerups_setitems(!getkey(noitems));
 	return 0;
 };
 

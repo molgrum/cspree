@@ -630,6 +630,9 @@ void gmapn_round_start()
 {
 	entity e;
 
+	for (int i = 0; i < itemnames.length; i++)
+		gmapn_reset_entities(itemnames[i]);
+	
 	//let clients know the correct time.
 	gmapn_matchstarttimems = 1000*time;
 

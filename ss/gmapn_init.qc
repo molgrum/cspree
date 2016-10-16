@@ -250,7 +250,7 @@ void gmapn_init_entities()
 	}
 
 	deathmatch = cvar("deathmatch");
-	gmapn_powerups_setitems(deathmatch < 4);
+	gmapn_powerups_setitems(!getkey(noitems));
 	
 	ctf_enableflags(gmapn_gamemode == GM_CTF);
 }

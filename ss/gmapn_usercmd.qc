@@ -755,14 +755,14 @@ float gmapn_handle_usercmd(float argc)
 			if (gmapn_serverstate == gmapn_serverstate_prewar)
 			{
 				dmm = floor(stof(argv(1)));
-				if (dmm >= 1 && dmm <= 6 && dmm == stof(argv(1)))
+				if (dmm >= 1 && dmm <= 7 && dmm == stof(argv(1)))
 				{
 					tempstr = ftos(dmm);
 					if (cvar("deathmatch") != dmm)
 					{
-						if (dmm == 5)
+						if (dmm == DMM_INSTAGIB)
 							bprint(PRINT_HIGH, self.netname, " changes deathmatch to instagib.\n");	
-						else if (dmm == 6)
+						else if (dmm == DMM_MIDAIR)
 							bprint(PRINT_HIGH, self.netname, " changes deathmatch to midair.\n");
 						else
 							bprint(PRINT_HIGH, self.netname, " changes deathmatch to ", tempstr, ".\n");
@@ -772,7 +772,7 @@ float gmapn_handle_usercmd(float argc)
 						else
 							cvar_set("coop", "1");
 							
-						gmapn_powerups_setitems(dmm < 4);
+						gmapn_powerups_setitems(!getkey(noitems));
 					}
 					else
 					{
@@ -781,7 +781,7 @@ float gmapn_handle_usercmd(float argc)
 				}
 				else
 				{
-					sprint(self, PRINT_HIGH, "Invalid deathmatch mode. Valid modes are 1 to 6.\n");
+					sprint(self, PRINT_HIGH, "Invalid deathmatch mode. Valid modes are 1 to 7.\n");
 				}
 			}
 			else

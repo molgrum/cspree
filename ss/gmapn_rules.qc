@@ -235,7 +235,7 @@ void gmapn_apply_gamemode(float newmode)
 		break;
 	}
 
-	gmapn_powerups_setitems(cvar("deathmatch") < 4);
+	gmapn_powerups_setitems(!getkey(noitems));
 	getkey_reset();
 	gmapn_updatemaxclients();
 };

@@ -89,13 +89,6 @@ void gmapn_powerups_toggle()
 		gmapn_powerups_disable();
 };
 
-string itemnames[] =
-{
-	"weapon_supershotgun", "weapon_nailgun", "weapon_supernailgun", "weapon_grenadelauncher", "weapon_rocketlauncher", "weapon_lightning", "weapon_railgun",
-	"item_shells", "item_spikes", "item_rockets", "item_cells", "item_weapon",
-	"item_armor1", "item_armor2", "item_armorInv", "item_health",
-};
-
 void gmapn_powerups_setitems(float newstate)
 {
 	int i;

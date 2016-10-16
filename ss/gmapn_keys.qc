@@ -66,6 +66,7 @@ string NULL = __NULL__;
 	GVF(powerups_enabled,		1,	NULL)\
 	GVF(hook_enabled,		0,	NULL)\
 	GVF(overtime,			3,	NULL)\
+	GVF(noitems,			0,	"Disable items that lay on the ground.")\
 	GVF(game_gibthreshhold,		-40,	NULL)\
 	GVF(game_cpmajump,		0,	NULL)\
 	GVF(game_fairpacks,		0,	"0 = drops current weapon\n1 = drops last fired weapon\n2 = drops current weapon only if firing.")\
