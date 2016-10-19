@@ -161,3 +161,12 @@ ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
 
 ## Bots
 Bots are in a very poor state, being Frikbot and all. Help out with AI!
+
+## Bugs
+Right now the most awkward bug is the vwep models being jerky and not displayed correctly. Reproduce this and file an issue.
+
+## Altars & Controlpoints
+We need coordinates for some maps of your choosing, place **one** info_altar in Head Hunters, place **several** info_controlpoint in Domination.
+
+## Game modes left to test
+These are: Last Man Standing, Freeze Tag, Domination and Rover. Four modes that have not been tested much.
