@@ -66,8 +66,7 @@ noref .string wad;
 
 .float	fallspeed;			// Player fall speed from previous frame
 .float	deathtype;			// keeps track of how the player died
-.float  oldweapon;
-.float  newweapon;
+.float  newweapon;			// weapon selected to change to after firing current
 
 //
 // Additional client attributes

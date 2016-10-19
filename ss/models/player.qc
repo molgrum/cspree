@@ -195,7 +195,6 @@ void player_setweapon()
 	}
 
 	self.weaponframe = 0;
-	self.oldweapon = self.weapon;
 
 	if (gmapn_qsg_has_zq_vwep)
 		self.vw_index = precache_vwep_model(vwep);
