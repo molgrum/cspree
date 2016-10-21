@@ -25,7 +25,7 @@
 
 string NULL = __NULL__;
 #define GAMEVARS	\
-	GVS(info_hostname,		"Unnamed GMAPN Server",	NULL)\
+	GVS(info_hostname,		"Admin is a Lazy Ass",	NULL)\
 	GVS(info_city,			"",	NULL)\
 	GVS(info_state,			"",	NULL)\
 	GVS(info_country,		"",	NULL)\

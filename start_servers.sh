@@ -1,7 +1,7 @@
 #!/bin/bash
 
 printf "* Starting ftesv (port 28501)..."
-if ps ax | grep -v grep | grep "fteqw.sv -game gmapn +exec ports/port1.cfg" > /dev/null
+if ps ax | grep -v grep | grep "fteqw.sv -game spree +exec ports/port1.cfg" > /dev/null
 then
     echo "[ALREADY RUNNING]"
 else
@@ -10,7 +10,7 @@ else
 fi
 
 #printf "* Starting ftesv (port 28502)..."
-#if ps ax | grep -v grep | grep "fteqw.sv -game gmapn +exec ports/port2.cfg" > /dev/null
+#if ps ax | grep -v grep | grep "fteqw.sv -game spree +exec ports/port2.cfg" > /dev/null
 #then
 #    echo "[ALREADY RUNNING]"
 #else
@@ -19,7 +19,7 @@ fi
 #fi
 
 #printf "* Starting ftesv (port 28503)..."
-#if ps ax | grep -v grep | grep "fteqw.sv -game gmapn +exec ports/port3.cfg" > /dev/null
+#if ps ax | grep -v grep | grep "fteqw.sv -game spree +exec ports/port3.cfg" > /dev/null
 #then
 #    echo "[ALREADY RUNNING]"
 #else
@@ -28,7 +28,7 @@ fi
 #fi
 
 #printf "* Starting ftesv (port 28504)..."
-#if ps ax | grep -v grep | grep "fteqw.sv -game gmapn +exec ports/port4.cfg" > /dev/null
+#if ps ax | grep -v grep | grep "fteqw.sv -game spree +exec ports/port4.cfg" > /dev/null
 #then
 #    echo "[ALREADY RUNNING]"
 #else

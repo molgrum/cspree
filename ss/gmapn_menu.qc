@@ -1353,7 +1353,7 @@ void gmapn_menu_any(float keys)
 		m = strcat(m, (city!=""||region!="")?", ":"", nation);
 	if (city != "" || region != "" || nation != "")
 		m = strcat(m, "\n");
-	m = strcat(m, VERSION, " - ", "github.com/molgrum/gmapn", "\n");
+	m = strcat(m, redify(VERSION), "\n", URL, "\n");
 	m = strcat(m, "\n");
 
 	if (gmapn_serverstate == gmapn_serverstate_countdown)

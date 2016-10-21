@@ -70,7 +70,7 @@ void gmapn_init()
 	if (hostname != "")
 	{
 		localcmd(hostname);
-		localcmd(" GMAPN");
+		localcmd(" GIRLS");
 	}
 	else
 	{

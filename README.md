@@ -1,11 +1,16 @@
+<<<<<<< 76fe4206dca2a543c4c6448150c8cc67354d28d6
 # GMAPN
 
 ## What is GMAPN?
 GMAPN is a deathmatch mod for Quakeworld that focuses on user friendliness and lots of
+=======
+# What is Chilling Spree?
+Chilling Spree is a deathmatch mod for Quakeworld that focuses on user friendliness and lots of
+>>>>>>> Rebranded the mod.
 game modes to try out. It is intended for having fun playing Quakeworld with new twists
 of the game instead of playing the same three modes all the time.
 
-GMAPN features fourteen game modes in total, nine of them which are unique to the mod compared
+Chilling Spree features fourteen game modes in total, nine of them which are unique to the mod compared
 to KTX.
 
 Lots of work has been made to create a whole new structure of deathmatch modding, it is
@@ -23,19 +28,26 @@ Right now the best way to install is by Git.
 ### Linux
 Change into your Quake directory.
 ```
-git clone https://github.com/molgrum/gmapn.git gmapn
-cd gmapn
+git clone https://github.com/molgrum/spree.git spree
+cd spree
 ./updatebinaries.sh
 make
 ./start_servers.sh
 ```
 
+<<<<<<< 76fe4206dca2a543c4c6448150c8cc67354d28d6
 ### Windows
 - Download the [zip](https://github.com/molgrum/gmapn/archive/master.zip) and extract into your Quake folder.
 - Rename the folder to "gmapn".
 - Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into gmapn directory)
+=======
+## Windows
+- Download the [zip](https://github.com/molgrum/spree/archive/master.zip) and extract into your Quake folder.
+- Rename the folder to "spree".
+- Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into spree directory)
+>>>>>>> Rebranded the mod.
 - Download server [64-bit](http://triptohell.info/moodles/win64/fteqwsv64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqwsv32.exe) (put into quake directory)
-- Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into gmapn directory)
+- Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into spree directory)
 - Run QCC exe and winquicker.bat
 
 Happy gibbing!
@@ -50,7 +62,9 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 - Connect with FTE or Fodquake preferably.
 
 ### Chat with us
-- **#gmapn** @ [Quakenet](https://webchat.quakenet.org/)
+
+## Chat with us
+- **#spree** @ [Quakenet](https://webchat.quakenet.org/)
 - **#beta-testers** on [Discord](https://discordapp.com/)
 
 ## Differences from KTX
@@ -97,7 +111,7 @@ ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
 
 #### LG
 - Test the LG on povdmm4, does the percentage differ from KTX?
-- Is the blood spawning more on GMAPN?
+- Is the blood spawning more on this mod?
 
 ### Enhancement
 - Try out every mode, see if you find any flaws or ideas on how to make them better.
@@ -124,7 +138,7 @@ ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
 - Not extensively tested.
 
 ### Hide & Seek
-- This mode is GMAPN specific, which means it is just a mock-up of a mode that needs suggestions.
+- This mode is mod specific, which means it is just a mock-up of a mode that needs suggestions.
 
 ### Domination
 - Teamplay with control points.

@@ -79,7 +79,7 @@ SRC = \
 	ss/monsters/wizard.qc \
 	ss/monsters/zombie.qc
 
-../gmapn/qwprogs.dat: $(SRC)
+../spree/qwprogs.dat: $(SRC)
 	$(QCC)
 
 ctags: $(SRC)
@@ -91,4 +91,4 @@ etags: $(SRC)
 clean:
 	rm -f qwprogs.dat qwprogs.lno
 
-all: ../gmapn/qwprogs.dat
+all: ../spree/qwprogs.dat
