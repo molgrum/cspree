@@ -1,12 +1,5 @@
-<<<<<<< 76fe4206dca2a543c4c6448150c8cc67354d28d6
-# GMAPN
-
-## What is GMAPN?
-GMAPN is a deathmatch mod for Quakeworld that focuses on user friendliness and lots of
-=======
 # What is Chilling Spree?
 Chilling Spree is a deathmatch mod for Quakeworld that focuses on user friendliness and lots of
->>>>>>> Rebranded the mod.
 game modes to try out. It is intended for having fun playing Quakeworld with new twists
 of the game instead of playing the same three modes all the time.
 
@@ -35,17 +28,10 @@ make
 ./start_servers.sh
 ```
 
-<<<<<<< 76fe4206dca2a543c4c6448150c8cc67354d28d6
-### Windows
-- Download the [zip](https://github.com/molgrum/gmapn/archive/master.zip) and extract into your Quake folder.
-- Rename the folder to "gmapn".
-- Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into gmapn directory)
-=======
 ## Windows
 - Download the [zip](https://github.com/molgrum/spree/archive/master.zip) and extract into your Quake folder.
 - Rename the folder to "spree".
 - Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into spree directory)
->>>>>>> Rebranded the mod.
 - Download server [64-bit](http://triptohell.info/moodles/win64/fteqwsv64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqwsv32.exe) (put into quake directory)
 - Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into spree directory)
 - Run QCC exe and winquicker.bat
