@@ -79,7 +79,7 @@ SRC = \
 	ss/monsters/wizard.qc \
 	ss/monsters/zombie.qc
 
-../spree/qwprogs.dat: $(SRC)
+../cspree/qwprogs.dat: $(SRC)
 	$(QCC)
 
 ctags: $(SRC)
