@@ -26,7 +26,7 @@
 
 /* MOD VERSION */
 string VERSION = "Chilling Spree 1.0 beta1";
-string URL = "http://github.com/molgrum/gmapn";
+string URL = "http://github.com/molgrum/cspree";
 
 ///////////////////////////////////////////////////////////////////////////////
 //                       Q U A K E   C O N S T A N T S                       //
