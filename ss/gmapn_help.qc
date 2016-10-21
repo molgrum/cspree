@@ -26,12 +26,13 @@
 static string tips[] =
 {
 	"Vote a map by its name, example: /dm4",
-	"To get a game going with too few players try enabling bots!",
-	"You can shoot and trigger everything in a map, it will reset on game start.",
+	"To get a game going with too few players try enabling bots",
+	"You can shoot and trigger everything in a map, it will reset on game start",
 	"Try to vote a random map with /rndmap",
-	"The rulemaker decides the game options and can allow anyone to set them. Try to become one with /rulemaker!",
-	"If some settings are modified from the server standard it will show them on countdown.",
-	"You can kick, ban and mute other players with /cmd kick ban mute"
+	"The rulemaker decides the game options and can allow anyone to set them. Try to become one with /rulemaker",
+	"If some settings are modified from the server standard it will show them on countdown",
+	"You can kick, ban and mute other players with /cmd kick ban mute",
+	"Matchless game modes will continue playing after intermission"
 };
 
 void gmapn_print_tipoftheday()

@@ -532,13 +532,14 @@ static string menu_rounds(float op)
 	}
 	
 	if (op == MENU_TITLE)
-		return "Rounds per game";
-	else if (op == MENU_VALUE)
 	{
 		if (modhasrounds == TRUE)
-			return ftos(val);
-		else return 0;
+			return "Rounds per game";
+		else
+			return 0;
 	}
+	else if (op == MENU_VALUE)
+		return ftos(val);
 	else if (op == MENU_LEFT)
 		setkey("game_rounds", ftos(max(2, val-2)));
 	else if (op == MENU_RIGHT)
@@ -812,11 +813,11 @@ static string rules_srv_desc[] =
 
 static string gamemode_desc[] =
 {
-	"Pick up a gun and shoot anyone",
-	"Frag whoever is king atm",
-	"Rocket Arena style but on normal maps",
-	"cl_gibfilter 0 is recommended",
-	"Normal Coop Quake",
+	"Pick up a gun and shoot anyone\nMATCHLESS",
+	"Frag whoever is king atm\nMATCHLESS",
+	"Rocket Arena style but on normal maps\nMATCHLESS",
+	"cl_gibfilter 0 is recommended\nMATCHLESS",
+	"Normal Coop Quake\nMATCHLESS",
 	"Normal 1on1",
 	"Normal 4on4",
 	"Normal 2on2",
