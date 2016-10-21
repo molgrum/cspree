@@ -25,14 +25,16 @@
 
 static string tips[] =
 {
-	"Vote a map by its name, example: /dm4",
-	"To get a game going with too few players try enabling bots",
-	"You can shoot and trigger everything in a map, it will reset on game start",
-	"Try to vote a random map with /rndmap",
-	"The rulemaker decides the game options and can allow anyone to set them. Try to become one with /rulemaker",
-	"If some settings are modified from the server standard it will show them on countdown",
-	"You can kick, ban and mute other players with /cmd kick ban mute",
-	"Matchless game modes will continue playing after intermission"
+	_("Vote a map by its name, example: /dm4\n"),
+	_("To get a game going with too few players try enabling bots\n"),
+	_("You can shoot and trigger everything in a map, it will reset on game start\n"),
+	_("Try to vote a random map with /rndmap\n"),
+	_("The rulemaker decides the game options and can allow anyone to set them. Try to become one with /rulemaker\n"),
+	_("If some settings are modified from the server standard it will show them on countdown\n"),
+	_("You can kick, ban and mute other players with /cmd kick ban mute\n"),
+	_("Matchless game modes will continue playing after intermission\n"),
+	_("Check your sorry ass stats by selecting Past Matches, you can even download demos here\n"),
+	_("For newcomers, Duel Arena is a fun mode that only requires two players\n")
 };
 
 void gmapn_print_tipoftheday()
