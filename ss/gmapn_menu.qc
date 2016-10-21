@@ -813,11 +813,11 @@ static string rules_srv_desc[] =
 
 static string gamemode_desc[] =
 {
-	"Pick up a gun and shoot anyone\nMATCHLESS",
-	"Frag whoever is king atm\nMATCHLESS",
-	"Rocket Arena style but on normal maps\nMATCHLESS",
-	"cl_gibfilter 0 is recommended\nMATCHLESS",
-	"Normal Coop Quake\nMATCHLESS",
+	"Pick up a gun and shoot anyone",
+	"Frag whoever is king atm",
+	"Rocket Arena style but on normal maps",
+	"cl_gibfilter 0 is recommended",
+	"Normal Coop Quake",
 	"Normal 1on1",
 	"Normal 4on4",
 	"Normal 2on2",
@@ -833,7 +833,14 @@ static string gamemode_desc[] =
 string gmapn_menu_rules_describe(float rulesel)
 {
 	if (rulesel == 3)
-		return gamemode_desc[bound(0, gmapn_gamemode, gamemode_desc.length-1)];
+	{
+		string matchless;
+		if (gmapn_ismatchless(gmapn_gamemode))
+			matchless = brackets(redify("MATCHLESS"));
+		else
+			matchless = "";
+		return sprintf("%s%s%s", gamemode_desc[bound(0, gmapn_gamemode, gamemode_desc.length-1)], "\n", matchless);
+	}
 	else
 		return rules_desc[bound(0, rulesel, rules_desc.length)];
 }
