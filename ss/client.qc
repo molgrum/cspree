@@ -2457,7 +2457,7 @@ void PutClientInServer()
 	}
 	else
 	{
-		//gmapn_print_version();
+		gmapn_print_tipoftheday();
 		gmapn_sql_welcome();
 	}
 

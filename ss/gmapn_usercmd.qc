@@ -76,19 +76,6 @@ void ThrowGib(string gibname, float dm)
 };
 #endif
 
-void cmd_help()
-{
-	entity helper, oself;
-
-	helper = spawn();
-	helper.owner = self;
-	oself = self;
-	self = helper;
-	gmapn_help_init();
-	self = oself;
-//	bprintln(PRINT_HIGH, "Welcome, you must be confused about how your game acts right now.");
-};
-
 void cmd_ready()
 {
 	entity player;
@@ -439,7 +426,7 @@ void cmd_rulemaker(string nick)
 	evoter.think1 = gmapn_newrulemaker;
 
 	if (vote_in_progress == FALSE)
-		bprintln(PRINT_HIGH, sprintf(_("%s requests to become rulemaker!"), self.netname));
+		bprintln(PRINT_HIGH, sprintf(_("%s requests to become rulemaker! Type /yes to vote"), self.netname));
 
 	if (gmapn_vote_init() == FALSE)
 		remove(evoter);
@@ -579,11 +566,6 @@ float gmapn_handle_usercmd(float argc)
 	if (self.is_fully_connected == 0)
 		return 0;
 
-	if (cmd == "help")
-	{
-		cmd_help();
-		return 1;
-	}
 	if (cmd == "ready")
 	{
 		cmd_ready();

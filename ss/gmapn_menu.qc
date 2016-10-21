@@ -532,14 +532,13 @@ static string menu_rounds(float op)
 	}
 	
 	if (op == MENU_TITLE)
+		return "Rounds per game";
+	else if (op == MENU_VALUE)
 	{
 		if (modhasrounds == TRUE)
-			return "Rounds per game";
-		else
-			return 0;
+			return ftos(val);
+		else return 0;
 	}
-	else if (op == MENU_VALUE)
-		return ftos(val);
 	else if (op == MENU_LEFT)
 		setkey("game_rounds", ftos(max(2, val-2)));
 	else if (op == MENU_RIGHT)
@@ -752,13 +751,11 @@ static string(float op) rules[] =
 	menu_readyteam,
 	menu_mapvote,
 	menu_rulemaker,
-	menu_spacer,
 	menu_gamemode,
 	menu_dmm,
 	menu_time,
 	menu_powerups,
 	menu_pastmatches,
-	menu_spacer,
 	menu_modoptions,
 	menu_srvoptions
 };
@@ -769,7 +766,6 @@ static string(float op) rules_mod[] =
 	menu_minplayers,
 	menu_rounds,
 	menu_loadout,
-	menu_spacer,
 	menu_back
 };
 
@@ -779,9 +775,77 @@ static string(float op) rules_srv[] =
 	menu_minping,
 	menu_botskill,
 	menu_spawnmode,
-	menu_spacer,
 	menu_back
 };
+
+static string rules_desc[] =
+{
+	"Ready to play",
+	"Displays a list of maps to vote from",
+	"The rulemaker can modify the settings",
+	"",
+	"Choose item respawns and starting items",
+	"Timelimit in minutes",
+	"Quad Damage, Pentagram, etc",
+	"Show a history of your progress <right>",
+	"Options for the game mode. <right>",
+	"Options for the server. <right>"
+};
+
+static string rules_mod_desc[] =
+{
+	"Maximum clients to be playing",
+	"Minimum clients for the game to start",
+	"Rounds per match",
+	"Starting weapons and items",
+	"Back to main menu <left>"
+};
+
+static string rules_srv_desc[] =
+{
+	"Aka antilag vastly increases accuracy",
+	"Force a simulated lag for all players",
+	"Set a skill for bots that autojoin",
+	"Spawn modes determine how you spawn",
+	"Back to main menu <left>"
+};
+
+static string gamemode_desc[] =
+{
+	"Pick up a gun and shoot anyone",
+	"Frag whoever is king atm",
+	"Rocket Arena style but on normal maps",
+	"cl_gibfilter 0 is recommended",
+	"Normal Coop Quake",
+	"Normal 1on1",
+	"Normal 4on4",
+	"Normal 2on2",
+	"Be the last man alive on the team",
+	"Freeze all opponents to win",
+	"Capture the control points",
+	"You frag people, they come to your team",
+	"Get the enemy flag to your base",
+	"1FCTF",
+	"It sucks"
+};
+
+string gmapn_menu_rules_describe(float rulesel)
+{
+	if (rulesel == 3)
+		return gamemode_desc[bound(0, gmapn_gamemode, gamemode_desc.length-1)];
+	else
+		return rules_desc[bound(0, rulesel, rules_desc.length)];
+}
+
+string gmapn_menu_mod_describe(float modsel)
+{
+	return rules_mod_desc[bound(0, modsel, rules_mod_desc.length)];
+}
+
+string gmapn_menu_server_describe(float srvsel)
+{
+	return rules_srv_desc[bound(0, srvsel, rules_srv_desc.length)];
+}
 
 static float rulechangetime[rules.length];
 static float modchangetime[rules_mod.length];
@@ -980,6 +1044,8 @@ string gmapn_menu_mod(float keys)
 
 		m = strcat(m, balancestrings(t, mid, v), "\n");
 	}
+
+	
 
 	return m;
 }
@@ -1283,24 +1349,6 @@ string gmapn_menu_settings()
 	}
 	if (getkey(game_rounds) || modified != "")
 		str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Rounds Per Game")), mid, ftos(getkey(game_rounds))), "\n");
-
-	/*
-	modified = "";
-	if (getkey(minplayers) != stof(infokey(world, "gmapn_minplayers")))
-	{
-		modified = icon;
-		printmodified = TRUE;
-	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Minplayers")), mid, ftos(getkey(minplayers))), "\n");
-
-	modified = "";
-	if (getkey(maxplayers) != stof(infokey(world, "gmapn_maxplayers")))
-	{
-		modified = icon;
-		printmodified = TRUE;
-	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Maxplayers")), mid, ftos(getkey(maxplayers))), "\n");
-	*/
 	
 	modified = "";
 	if (cvar("sv_antilag") != stof(infokey(world, "gmapn_antilag")))
@@ -1386,13 +1434,24 @@ void gmapn_menu_any(float keys)
 			m = strcat(m, gmapn_menu_waitingfor((time*2) & 1));
 	}
 	else if (self.subsel == SUBSEL_MAPS)
+	{
 		m = strcat("/P", m, gmapn_menu_maps(keys));
+	}
 	else if (self.subsel == SUBSEL_MOD)
+	{
 		m = strcat("/P", m, gmapn_menu_mod(keys));
+		m = strcat(m, "\n", gmapn_menu_mod_describe(self.modsel));
+	}
 	else if (self.subsel == SUBSEL_SERVER)
+	{
 		m = strcat("/P", m, gmapn_menu_server(keys));
+		m = strcat(m, "\n", gmapn_menu_server_describe(self.srvsel));
+	}
 	else
+	{
 		m = strcat("/P", m, gmapn_menu_rules(keys));
+		m = strcat(m, "\n", gmapn_menu_rules_describe(self.rulesel));
+	}
 
 	centerprint(self, m);
 };

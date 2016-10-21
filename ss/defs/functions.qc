@@ -96,8 +96,7 @@ void() gmapn_round_end;
 /*
  * gmapn_help.qc
  */
-void() gmapn_help_init;
-void() gmapn_help_think;
+void() gmapn_print_tipoftheday;
 
 /*
  * gmapn_init.qc

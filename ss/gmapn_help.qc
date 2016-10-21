@@ -23,28 +23,20 @@
 
 */
 
-static string helperprints[] =
+static string tips[] =
 {
-	"Welcome peasant.",
-	"more text"
+	"Vote a map by its name, example: /dm4",
+	"To get a game going with too few players try enabling bots!",
+	"You can shoot and trigger everything in a map, it will reset on game start.",
+	"Try to vote a random map with /rndmap",
+	"The rulemaker decides the game options and can allow anyone to set them. Try to become one with /rulemaker!",
+	"If some settings are modified from the server standard it will show them on countdown.",
+	"You can kick, ban and mute other players with /cmd kick ban mute"
 };
 
-static float index;
-
-void gmapn_help_think()
+void gmapn_print_tipoftheday()
 {
-	sprint(self.owner, PRINT_HIGH, redify("console: "));
-	sprintln(self.owner, PRINT_HIGH, redify(helperprints[index]));
-	self.nextthink = time + 5.0;
-	index++;
+	float rnd = floor(random() * tips.length);
 
-	if (index >= helperprints.length || !self.owner)
-		remove(self);
-};
-
-void gmapn_help_init()
-{
-	index = 0;
-	self.nextthink = time + 1.0;
-	self.think = gmapn_help_think;
-};
+	sprint(self, PRINT_HIGH, "\n", redify(_("Tip of the day:\n")), tips[rnd], "\n\n");
+}
