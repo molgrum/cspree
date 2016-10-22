@@ -21,19 +21,19 @@ Right now the best way to install is by Git.
 ### Linux
 Change into your Quake directory.
 ```
-git clone https://github.com/molgrum/spree.git spree
-cd spree
+git clone https://github.com/molgrum/cspree.git cspree
+cd cspree
 ./updatebinaries.sh
 make
 ./start_servers.sh
 ```
 
 ## Windows
-- Download the [zip](https://github.com/molgrum/spree/archive/master.zip) and extract into your Quake folder.
-- Rename the folder to "spree".
-- Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into spree directory)
+- Download the [zip](https://github.com/molgrum/cspree/archive/master.zip) and extract into your Quake folder.
+- Rename the folder to "cspree".
+- Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into cspree directory)
 - Download server [64-bit](http://triptohell.info/moodles/win64/fteqwsv64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqwsv32.exe) (put into quake directory)
-- Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into spree directory)
+- Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into cspree directory)
 - Run QCC exe and winquicker.bat
 
 Happy gibbing!
@@ -50,7 +50,7 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 ### Chat with us
 
 ## Chat with us
-- **#spree** @ [Quakenet](https://webchat.quakenet.org/)
+- **#gmapn** @ [Quakenet](https://webchat.quakenet.org/)
 - **#beta-testers** on [Discord](https://discordapp.com/)
 
 ## Differences from KTX
