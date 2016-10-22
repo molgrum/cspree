@@ -97,6 +97,8 @@ var float gmapn_matchstarttimems;	//global stat that marks the time that the mat
 
 float  vote_in_progress; // 0 = no voting, ok to start a vote, else don't
 entity evoter;            // set a think function that executes if a vote passes
+
+string gmapn_demoname;
 /*
 var float default_game_loadout = 0;
 var float default_game_botskill = 0;

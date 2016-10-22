@@ -239,7 +239,7 @@ void gmapn_sql_logmatch()
 	}
 
 	sqlopenquery(gmapn_sql_matchlogdb, sqlerroronerror, 0, "BEGIN TRANSACTION;");
-	sqlopenquery(gmapn_sql_matchlogdb, sqlerroronerror, 0, sprintf("INSERT INTO match (map) VALUES ('%s');", sqlescape(gmapn_sql_matchlogdb, mapname)));
+	sqlopenquery(gmapn_sql_matchlogdb, sqlerroronerror, 0, sprintf("INSERT INTO match (matchtype, map, demname) VALUES (%g, '%s', '%s');", gmapn_gamemode, sqlescape(gmapn_sql_matchlogdb, mapname), sqlescape(gmapn_sql_matchlogdb, gmapn_demoname)));
 	sqlopenquery(gmapn_sql_matchlogdb, gmapn_sql_populatematch, 0, "SELECT seq FROM SQLITE_SEQUENCE WHERE name='match';");
 };
 

@@ -76,8 +76,7 @@ void gmapn_record_demo()
 		return;
 	}
 
-	recordstr = "easyrecord ";
-	recordstr = strcat(recordstr, getkey(game_mode), "_");
+	recordstr = strcat(getkey(game_mode), "_");
 
 	switch (gmapn_gamemode)
 	{
@@ -127,7 +126,9 @@ void gmapn_record_demo()
 
 	datetime = strftime(TRUE, "%H%M");
 	recordstr = strcat(recordstr, mapname, "_");
-	localcmd(strcat(recordstr, datetime, "\n"));
+	gmapn_demoname = strcat(recordstr, datetime);
+	localcmd(strcat("easyrecord ", gmapn_demoname, "\n"));
+	gmapn_demoname = strcat("demos/", gmapn_demoname, ".mvd");
 };
 
 void gmapn_game_beginpregamecountdown(float countdowntime)
