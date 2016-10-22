@@ -391,6 +391,11 @@ void cmd_rulemaker(string nick)
 {
 	entity target;
 
+	if (getkey(game_lockrules) > 0)
+	{
+		sprintln(self, PRINT_HIGH, _("Server is locked!"));
+		return;
+	}
 	if (gmapn_gamemaster == self)
 	{
 		target = matchclientname(nick);

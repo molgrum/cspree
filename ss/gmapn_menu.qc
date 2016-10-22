@@ -197,7 +197,7 @@ static string menu_mapvote(float op)
 	else if (op == MENU_VALUE)
 	{
 		if (getkey(maprotation) != "")
-			return "Maprotation is active";
+			return "Maprotation";
 		string myvote = gmapn_mapvote_getvote();
 		if (myvote)
 			return myvote;
