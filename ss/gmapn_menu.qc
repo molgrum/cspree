@@ -196,15 +196,17 @@ static string menu_mapvote(float op)
 		return "Map Vote";
 	else if (op == MENU_VALUE)
 	{
+		if (getkey(maprotation) != "")
+			return "Maprotation is active";
 		string myvote = gmapn_mapvote_getvote();
 		if (myvote)
 			return myvote;
 		else
 			return "Abstain";
 	}
-	else if (op == MENU_LEFT)
+	else if (op == MENU_LEFT && getkey(maprotation) == "")
 		gmapn_mapvote_removevote();
-	else if (op == MENU_RIGHT)
+	else if (op == MENU_RIGHT && getkey(maprotation) == "")
 	{
 		menu_mapvote_randomize();
 		self.subsel = SUBSEL_MAPS;
