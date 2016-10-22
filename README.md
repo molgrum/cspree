@@ -118,7 +118,7 @@ ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
 - Not extensively tested.
 
 ### Duel Arena
-- Issues with spectating players not getting disconnected when game is in progress, reproduce this and file a report so we can fix it.
+- Thoroughly tested.
 
 ### Freeze Tag
 - Not extensively tested.
@@ -135,7 +135,7 @@ ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
 
 ### Kill the King
 - FFA style mode.
-- Test if the timelimit is okay.
+- Thoroughly tested.
 
 ### Free For All
 - Not extensively tested.
@@ -147,14 +147,13 @@ ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
 ### Head Hunters
 - FFA style mode.
 - Test if the timelimit is okay.
-- NOTE you always gib in this mode.
+- NOTE you always gib in this mode (cl_gibfilter 0 to see heads).
 
 ### Last Man Standing
 - Not extensively tested.
 
 ### Cooperative
 - Tested and does work, there may be issues though.
-- Idea about starting on any map and having the previous progress autocompleted.
 
 ### Race
 - NOT IMPLEMENTED YET. If there is need for anything better than KTX feel free to drop suggestions.
