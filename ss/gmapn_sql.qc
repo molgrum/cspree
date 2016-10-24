@@ -484,7 +484,7 @@ string gmapn_menu_matchlist(float keys)
 			self.matchstatsquery = sqlopenquery(gmapn_sql_matchlogdb, __NULL__, SQL_TYPE_PERSISTANT, sprintf(
 					"SELECT matchplayer.pid, matchplayer.name, matchplayer.kills, matchplayer.deaths FROM matchplayer WHERE matchplayer.mid == %f", matchid
 				));
-			return gmapn_menu_matchstats(keys);
+			return gmapn_menu_matchstats(0);
 		}
 	}
 	if (keys & 3)
