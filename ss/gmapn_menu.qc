@@ -352,7 +352,7 @@ static string menu_dmm(float op)
 			val += 1; // skip dmm2
 		cvar_set("deathmatch", ftos(val));
 	}
-	gmapn_powerups_setitems(!getkey(noitems));
+	gmapn_powerups_setitems(!getkey(noitems) && val != 4 && val != DMM_MIDAIR && val != DMM_INSTAGIB);
 	return 0;
 };
 
