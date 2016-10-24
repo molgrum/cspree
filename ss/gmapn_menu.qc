@@ -701,6 +701,37 @@ static string menu_pastmatches(float op)
 	return 0;
 };
 
+static string menu_back(float op)
+{
+	if (op == MENU_TITLE)
+		return "Back";
+	else if (op == MENU_VALUE)
+		return "";
+	else if (op == MENU_LEFT)
+		self.subsel = SUBSEL_MAIN;
+	else if (op == MENU_ISNONADMIN)
+		return ".";
+	return 0;
+}
+
+static string(float op) rules_mod[] =
+{
+	menu_maxplayers,
+	menu_minplayers,
+	menu_rounds,
+	menu_loadout,
+	menu_back
+};
+
+static string(float op) rules_srv[] =
+{
+	menu_antilag,
+	menu_minping,
+	menu_botskill,
+	menu_spawnmode,
+	menu_back
+};
+
 static string menu_modoptions(float op)
 {
 	if (op == MENU_TITLE)
@@ -710,7 +741,19 @@ static string menu_modoptions(float op)
 	else if (op == MENU_LEFT)
 		;
 	else if (op == MENU_RIGHT)
+	{
 		self.subsel = SUBSEL_MOD;
+		self.modsel = -1;
+		do
+		{
+			self.modsel += 1;
+			if (self.modsel >= rules_mod.length)
+			{
+				self.modsel = rules_mod.length - 1;
+				break;
+			}
+		} while(!rules_mod[self.modsel](0) || (!gmapn_isgamemaster(self) && !rules_mod[self.modsel](4)));
+	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";
 	return 0;
@@ -725,20 +768,19 @@ static string menu_srvoptions(float op)
 	else if (op == MENU_LEFT)
 		;
 	else if (op == MENU_RIGHT)
+	{
 		self.subsel = SUBSEL_SERVER;
-	else if (op == MENU_ISNONADMIN)
-		return ".";
-	return 0;
-}
-
-static string menu_back(float op)
-{
-	if (op == MENU_TITLE)
-		return "Back";
-	else if (op == MENU_VALUE)
-		return "";
-	else if (op == MENU_LEFT)
-		self.subsel = SUBSEL_MAIN;
+		self.srvsel = -1;
+		do
+		{
+			self.srvsel += 1;
+			if (self.srvsel >= rules_srv.length)
+			{
+				self.srvsel = rules_srv.length - 1;
+				break;
+			}
+		} while(!rules_srv[self.srvsel](0) || (!gmapn_isgamemaster(self) && !rules_srv[self.srvsel](4)));
+	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";
 	return 0;
@@ -761,24 +803,6 @@ static string(float op) rules[] =
 	menu_pastmatches,
 	menu_modoptions,
 	menu_srvoptions
-};
-
-static string(float op) rules_mod[] =
-{
-	menu_maxplayers,
-	menu_minplayers,
-	menu_rounds,
-	menu_loadout,
-	menu_back
-};
-
-static string(float op) rules_srv[] =
-{
-	menu_antilag,
-	menu_minping,
-	menu_botskill,
-	menu_spawnmode,
-	menu_back
 };
 
 static string rules_desc[] =
