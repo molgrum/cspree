@@ -1163,6 +1163,12 @@ string gmapn_menu_rules(float keys)
 	if (!gmapn_gamemaster)
 		gmapn_evaluategamemaster();
 
+	if (time - self.connectedtime <= 3)
+	{
+		keys &= ~KEY_LEFT;
+		keys &= ~KEY_RIGHT;
+	}
+	
 	//use gmapn_gamemaster instead of getkey(game_lockrules), because we might have/be a vip
 	if (getkey(game_lockrules)>0 && !gmapn_gamemodeneedsteam(gmapn_gamemode))
 	{
