@@ -1438,7 +1438,9 @@ void gmapn_menu_any(float keys)
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_prewar)
 	{
-		if (self == gmapn_gamemaster)
+		if (!gmapn_gamemaster)
+			m = strcat(m, sprintf(_("\n\nNobody is %s\n\n"), redify("the Rulemaker")));
+		else if (self == gmapn_gamemaster)
 			m = strcat(m, sprintf(_("\n\nYou are %s\n\n"), redify("the Rulemaker")));
 		else
 			m = strcat(m, sprintf(_("\n\n%s is %s"), gmapn_gamemaster.netname, redify("the Rulemaker")), "\n\n");
