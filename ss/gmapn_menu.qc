@@ -1302,20 +1302,7 @@ string gmapn_menu_rules(float keys)
 
 	return m;
 }
-/*
-string gmapn_menu_settings()
-{
-	string str, mid;
 
-	str = "\n";
-	mid = ":";
-	str = strcat(str, balancestrings(redify("Deathmatch Mode"), mid, goldnmbr(ftos(cvar("deathmatch")))), "\n");
-	str = strcat(str, balancestrings(redify("Timelimit"), mid, goldnmbr(ftos(cvar("timelimit")))), "\n");
-	str = strcat(str, balancestrings(redify("Powerups"), mid, (getkey(powerups_enabled) == 0 ? "Disabled" : "Enabled")), "\n");
-
-	return str;
-}
-*/
 string gmapn_menu_settings()
 {
 	string str, mid, modified, icon, tmp;
@@ -1448,6 +1435,13 @@ void gmapn_menu_any(float keys)
 	{
 		m = sprintf("\n\n%s starts in %s\n\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
 		m = strcat(m, gmapn_menu_settings());
+	}
+	else if (gmapn_serverstate == gmapn_serverstate_prewar)
+	{
+		if (self == gmapn_gamemaster)
+			m = strcat(m, sprintf(_("\n\nYou are %s\n\n"), redify("the Rulemaker")));
+		else
+			m = strcat(m, sprintf(_("\n\n%s is %s"), gmapn_gamemaster.netname, redify("the Rulemaker")), "\n\n");
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)
 		m = strcat(m, flash("READY UP NOW\n"));
