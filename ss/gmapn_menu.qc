@@ -925,6 +925,9 @@ string gmapn_menu_maps(float keys)
 	float lim;
 	string m = 0;
 
+	if (self.mapsel <= 0)
+		self.mapsel = 1;
+	
 	if (keys & KEY_RIGHT)
 	{
 		gmapn_mapvote_removevote();
