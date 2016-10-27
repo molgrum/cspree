@@ -933,6 +933,9 @@ void client_spawn(float sameplace)
 //
 void client_clearspectator(entity player)
 {
+	player.solid = SOLID_SLIDEBOX;
+	player.takedamage = DAMAGE_BLEED;
+	player.movetype = MOVETYPE_WALK;
 	forceinfokey(player, "*spectator", "");	//ezquake bug - \*spectator\0 = spectating... if you fill your userinfo its your own fault.
 	
 	//ezquake bug - players switching between spectator and player end up with -999 frags.
@@ -951,6 +954,9 @@ void client_clearspectator(entity player)
 
 void client_setspectator(entity player)
 {
+	player.solid = SOLID_NOT;
+	player.takedamage = DAMAGE_NO;
+	player.movetype = MOVETYPE_NOCLIP;
 	forceinfokey(player, "*spectator", "2");
 	if (!stof(infokey(player, "*spectator")))
 	{
@@ -1832,9 +1838,15 @@ void PlayerDeathThink()
 		self.deadflag = DEAD_RESPAWNABLE;
 		return;
 	}
-	
-	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_DA)
-		return; //last man standing does not allow respawning, nor do duel arena.  FIXME: make spectator
+
+	 //last man standing does not allow respawning, nor do duel arena.  FIXME: make spectator
+	if (gmapn_gamemode == GM_LASTMANSTANDING)
+	{
+		client_setspectator(self);
+		return;
+	}
+	if (gmapn_gamemode == GM_DA)
+		return;
 	if (gmapn_gamemode == GM_FREEZETAG && self.watertype != CONTENT_LAVA && self.watertype != CONTENT_SLIME)
 		return;	//in freezetag, players can't respawn themselves, but rather are respawned by other players (unless they died or were knocked into lava/slime/void).
 	if (gmapn_gamemode == GM_HIDENSEEK)

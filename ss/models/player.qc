@@ -756,6 +756,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 	if (!client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -833,13 +834,15 @@ void() player_spike1 = [$nailatt1, player_spike2]
 
 	if (!self.button0)
 	{
-		self.weaponframe = 0;
+		player_setweapon();
+		player_run();
 		return;
 	}
 
 	if (!client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -902,13 +905,15 @@ void() player_spike2 = [$nailatt2, player_spike1]
 
 	if (!self.button0)
 	{
-		self.weaponframe = 0;
+		player_setweapon();
+		player_run();
 		return;
 	}
 
 	if (!client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -974,6 +979,7 @@ void() player_grenade1 = [$rockatt1, player_grenade2]
 	if (!client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -1012,6 +1018,7 @@ void() player_rocket1 = [$rockatt1, player_rocket2]
 	if (!client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -1047,6 +1054,7 @@ void() player_railgun1 = [$rockatt1, player_railgun2]
 	if (!self.button0 || self.ammo_cells < 10 || !(self.items & IT_RAILGUN))
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -1082,6 +1090,7 @@ void() player_portal1 = [$rockatt1, player_rocket2]
 	if (!self.button0 || !(self.items & IT_PORTALGUN))
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -1104,13 +1113,15 @@ void() player_lightning1 = [$light1, player_lightning2]
 
 	if (!self.button0)
 	{
-		self.weaponframe = 0;
+		player_setweapon();
+		player_run();
 		return;
 	}
 
 	if (!client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}
@@ -1153,13 +1164,15 @@ void() player_lightning2 = [$light2, player_lightning1]
 
 	if (!self.button0)
 	{
-		self.weaponframe = 0;
+		player_setweapon();
+		player_run();
 		return;
 	}
 
 	if (!client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
+		player_setweapon();
 		player_run();
 		return;
 	}

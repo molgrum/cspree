@@ -631,6 +631,17 @@ void gmapn_round_start()
 {
 	entity e;
 
+	gmapn_reset_entities("func_button");
+	gmapn_reset_entities("func_door");
+	gmapn_reset_entities("func_door_secret");
+	gmapn_reset_entities("func_plat");
+	gmapn_reset_entities("func_train");
+	gmapn_reset_entities("trigger_counter");
+	gmapn_reset_entities("trigger_once");
+	gmapn_reset_entities("trigger_onlyregistered");
+	gmapn_reset_entities("info_controlpoint");
+//	gmapn_reset_entities("item_flag");
+
 	for (int i = 0; i < itemnames.length; i++)
 		gmapn_reset_entities(itemnames[i]);
 	
