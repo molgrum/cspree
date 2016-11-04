@@ -836,6 +836,13 @@ void gmapn_round_start()
 	
 	if (gmapn_roundslimit > 1)
 		bprint(PRINT_HIGH, sprintf("Round %g of %g!\n", gmapn_roundnum, gmapn_roundslimit));
+
+	// ezquake bug hack
+	if (gmapn_gamemode == GM_LASTMANSTANDING)
+	{
+		for (e = world; (e = find(e, classname, "player")); )
+			stuffcmd(e, "skins\n");
+	}
 };
 
 //called after intra-round breather
