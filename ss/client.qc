@@ -1583,7 +1583,7 @@ void client_update_weaponstats()
 
 void client_pack_touch()
 {
-	if (other.classname != "player")
+	if (other.deadflag || other.classname != "player")
 	{
 		return;
 	}
