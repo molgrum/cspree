@@ -64,6 +64,14 @@ void gmapn_game_score_teampoint(string t, float points)
 		gmapn_teamscores_blue += points;
 };
 
+// helper function for gmapn_record_demo()
+string demo_convertname(string name)
+{
+	if (getkey(demo_lowername) == 1)
+		return lowrcase(name);
+	return name;
+}
+
 void gmapn_record_demo()
 {
 	entity e;
@@ -84,7 +92,7 @@ void gmapn_record_demo()
 		e = find(world, classname, "player");
 		if (e)
 		{
-			recordstr = strcat(recordstr, e.netname, "_vs");
+			recordstr = strcat(recordstr, demo_convertname(e.netname), "_vs");
 		}
 		else
 		{
@@ -94,7 +102,7 @@ void gmapn_record_demo()
 		e = find(e, classname, "player");
 		if (e)
 		{
-			recordstr = strcat(recordstr, "_", e.netname, "_");
+			recordstr = strcat(recordstr, "_", demo_convertname(e.netname), "_");
 		}
 		else if (getkey(game_botskill))
 		{
@@ -114,17 +122,17 @@ void gmapn_record_demo()
 			return;
 		}
 		else if (gmapn_team_blue == string_null)
-			recordstr = strcat(recordstr, gmapn_team_red, "_vs_bots", "_");
+			recordstr = strcat(recordstr, demo_convertname(gmapn_team_red), "_vs_bots", "_");
 		else if (gmapn_team_red == string_null)
-			recordstr = strcat(recordstr, gmapn_team_blue, "_vs_bots", "_");
+			recordstr = strcat(recordstr, demo_convertname(gmapn_team_blue), "_vs_bots", "_");
 		else
-			recordstr = strcat(recordstr, gmapn_team_red, "_vs_", gmapn_team_blue, "_");
+			recordstr = strcat(recordstr, demo_convertname(gmapn_team_red), "_vs_", demo_convertname(gmapn_team_blue), "_");
 		break;
 	default:
 		break;
 	}
 
-	datetime = strftime(TRUE, "%H%M");
+	datetime = strftime(TRUE, "%Y%m%d-%H%M");
 	recordstr = strcat(recordstr, mapname, "_");
 	gmapn_demoname = strcat(recordstr, datetime);
 	localcmd(strcat("easyrecord ", gmapn_demoname, "\n"));

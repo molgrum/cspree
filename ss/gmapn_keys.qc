@@ -31,6 +31,7 @@ string NULL = __NULL__;
 	GVS(info_country,		"",	NULL)\
 	GVS(allowedmodes,		"",	"list of allowed modes. blank for any")\
 	GVF(allowbots,			0,	"If set, users are able to enable bots.")\
+	GVF(demo_lowername,		0,	"If set, forces lowercase characters in demo names.") \
 	GVF(game_lockrules,		0,	"If set, users are not allowed to change the rules.")\
 	GVS(game_mode,			"duel",	"The set of scoring rules to utilise.")\
 	GVF(game_loadout,		0,	NULL)\

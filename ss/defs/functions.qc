@@ -313,6 +313,7 @@ void() FoundTarget;
 #define alternate(s) strconv(0,5 + ((time*4)&1), 5 + ((time*4)&1),s)
 #define flash(s) strconv(0,1 + ((time*4)&1), 1 + ((time*4)&1),s)
 #define goldnmbr(s) strconv(0,3,3,s)
+#define lowrcase(s) strconv(1,0,0,s)
 #define brackets(s) sprintf("%s%s%s", chr2str(0x90), s, chr2str(0x91))
 #define disconnected(s) sprintf("%s %s", chr2str(0x87), s)
 #define SUB_Remove self_destruct
