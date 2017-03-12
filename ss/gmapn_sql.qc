@@ -397,6 +397,64 @@ void gmapn_sql_welcome()
 	sqlopenquery(gmapn_sql_matchlogdb, gmapn_sql_welcomeresult, 0, sprintf("SELECT sum(matchplayer.kills), sum(matchplayer.deaths), count(*) FROM matchplayer INNER JOIN player ON matchplayer.pid = player.id WHERE player.guid='%s';", sqlescape(gmapn_sql_matchlogdb, playerguid(self))));
 };
 
+void gmapn_menu_populatemaps_sql(float serveridx, float queryidx, float rows, float columns, float eof, float firstrow)
+{
+	int i, mapidx;
+
+	// write the popular played maps on the server
+	for (i = 0; i < MAPLIMIT; i++)
+	{
+		string sqlmapname;
+
+		if (i >= sqlreadfloat(gmapn_sql_matchlogdb, self.mapquery, SQL_ROWCOUNT, SQL_ROWCOUNT))
+		{
+			if (i == 0)
+				menu_mapvote_randomize();
+			break;
+		}
+		
+		sqlmapname = sqlreadfield(gmapn_sql_matchlogdb, self.mapquery, i, 0);
+
+		for (mapidx = 0; infokey(world, strcat("gmapn_map", ftos(mapidx))) != ""; mapidx++)
+		{
+			if (infokey(world, strcat("gmapn_map", ftos(mapidx))) == sqlmapname)
+				break;
+		}
+
+		
+		self.maps[i] = mapidx;
+	}
+	
+	self.subsel = SUBSEL_MAPS;
+}
+
+void gmapn_menu_mapvote_sql()
+{
+	if (gmapn_sql_matchlogdb < 0)
+	{
+		menu_mapvote_randomize();
+		return;
+	}
+
+	if (self.mapquery)
+		sqlclosequery(gmapn_sql_matchlogdb, self.mapquery);
+	
+	self.mapquery = sqlopenquery(gmapn_sql_matchlogdb, gmapn_menu_populatemaps_sql, SQL_TYPE_PERSISTANT, sprintf(
+								"SELECT match.map, COUNT(*) FROM match WHERE match.matchtype == %f GROUP BY match.map ORDER BY COUNT(*) DESC", gmapn_gamemode
+								));
+}
+
+string gmapn_menu_maplist(float keys)
+{
+	// override back to menu with additional SQL closing
+	if (keys & 8)
+	{
+		sqlclosequery(gmapn_sql_matchlogdb, self.mapquery);
+		self.mapquery = 0;
+	}
+
+	return gmapn_menu_maps(keys);
+}
 
 //centerprint menus
 #define MAX_SHOWCOUNT 10

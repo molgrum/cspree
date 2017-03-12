@@ -316,4 +316,7 @@ void() FoundTarget;
 #define lowrcase(s) strconv(1,0,0,s)
 #define brackets(s) sprintf("%s%s%s", chr2str(0x90), s, chr2str(0x91))
 #define disconnected(s) sprintf("%s %s", chr2str(0x87), s)
+
+#define URL_MAPLIST(url, mode, dmm) strcat(url, "maplist?mode=", gmapn_gamemodetostring(mode), "&dmm=", ftos(dmm))
+
 #define SUB_Remove self_destruct

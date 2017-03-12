@@ -474,6 +474,11 @@ enum
 	GM_MODES
 };
 
+enum
+{
+	URI_GET_MAPLIST
+};
+
 string DATE = __DATE__;
 string TIME = __TIME__;
 

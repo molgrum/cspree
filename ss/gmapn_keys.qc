@@ -29,6 +29,7 @@ string NULL = __NULL__;
 	GVS(info_city,			"",	NULL)\
 	GVS(info_state,			"",	NULL)\
 	GVS(info_country,		"",	NULL)\
+	GVS(staturl,			"", "URL to query for statistics.")\
 	GVS(allowedmodes,		"",	"list of allowed modes. blank for any")\
 	GVF(allowbots,			0,	"If set, users are able to enable bots.")\
 	GVF(demo_lowername,		0,	"If set, forces lowercase characters in demo names.") \

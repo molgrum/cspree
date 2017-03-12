@@ -20,9 +20,11 @@
 #define SUBSEL_SERVER 3
 
 string gmapn_menu_matchlist(float keys);
+string gmapn_menu_maplist(float keys);
 .float matchfirst;
 .float matchlistquery;
 .float matchstatsquery;
+.float mapquery;
 
 .float oldmkeys;
 .float viewingrules;	//timer when it should next be resent
@@ -176,7 +178,7 @@ static string menu_team(float op)
 };
 */
 
-static void menu_mapvote_randomize()
+void menu_mapvote_randomize()
 {
 	float mappoolsize, rnd;
 
@@ -187,8 +189,11 @@ static void menu_mapvote_randomize()
 		rnd = floor(random() * mappoolsize);
 		self.maps[i] = rnd;
 	}
+
+	self.subsel = SUBSEL_MAPS;
 };
 
+void gmapn_menu_mapvote_sql();
 static string menu_mapvote(float op)
 
 {
@@ -205,11 +210,24 @@ static string menu_mapvote(float op)
 			return "Abstain";
 	}
 	else if (op == MENU_LEFT && getkey(maprotation) == "")
+	{
 		gmapn_mapvote_removevote();
+	}
 	else if (op == MENU_RIGHT && getkey(maprotation) == "")
 	{
-		menu_mapvote_randomize();
-		self.subsel = SUBSEL_MAPS;
+		for (int i = 0; i < MAPLIMIT; i++)
+			self.maps[i] = -1; // empty out map list
+
+		self.mapsel = 1; // place marker on first map in the list
+
+		if (uri_get(URL_MAPLIST(getkey(staturl), gmapn_gamemode, cvar("deathmatch")), URI_GET_MAPLIST) == 1)
+		{
+			self.mapquery = -1;
+		}
+		else
+		{
+			gmapn_menu_mapvote_sql();
+		}
 	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";	//anything not null
@@ -923,6 +941,7 @@ string gmapn_menu_maps(float keys)
 {
 	float i;
 	float lim;
+	float currentsel = self.mapsel;
 	string m = 0;
 
 	if (self.mapsel <= 0)
@@ -935,19 +954,29 @@ string gmapn_menu_maps(float keys)
 	}
 	if (keys & KEY_UP)
 	{
-		self.mapsel -= 1;
-		if (!self.mapsel)
+		do
 		{
-			//while ("" != infokey(world, strcat("gmapn_map", ftos(self.maps[self.subsel]))))
-				self.mapsel+=1;
-		}
+			self.mapsel -= 1;
+			
+			if (!self.mapsel)
+				self.mapsel = MAPLIMIT;
+			
+			if (self.mapsel == currentsel)
+				break;
+		} while (infokey(world, strcat("gmapn_map", ftos(self.maps[self.mapsel-1]))) == "");
 	}
 	if (keys & KEY_DOWN)
 	{
-		self.mapsel += 1;
-		//if ("" == infokey(world, strcat("gmapn_map", ftos(self.maps[self.subsel-1]))))
-		if (self.mapsel > MAPLIMIT)
-			self.mapsel = 1;
+		do
+		{
+			self.mapsel += 1;
+			
+			if (self.mapsel > MAPLIMIT)
+				self.mapsel = 1;
+
+			if (self.mapsel == currentsel)
+				break;
+		} while (infokey(world, strcat("gmapn_map", ftos(self.maps[self.mapsel-1]))) == "");
 	}
 
 	i = self.mapsel - (MAPLIMIT / 2);
@@ -1464,6 +1493,8 @@ void gmapn_menu_any(float keys)
 
 	if (self.matchlistquery)
 		m = strcat("/P", m, gmapn_menu_matchlist(keys));
+	else if (self.mapquery != 0) // -1 for URI GET
+		m = strcat("/P", m, gmapn_menu_maplist(keys));
 	else if (self.ready || self.movetime >= time)
 	{	//menu is temporarily hidden because the player is moving.
 		if (self.ready || self.movement || self.button0 || self.button2)

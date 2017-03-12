@@ -83,6 +83,7 @@ gmapn_usercmd.qc
 gmapn_vote.qc
 gmapn_votefuncs.qc
 
+gmapn_http.qc
 
 //for coop
 monsters/ai.qc

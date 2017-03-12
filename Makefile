@@ -10,6 +10,7 @@ SRC = \
 	ss/gmapn_game.qc \
 	ss/gmapn_help.qc \
 	ss/gmapn_hazards.qc \
+	ss/gmapn_http.qc \
 	ss/gmapn_init.qc \
 	ss/gmapn_keys.qc \
 	ss/gmapn_latency.qc \
