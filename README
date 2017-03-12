@@ -10,6 +10,15 @@ Features
 * Heaps of game modes. Duel Arena, Domination and Freeze Tag to name a few.
 * GUI menu
 
+Setting up
+----------
+
+Edit private.cfg and ports/port*.cfg
+
+./updatebinaries.sh
+make
+./start_servers.sh
+
 Downloading files from FTESV
 ----------------------------
 
