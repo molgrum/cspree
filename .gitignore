@@ -4,7 +4,10 @@
 *#*#
 fteqcc*
 qwprogs.*
+fteqw*
 TAGS
 crash.log
 port*.log
+wgetlog
+cspree.pk3
 gmapn.pk3
