@@ -217,17 +217,14 @@ void getkey_reset()
 	//global defaults
 	getkey_parseconfig("cfgs/rules/default.conf");
 
-	//dmm overrides
-	getkey_parseconfig(sprintf("cfgs/rules/dmm%g.conf", deathmatch));
-
 	//mode-specific overrides
 	if (!getkey_parseconfig(sprintf("cfgs/rules/%s.conf", modename)))
 		dprint(sprintf("could not read cfgs/rules/%s.conf\n", modename));
 	
 	//map-specific overrides
-	getkey_parseconfig(sprintf("cfgs/maps/%s.conf", mapname));
+	getkey_parseconfig(sprintf("cfgs/maps/%s/default.conf", mapname));
 	//map-mode-specific settings...
-	getkey_parseconfig(sprintf("cfgs/maps/%s/%s.conf", modename, mapname));
+	getkey_parseconfig(sprintf("cfgs/maps/%s/%s.conf", mapname, modename));
 
 	gmapn_update_defaults_mod();
 };
