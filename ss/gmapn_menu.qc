@@ -362,6 +362,7 @@ static string menu_dmm(float op)
 		if (val == 2)
 			val -= 1; // skip dmm2
 		cvar_set("deathmatch", ftos(val));
+		gmapn_powerups_setitems(!getkey(noitems) && val != 4 && val != DMM_MIDAIR && val != DMM_INSTAGIB);
 	}
 	else if (op == MENU_RIGHT)
 	{
@@ -369,8 +370,9 @@ static string menu_dmm(float op)
 		if (val == 2)
 			val += 1; // skip dmm2
 		cvar_set("deathmatch", ftos(val));
+		gmapn_powerups_setitems(!getkey(noitems) && val != 4 && val != DMM_MIDAIR && val != DMM_INSTAGIB);
 	}
-	gmapn_powerups_setitems(!getkey(noitems) && val != 4 && val != DMM_MIDAIR && val != DMM_INSTAGIB);
+
 	return 0;
 };
 
