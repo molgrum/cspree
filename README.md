@@ -44,8 +44,8 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 ## How to test
 
 ### Servers
-- Testing server is located at *fr.besmella.com:2901*.
-- Connect with FTE or Fodquake preferably.
+- Servers at time of writing: *quake1.de:28501* (EU) *nicotinelounge.com:28501* (US)
+- Connect with any client.
 
 ### Chat with us
 
@@ -56,11 +56,12 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 ## Differences from KTX
 
 ### Server side
-- Built for FTESV. Unfortunately MVDSV cannot be supported due to technicalities but if the MVDSV team would like to cooperate we will gladly code support for it.
+- GUI menu system using your movement keys as arrow keys.
+- Built for FTESV. Unfortunately MVDSV cannot be supported due to major usages of FTE extensions. There is no plan to support it.
 - Written (almost entirely) from scratch in QuakeC.
-- Server side "antilag" which works better and more precise than MVDSV.
+- Server side "antilag" which is client independent.
 - Frikbot support built in. This is mostly for testing purposes but we would really like to improve this AI logic with someone who is wiling to help us.
-- Statistics are saved when you play making a history of kills and deaths using your nickname as identifier across disconnects.
+- Statistics are saved when you play making a history of kills and deaths using your GUID as identifier across disconnects.
 - Practice mode is redundant, all doors trigger etc are reset on match start.
 - Server cvar key system to configure the mod, very customizable in itself with keys for almost anything.
 - Rulemaker system, whoever connects first gets to set the rules of the game to be played. This status is preserved across map changes as well.
@@ -68,7 +69,7 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 ### Client side
 - CSQC is planned for future releases, client side modding makes possible for predictions to be made.
 - Menu system instead of console commands, control the rules and setup with cvar keys.
-- Get a random list of custom maps when voting for one.
+- Get a map list currently based on quering the server on the most played ones.
 - Faster loading of commands to the client.
 - Some lightstyle eyecandy when a match is about to start, check it.
 - Possibility to download .loc, .cfg and .lit from the server.
@@ -112,7 +113,7 @@ ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
 - Tested and works.
 
 ### 2on2
-- Not extensively  tested.
+- Not extensively tested.
 
 ### 4on4
 - Not extensively tested.
