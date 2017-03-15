@@ -179,3 +179,9 @@ We need coordinates for some maps of your choosing, place **one** info_altar in 
 
 ### Game modes left to test
 These are: Last Man Standing, Freeze Tag, Domination and Rover. Four modes that have not been tested much.
+
+## Quotes
+
+lordlame: hmm where is this
+
+Robin: smooth server
