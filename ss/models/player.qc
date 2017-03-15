@@ -635,6 +635,9 @@ void player_pain()
 		return;
 	}
 
+	if (self.weaponframe > 0)
+		return; // do not jam weapon animations
+
 	if (self.weapon == IT_AXE)
 	{
 		player_axpain1();
