@@ -43,9 +43,16 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 
 ## How to test
 
-### Servers
+### Getting a client
+- [nQuake](http://nquake.com/) bundles with the [ezQuake](http://ezquake.github.io/) client and is by far the most popular way to get a Quakeworld setup running with a few clicks
+
+### Connecting to a server
 - Servers at time of writing: *quake1.de:28501* (EU) *nicotinelounge.com:28501* (US)
+- Type in console: connect quake1.de:28501
 - Connect with any client.
+
+### Something is wrong?
+- [Open webchat](https://webchat.quakenet.org/) and enter the channel **#qwrookie** for general help and **#gmapn** for mod specific help
 
 ### Chat with us
 
@@ -172,3 +179,9 @@ We need coordinates for some maps of your choosing, place **one** info_altar in 
 
 ### Game modes left to test
 These are: Last Man Standing, Freeze Tag, Domination and Rover. Four modes that have not been tested much.
+
+## Quotes
+
+lordlame: hmm where is this
+
+Robin: smooth server
