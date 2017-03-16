@@ -650,8 +650,7 @@ void gmapn_round_start()
 	gmapn_reset_entities("info_controlpoint");
 //	gmapn_reset_entities("item_flag");
 
-	for (int i = 0; i < itemnames.length; i++)
-		gmapn_reset_entities(itemnames[i]);
+	gmapn_powerups_setitems(!getkey(noitems) && (deathmatch < 4 || deathmatch == 5));
 	
 	//let clients know the correct time.
 	gmapn_matchstarttimems = 1000*time;
