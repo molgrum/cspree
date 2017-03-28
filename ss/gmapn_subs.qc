@@ -626,14 +626,34 @@ void gmapn_centerprint_clear()
 	remove(self);
 };
 
+const float printinterval = 0.01;
+
+void gmapn_centerprint_think()
+{
+	self.nextthink = time + printinterval;
+	self.cnt -= printinterval;
+
+	if (self.cnt <= 0)
+	{
+		self.think = gmapn_centerprint_clear;
+
+		return;
+	}
+
+	centerprint(self.owner, self.str);
+}
+
 void gmapn_centerprint(entity client, string msg, float duration)
 {
 	entity printer;
 
 	printer = spawn();
-	printer.nextthink = time + duration;
+	printer.classname = "gmapn_centerprint";
+	printer.str = msg;
+	printer.cnt = duration;
+	printer.nextthink = time + printinterval;
 	printer.owner = client;
-	printer.think = gmapn_centerprint_clear;
+	printer.think = gmapn_centerprint_think;
 
 	centerprint(client, msg);
 };

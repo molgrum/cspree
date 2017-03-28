@@ -1528,12 +1528,289 @@ void gmapn_menu_any(float keys)
 	centerprint(self, m);
 };
 
+const string welcome_main[] =
+{
+	"Chilling Spree\n",
+	"\n",
+	"Contributors: bigfoot, molgrum, spike\n",
+	"\n",
+	"Features seven modes apart from the\n",
+	"classical ones. Modes are variations of\n",
+	"the gameplay.\n",
+	"\n",
+	"To skip this introduction, simply FIRE."
+};
+
+const string welcome_modes[] =
+{
+	"Extra modes\n",
+	"\n",
+	"Domination, Duel arena, Freeze tag,\n",
+	"Head hunters, Kill the king,\n",
+	"Last man standing, Rover.\n"
+};
+
+const string welcome_domination[] =
+{
+	"Domination\n",
+	"\n",
+	"Capture the control points and keep\n",
+	"the control.\n"
+};
+
+const string welcome_duelarena[] =
+{
+	"Duel arena\n",
+	"\n",
+	"Frag the other player, next round\n",
+	"the map resets and you both try again.\n"
+};
+
+const string welcome_freezetag[] =
+{
+	"Freeze tag\n",
+	"\n",
+	"Shoot every player in the other team to\n",
+	"freeze them, your team wins the round\n",
+	"when all enemies are frozen.\n"
+};
+
+const string welcome_headhunters[] =
+{
+	"Head hunters\n",
+	"\n",
+	"Gib other players, collect their head,\n",
+	"bring the head(s) to the altar.\n",
+	"\n",
+	"TIP: cl_gibfilter 0\n"
+};
+
+const string welcome_killtheking[] =
+{
+	"Kill the king\n",
+	"\n",
+	"Frag the player that is king to become\n",
+	"the king. Only the king gets frags for\n",
+	"kills.\n"
+};
+
+const string welcome_lastmanstanding[] =
+{
+	"Last man standing\n",
+	"\n",
+	"Kill every player in the other team to\n",
+	"win the round.\n"
+};
+
+const string welcome_rover[] =
+{
+	"Rover\n",
+	"\n",
+	"Kill players in the other team,\n",
+	"capturing them into your own team. You\n",
+	"win the round when everyone is in your\n",
+	"team.\n"
+};
+
+const string welcome_end[] =
+{
+	"Usage\n",
+	"\n",
+	"To use the menu: MOVEMENT KEYS\n",
+	"To disable the menu: JUMP or READY UP\n",
+	"\n",
+	"If you joined without any players on the\n",
+	"server, you are the RULEMAKER meaning\n",
+	"only you can modify the game settings.\n",
+	"You may allow anyone to modify them by\n",
+	"changing the rulemaker setting in the\n",
+	"menu.\n",
+	"\n",
+	"Now experiment with the settings, open\n",
+	"the console and .qw in some players!\n"
+};
+
+float gmapn_display_welcome()
+{
+	string msg = "";
+	float done = FALSE;
+	int i = 0;
+
+	while (done == FALSE)
+	{
+		switch (self.menustate)
+		{
+		case MENU_WELCOME:
+
+			if (i < welcome_main.length)
+			{
+				msg = strcat(msg, welcome_main[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_MODES;
+			}
+
+			break;
+
+		case MENU_MODES:
+
+			if (i < welcome_modes.length)
+			{
+				msg = strcat(msg, welcome_modes[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_DOMINATION;
+			}
+
+			break;
+
+		case MENU_DOMINATION:
+
+			if (i < welcome_domination.length)
+			{
+				msg = strcat(msg, welcome_domination[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_DUELARENA;
+			}
+
+			break;
+
+		case MENU_DUELARENA:
+
+			if (i < welcome_duelarena.length)
+			{
+				msg = strcat(msg, welcome_duelarena[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_FREEZETAG;
+			}
+
+			break;
+
+		case MENU_FREEZETAG:
+
+			if (i < welcome_freezetag.length)
+			{
+				msg = strcat(msg, welcome_freezetag[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_HEADHUNTERS;
+			}
+
+			break;
+
+		case MENU_HEADHUNTERS:
+
+			if (i < welcome_headhunters.length)
+			{
+				msg = strcat(msg, welcome_headhunters[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_KILLTHEKING;
+			}
+
+			break;
+
+		case MENU_KILLTHEKING:
+
+			if (i < welcome_killtheking.length)
+			{
+				msg = strcat(msg, welcome_killtheking[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_LASTMANSTANDING;
+			}
+
+			break;
+
+		case MENU_LASTMANSTANDING:
+
+			if (i < welcome_lastmanstanding.length)
+			{
+				msg = strcat(msg, welcome_lastmanstanding[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_ROVER;
+			}
+
+			break;
+
+		case MENU_ROVER:
+
+			if (i < welcome_rover.length)
+			{
+				msg = strcat(msg, welcome_rover[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_END;
+			}
+
+			break;
+
+		case MENU_END:
+
+			if (i < welcome_end.length)
+			{
+				msg = strcat(msg, welcome_end[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_SHOW;
+			}
+
+			break;
+
+		case MENU_SHOW:
+
+			return FALSE;
+		}
+
+		i += 1;
+	}
+
+	gmapn_centerprint(self, msg, i*1.5);
+	self.menutime = time + i*1.5;
+	return TRUE;
+}
+
 float gmapn_display_rules()
 {
+	entity e;
 	float newkeys, keys;
 
 	if (time < 1)	//can do weird things on loading screens
 		return TRUE;
+
+	// Skip introduction
+	if (self.menustate != MENU_SHOW && self.button0)
+	{
+		self.menustate = MENU_SHOW;
+		self.menutime = time + 0.2;
+		e = find(world, classname, "gmapn_centerprint");
+		e.think = gmapn_centerprint_clear;
+		e.nextthink = time + 0.1;
+		return TRUE;
+	}
 
 	if (time < self.menutime)
 		return TRUE;
@@ -1562,6 +1839,9 @@ float gmapn_display_rules()
 			self.viewingrules = time;
 		self.movetime = time + 3;
 	}
+
+	if (gmapn_display_welcome())
+		return TRUE;
 
 	if (self.ready || self.movetime > time)
 	{

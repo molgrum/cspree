@@ -161,7 +161,11 @@ noref .string wad;
 
 .float  latency;
 .float	ready;
+.float	menustate; // introduction text before showing the menu
 .float	vote_rpickup;
+
+// String field to hold whatever
+.string str;
 
 .float	vote;
 enum
