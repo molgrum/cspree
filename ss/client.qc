@@ -2428,6 +2428,11 @@ void ClientConnect()
 
 	self.connectedtime = time;
 	self.challengertime = time;	//make sure we can't bypass duel queues by just reconnecting
+
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
+		self.menustate = MENU_WELCOME; // Display an explanation of the mod
+	else
+		self.menustate = MENU_SHOW;
 };
 
 //======================================================================
@@ -2452,7 +2457,6 @@ void PutClientInServer()
 	self.max_ammo_cells = 100;			// Maximum cells a player can have;
 	self.my_spawn = world;				// Has not selected a spawn yet
 	self.vote = VOTE_NULL;					// Start with no vote
-	self.menustate = MENU_WELCOME;		// Display an explanation of what this is
 	self.lastroundnum = -1;
 	for (float i = 0; i < stats_hit.length; i++)
 	{

@@ -481,6 +481,8 @@ enum
 
 enum
 {
+	MENU_NULL,
+
 	MENU_WELCOME,
 	MENU_MODES,
 	MENU_DOMINATION,
