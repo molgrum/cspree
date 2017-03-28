@@ -94,6 +94,7 @@ $frame axattc1 axattc2 axattc3 axattc4 axattc5 axattc6
 $frame axattd1 axattd2 axattd3 axattd4 axattd5 axattd6
 
 float() client_bestweapon;
+void() player_run;
 
 void player_setweapon()
 {
@@ -195,6 +196,7 @@ void player_setweapon()
 	}
 
 	self.weaponframe = 0;
+	player_run();
 
 	if (gmapn_qsg_has_zq_vwep)
 		self.vw_index = precache_vwep_model(vwep);
@@ -215,8 +217,6 @@ float hasted_reload(float base)
 	}
 	return base;
 };
-
-void() player_run;
 
 //======================================================================
 // player_stand
