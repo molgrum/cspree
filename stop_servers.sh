@@ -1,27 +1,21 @@
 #!/bin/bash
 
-# Kill 28501
-pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port1.sh" | awk '{print $1}'`
+# Kill 27511
+pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port27511.sh" | awk '{print $1}'`
 if [ "$pid" != "" ]; then kill -9 $pid; fi;
-pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec ports/port1.cfg" | awk '{print $1}'`
-if [ "$pid" != "" ]; then kill -9 $pid; fi;
-
-# Kill 28502
-pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port2.sh" | awk '{print $1}'`
-if [ "$pid" != "" ]; then kill -9 $pid; fi;
-pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec ports/port2.cfg" | awk '{print $1}'`
+pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec cfgs/ports/port27511.cfg" | awk '{print $1}'`
 if [ "$pid" != "" ]; then kill -9 $pid; fi;
 
-# Kill 28503
-pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port3.sh" | awk '{print $1}'`
+# Kill 27512
+pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port27512.sh" | awk '{print $1}'`
 if [ "$pid" != "" ]; then kill -9 $pid; fi;
-pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec ports/port3.cfg" | awk '{print $1}'`
+pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec cfgs/ports/port27512.cfg" | awk '{print $1}'`
 if [ "$pid" != "" ]; then kill -9 $pid; fi;
 
-# Kill 28504
-pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port4.sh" | awk '{print $1}'`
+# Kill 27513
+pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port27513.sh" | awk '{print $1}'`
 if [ "$pid" != "" ]; then kill -9 $pid; fi;
-pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec ports/port4.cfg" | awk '{print $1}'`
+pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec cfgs/ports/port27513.cfg" | awk '{print $1}'`
 if [ "$pid" != "" ]; then kill -9 $pid; fi;
 
 # Kill QTV
