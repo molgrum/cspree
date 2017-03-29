@@ -55,7 +55,7 @@ string NULL = __NULL__;
 	GVF(armor3_absorb,		0.8,	NULL)\
 	GVF(armor3_amount,		200,	NULL)\
 	GVF(axe_new,			0,	"Use more predictable axe attack timings")\
-	GVF(axe_damage,			20,	NULL)\
+	GVF(axe_damage,			80,	NULL)\
 	GVF(axe_push,			1.0,	NULL)\
 	GVF(axe_push_frozen,		3.0,	"Pushback multiplier for axe hits against frozen targets. Applies in freezetag or when the player is staring at mod menus.")\
 	GVF(axe_reload,			0.5,	NULL)\
@@ -117,11 +117,11 @@ string NULL = __NULL__;
 	GVF(spike_damage,		9,	NULL)\
 	GVF(spike_push,			1.0,	NULL)\
 	GVF(spike_reload,		0.2,	NULL)\
-	GVF(spike_velocity,		1000,	NULL)\
+	GVF(spike_velocity,		2000,	NULL)\
 	GVF(spike2_damage,		18,	NULL)\
 	GVF(spike2_push,		1.0,	NULL)\
 	GVF(spike2_reload,		0.2,	NULL)\
-	GVF(spike2_velocity,		1000,	NULL)\
+	GVF(spike2_velocity,		2000,	NULL)\
 	GVF(teleport_angles,		0,	"0 = Angles are set after spawn angles (original)\n1 = Only yaw angles are set after spawn angles\n2 = Yaw angle is set after velocity direction")\
 	GVF(teleport_entities,		0,	"0 = Only teleport players (orgiginal)\n1 = Teleport all entities touching the teleporter")\
 	GVF(teleport_velocity,		0,	"0 = Set a constant velocity of 300 when you teleport\n1 = Preserve all velocity, merging x and y velocity\ninto one forward velocity and preserving z velocity\nas it is. If z velocity < 0 it is set to 0.")\
