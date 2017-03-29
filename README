@@ -1,28 +1,86 @@
-Features
---------
+-----------------------
+What is Chilling Spree?
+-----------------------
 
-* Fast commands downloading
-* Loads of tweaks available to change gameplay
-* Try r_dynamic 1 and ready up
-* Written almost entirely from scratch which makes it easier to fix and extend
-* Supports FTESV fully, MVDSV to some extent but it is not recommended
-* Code is in QC which makes it easier to read than C
-* Heaps of game modes. Duel Arena, Domination and Freeze Tag to name a few.
-* GUI menu
+Chilling Spree is a deathmatch mod for Quakeworld that focuses on user friendliness
+and lots of game modes to try out. It is intended for having fun playing Quakeworld
+with new twists of the game instead of playing the same three modes all the time.
 
+Chilling Spree features fourteen game modes in total, nine of them which are unique
+to the mod compared to KTX.
+
+Lots of work has been made to create a whole new structure of deathmatch modding,
+it is in fact rewritten from the ground up and has its unique style.
+
+With a load of new features like GUI system, server side bot support and heapless
+of game modes it is intended to be a casual mod that you can use to
+"just have fun"(tm).
+
+For those that want to play custom maps but cannot decide what to pick, there is a
+built in randomizer that selects ten maps that you can vote for.
+
+
+--------------------
+Differences from KTX
+--------------------
+
+Server side
+
+GUI menu system using your movement keys as arrow keys.
+Built for FTESV. Unfortunately MVDSV cannot be supported due to major usages of FTE
+extensions. There is no plan to support it.
+Written (almost entirely) from scratch in QuakeC.
+Server side "antilag" which is client independent.
+Frikbot support built in. This is mostly for testing purposes.
+Statistics are saved when you play making a history of kills and deaths using your
+GUID as identifier across disconnects.
+Practice mode is redundant, all doors trigger etc are reset on match start.
+Server cvar key system to configure the mod, very customizable in itself with keys
+for almost anything.
+Rulemaker system, whoever connects first gets to set the rules of the game to be
+played. This status is preserved across map changes as well.
+
+Client side
+
+CSQC is planned for future releases, client side modding makes possible for
+predictions to be made.
+Menu system instead of console commands, control the rules and setup with cvar
+keys.
+Get a map list currently based on quering the server on the most played ones.
+Faster loading of commands to the client.
+Some lightstyle eyecandy when a match is about to start, check it.
+Possibility to download .loc, .cfg and .lit from the server.
+
+Administration
+
+Simple installation.
+FTEQCC is in Debian/Ubuntu repositories but is old, try to use the one at
+triptohell instead.
+Same goes with FTESV, use triptohell.
+For Debian admins we noted that SQLite support needs this command:
+
+ln -s /usr/lib/libsqlite.so.0.8.6 /usr/lib/libsqlite3.so.0
+
+.ent files are used for map modifications such as quad on Aerowalk and removing
+spawn on End.
+
+
+----------
 Setting up
 ----------
 
-Edit private.cfg and ports/port*.cfg
+Edit private.cfg and cfgs/ports/port*.cfg for customization of the server.
 
 ./updatebinaries.sh
-make
 ./start_servers.sh
 
+Happy gibbing!
+
+
+----------------------------
 Downloading files from FTESV
 ----------------------------
 
 /cmd demolist
 /download demonum/X
-
 /download locs/map.loc
