@@ -2227,13 +2227,7 @@ void PlayerPreThink()
 		player_setweapon();
 	}
 	client_attack();
-
-	if (self.button2)
-	{
-		client_jump();
-	}
-	else
-		self.flags = self.flags | FL_JUMPRELEASED;
+	client_jump();
 
 	if (self.fallspeed == 0)
 		self.flags = self.flags | FL_ONGROUND;

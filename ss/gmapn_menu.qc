@@ -905,22 +905,22 @@ static float rulechangetime[rules.length];
 static float modchangetime[rules_mod.length];
 static float srvchangetime[rules_srv.length];
 
-void SV_RunClientCommand()
-{
-	if (!self.ishuman)
-		input_angles = self.v_angle;
+/* void SV_RunClientCommand() */
+/* { */
+/* 	if (!self.ishuman) */
+/* 		input_angles = self.v_angle; */
 
-	if (!self.maxspeed)
-	{	//in menus or frozen
-		input_buttons = 0;
-		input_movevalues = '0 0 0';
-	}
+/* 	if (!self.maxspeed) */
+/* 	{	//in menus or frozen */
+/* 		input_buttons = 0; */
+/* 		input_movevalues = '0 0 0'; */
+/* 	} */
 
-	if (self.hook)
-		ctf_hookupdate();
-	else
-		runstandardplayerphysics(self);
-};
+/* 	if (self.hook) */
+/* 		ctf_hookupdate(); */
+/* 	else */
+/* 		runstandardplayerphysics(self); */
+/* }; */
 
 string balancestrings(string left, string separator, string right)
 {
