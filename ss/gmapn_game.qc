@@ -994,7 +994,10 @@ void gmapn_game_start()
 	if (gmapn_gamemode == GM_DOMINATION)
 		domination_startup();
 	if (gmapn_gamemode == GM_HEADHUNTER)
+	{
 		headhunter_startup();
+		stuffcmd(self, "cl_gibFilter 0\n");
+	}
 	if (gmapn_gamemode == GM_CTF)
 		ctf_enableflags(TRUE);
 
