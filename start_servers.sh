@@ -10,7 +10,7 @@ else
 fi
 
 printf "* Starting ftesv (port 27512)..."
-if ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec cfgs/ports/port2751.cfg" > /dev/null
+if ps ax | grep -v grep | grep "fteqw.sv -game cspree +exec cfgs/ports/port27512.cfg" > /dev/null
 then
     echo "[ALREADY RUNNING]"
 else
