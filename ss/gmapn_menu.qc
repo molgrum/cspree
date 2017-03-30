@@ -1462,7 +1462,8 @@ void gmapn_menu_any(float keys)
 		m = strcat(m, (city!=""||region!="")?", ":"", nation);
 	if (city != "" || region != "" || nation != "")
 		m = strcat(m, "\n");
-	m = strcat(m, redify(VERSION), "\n", URL, "\n");
+
+	m = strcat(m, sprintf("\n%s %s\n", NAME, redify(VERSION)));
 	m = strcat(m, "\n");
 
 	if (gmapn_serverstate == gmapn_serverstate_countdown)
@@ -1528,48 +1529,62 @@ void gmapn_menu_any(float keys)
 	centerprint(self, m);
 };
 
+const string welcome_halt[] =
+{
+	"HALT!\n\n\n",
+	"DO NOT TRY TOO HARD NOW!\n\n\n",
+	"DO NOT SHOOT!\n\n\n",
+	"Just relax, follow reading\n",
+	"this text and still move and jump\n",
+	"around.\n"
+};
+
 const string welcome_main[] =
 {
-	"Chilling Spree\n",
-	"\n",
-	"Contributors: bigfoot, molgrum, spike\n",
-	"\n",
-	"Features seven modes apart from the\n",
-	"classical ones. Modes are variations of\n",
-	"the gameplay.\n",
-	"\n",
-	"To skip this introduction, simply FIRE."
+	"Greetings peasant, welcome to Chilling\nSpree\n\n",
+	"Contributors: bigfoot, molgrum, mushi,\nspike\n\n",
+	"Project page: https://git.io/vSGFe\n\n",
+	"Features seven modes apart from the\nclassical ones. Modes are variations of\nthe gameplay.\n\n",
+	"To skip this introduction, simply FIRE.\n"
 };
 
 const string welcome_modes[] =
 {
-	"Extra modes\n",
-	"\n",
-	"Domination, Duel arena, Freeze tag,\n",
-	"Head hunters, Kill the king,\n",
-	"Last man standing, Rover.\n"
+	"The additional modes that you can pick\nfrom are...\n\n",
+	"Domination, Duel Arena, Freeze Tag,\nHead Hunters, Kill The King,\nLast Man Standing, Rover.\n\n",
+	"Patience, good!\n"
 };
 
 const string welcome_domination[] =
 {
-	"Domination\n",
-	"\n",
-	"Capture the control points and keep\n",
-	"the control.\n"
+	"Domination\n\n",
+	"There are control points that lay around\n",
+	"the map, in the shape of a purple\n",
+	"spikeball.\n\n",
+	"Right at the time of writing, the\n",
+	"control points are mimiced to weapon\n",
+	"positions on the map.\n\n",
+	"Either play like that or go help us\n",
+	"out to place controlpoints on\n",
+	"interesting places on this map.\n\n",
+	"Hold the points to win.\n"
 };
 
 const string welcome_duelarena[] =
 {
-	"Duel arena\n",
-	"\n",
-	"Frag the other player, next round\n",
-	"the map resets and you both try again.\n"
+	"Duel arena\n\n",
+	"You play two at a time, more players\n",
+	"than two can be in queue to play.\n\n",
+	"Start with a stacked loadout with\n",
+	"limited ammo, try to frag the other\n",
+	"opponent while exploiting the items\n",
+	"layig around.\n\n",
+	"The map resets and you both try again.\n"
 };
 
 const string welcome_freezetag[] =
 {
-	"Freeze tag\n",
-	"\n",
+	"Freeze tag\n\n",
 	"Shoot every player in the other team to\n",
 	"freeze them, your team wins the round\n",
 	"when all enemies are frozen.\n"
@@ -1577,18 +1592,15 @@ const string welcome_freezetag[] =
 
 const string welcome_headhunters[] =
 {
-	"Head hunters\n",
-	"\n",
+	"Head hunters\n\n",
 	"Gib other players, collect their head,\n",
-	"bring the head(s) to the altar.\n",
-	"\n",
+	"bring the head(s) to the altar.\n\n",
 	"TIP: cl_gibfilter 0\n"
 };
 
 const string welcome_killtheking[] =
 {
-	"Kill the king\n",
-	"\n",
+	"Kill the king\n\n",
 	"Frag the player that is king to become\n",
 	"the king. Only the king gets frags for\n",
 	"kills.\n"
@@ -1596,16 +1608,14 @@ const string welcome_killtheking[] =
 
 const string welcome_lastmanstanding[] =
 {
-	"Last man standing\n",
-	"\n",
+	"Last man standing\n\n",
 	"Kill every player in the other team to\n",
 	"win the round.\n"
 };
 
 const string welcome_rover[] =
 {
-	"Rover\n",
-	"\n",
+	"Rover\n\n",
 	"Kill players in the other team,\n",
 	"capturing them into your own team. You\n",
 	"win the round when everyone is in your\n",
@@ -1614,18 +1624,15 @@ const string welcome_rover[] =
 
 const string welcome_end[] =
 {
-	"Usage\n",
-	"\n",
+	"Usage\n\n",
 	"To use the menu: MOVEMENT KEYS\n",
-	"To disable the menu: JUMP or READY UP\n",
-	"\n",
+	"To disable the menu: JUMP or READY UP\n\n",
 	"If you joined without any players on the\n",
 	"server, you are the RULEMAKER meaning\n",
 	"only you can modify the game settings.\n",
 	"You may allow anyone to modify them by\n",
 	"changing the rulemaker setting in the\n",
-	"menu.\n",
-	"\n",
+	"menu.\n\n",
 	"Now experiment with the settings, open\n",
 	"the console and .qw in some players!\n"
 };
@@ -1640,6 +1647,20 @@ float gmapn_display_welcome()
 	{
 		switch (self.menustate)
 		{
+		case MENU_HALT:
+
+			if (i < welcome_halt.length)
+			{
+				msg = strcat(msg, welcome_halt[i]);
+			}
+			else
+			{
+				done = TRUE;
+				self.menustate = MENU_WELCOME;
+			}
+
+			break;
+
 		case MENU_WELCOME:
 
 			if (i < welcome_main.length)
@@ -1788,27 +1809,29 @@ float gmapn_display_welcome()
 		i += 1;
 	}
 
-	gmapn_centerprint(self, msg, i*1.5);
-	self.menutime = time + i*1.5;
+	// Rows in a centerprint times this determines how long they stay printed
+	const float multiple = 1.5;
+
+	gmapn_centerprint(self, msg, i*multiple);
+	self.menutime = time + i*multiple;
+	self.viewingrules = 0;
 	return TRUE;
 }
 
 float gmapn_display_rules()
 {
-	entity e;
 	float newkeys, keys;
 
 	if (time < 1)	//can do weird things on loading screens
 		return TRUE;
 
 	// Skip introduction
-	if (self.menustate != MENU_SHOW && self.button0)
+	if (self.button0 && self.menustate != MENU_WELCOME &&  self.menustate != MENU_SHOW)
 	{
 		self.menustate = MENU_SHOW;
 		self.menutime = time + 0.2;
-		e = find(world, classname, "gmapn_centerprint");
-		e.think = gmapn_centerprint_clear;
-		e.nextthink = time + 0.1;
+		self.movetime = time + 0.2;
+		gmapn_centerprint_clear();
 		return TRUE;
 	}
 

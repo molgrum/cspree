@@ -2424,7 +2424,7 @@ void ClientConnect()
 	self.challengertime = time;	//make sure we can't bypass duel queues by just reconnecting
 
 	if (gmapn_serverstate == gmapn_serverstate_prewar)
-		self.menustate = MENU_WELCOME; // Display an explanation of the mod
+		self.menustate = MENU_HALT; // Display an explanation of the mod, stop shooting!
 	else
 		self.menustate = MENU_SHOW;
 };

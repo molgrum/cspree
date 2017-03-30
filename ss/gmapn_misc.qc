@@ -159,21 +159,3 @@ void gmapn_reset_entities(string classnamestr)
 		e = find(e, classname, classnamestr);
 	}
 };
-
-void gmapn_print_version()
-{
-	sprintln(self, PRINT_HIGH, "");
-	sprintln(self, PRINT_HIGH, "-------------------------------------");
-	sprint(self, PRINT_HIGH,   redify("Engine version: "));
-	sprintln(self, PRINT_HIGH, infokey(world, "*version"));
-	sprint(self, PRINT_HIGH,   redify("Mod version:    "));
-	sprintln(self, PRINT_HIGH, VERSION);
-	sprint(self, PRINT_HIGH,   redify("Build date:     "));
-	sprint(self, PRINT_HIGH,   DATE);
-	sprint(self, PRINT_HIGH,   " ");
-	sprintln(self, PRINT_HIGH, TIME);
-	sprintln(self, PRINT_HIGH, "");
-	sprintln(self, PRINT_HIGH, redify("gmapn.sourceforge.net"));
-	sprintln(self, PRINT_HIGH, "-------------------------------------");
-	sprintln(self, PRINT_HIGH, "");
-};

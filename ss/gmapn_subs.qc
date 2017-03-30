@@ -622,8 +622,11 @@ void gmapn_blood(entity inflictor)
 
 void gmapn_centerprint_clear()
 {
-	centerprint(self.owner, "\n");
-	remove(self);
+	entity printer;
+
+	printer = find(world, classname, "gmapn_centerprint");
+	centerprint(printer, "\n");
+	remove(printer);
 };
 
 const float printinterval = 0.01;
@@ -647,6 +650,10 @@ void gmapn_centerprint(entity client, string msg, float duration)
 {
 	entity printer;
 
+	// Clear any lurking printing timer
+	gmapn_centerprint_clear();
+
+	// Classname to find it again, message, duration to stay up
 	printer = spawn();
 	printer.classname = "gmapn_centerprint";
 	printer.str = msg;

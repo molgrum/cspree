@@ -139,7 +139,6 @@ void(string mapstr) gmapn_mapvote_addvote;
 
 void(string classnamestr) gmapn_reset_entities;
 void(entity source, vector destination) gmapn_telefrag_check;
-void() gmapn_print_version;
 
 /*
  * gmapn_powerups.qc

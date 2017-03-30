@@ -25,16 +25,23 @@
 
 static string tips[] =
 {
-	_("Vote a map by its name, example: /dm4\n"),
-	_("To get a game going with too few players try enabling bots\n"),
-	_("You can shoot and trigger everything in a map, it will reset on game start\n"),
-	_("Try to vote a random map with /rndmap\n"),
-	_("The rulemaker decides the game options and can allow anyone to set them. Try to become one with /rulemaker\n"),
-	_("If some settings are modified from the server standard it will show them on countdown\n"),
-	_("You can kick, ban and mute other players with /cmd kick ban mute\n"),
-	_("Matchless game modes will continue playing after intermission\n"),
-	_("Check your sorry ass stats by selecting Past Matches, you can even download demos here\n"),
-	_("For newcomers, Duel Arena is a fun mode that only requires two players\n")
+	_("Vote a map by its name FOR NOW, example:\n/dm4\nMap list is not available yet, menu map\nlist is unfinished so don't use it.\n"),
+	_("To get a game going with too few players\ntry opening console and type: .qw get in\nhere NOW and play with ME!\n"),
+	_("You can shoot, trigger, open and press.\nAny action you can think of to move\nthrough the map in prewar and exploring\nit. Everything in a map, will reset on\ngame start\n"),
+	_("Since there is no maplist for ALL maps,\ntry to vote a random map with /rndmap\nfor now\n"),
+	_("The rulemaker is simply the currently\nallowed tinkerer that picks the game\noptionsand can although allow ANYONE\nto set them. If you feel envyous, try to\nbecome one with /rulemaker\n"),
+	_("If some settings are modified BY YOU\nfrom other than the server standard it\nwill show a blinking warning on\ncountdown where yellow leds indicate.\n"),
+	_("You can kick, ban and mute other players\nthat you find annoying with /cmd\ncommands: kick, ban or mute\n"),
+	_("Matchless game modes will continue\nplaying after intermission. Such as Duel Arena, Kill the King.\n"),
+	_("Check your sorry ass stats by selecting\nPast Matches, you can even download demos\nhere\n"),
+	_("Cooperative gamemode places you in\nsingle player missions with other\nplayers able to join in and help you\nkill monsters and find secrets.\n"),
+	_("Domination. Right now the capture points\nare usually at RL, LG or even GL. Lack\nof information that is planned to be\nadded makes this mode not have its full\npotential.\n"),
+	_("For newcomers, Duel Arena is a fun and\nrelaxed mode that only requires two\nplayers. Which makes it abit easier to\nmake the game start.\n"),
+	_("Freezetag. Team based where your team\ntries to freeze all of the opponents.\nYou win the round when all opponents are\nfrozen!\n"),
+	_("Headhunters. Free for All, gib the\nothers, collect heads from their dead\nbodies, bring the heads to the map altar\n(there is only one).\n"),
+	_("Kill the King. Everyone starts as plebs,\nplebs can kill but not gain frags.\nWhoever gets first blood becomes king,\nand start accumuling frags. Try to\nsnatch the crown and win the amount of\nfrags!\n"),
+	_("Did you like clan arena? Definitively\ntry out Last Man Standing then!\n"),
+	_("Rover. The weirdest mode yet. You start\noff on rounds, two teams facing each\nother. When you kill an opponent, he\nsuddenly swaps team into your, meaning\nyou converted him. Keep doing this magic\nwith the whole opposing team until\neveryone is in your team. Score!\n")
 };
 
 void gmapn_print_tipoftheday()

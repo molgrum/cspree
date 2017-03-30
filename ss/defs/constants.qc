@@ -24,9 +24,13 @@
 
 */
 
-/* MOD VERSION */
-string VERSION = "Chilling Spree 1.0 beta";
-string URL = "http://github.com/molgrum/cspree";
+/* MOD INFO */
+// Name is the shortened variant
+// Version is always git when laying in the repo, do change it on release
+// URL is a shortened link to the project page
+const string NAME    = "cspree";
+const string VERSION = "1.0 git";
+const string URL     = "https://git.io/vSGFe";
 
 ///////////////////////////////////////////////////////////////////////////////
 //                       Q U A K E   C O N S T A N T S                       //
@@ -483,6 +487,7 @@ enum
 {
 	MENU_NULL,
 
+	MENU_HALT,
 	MENU_WELCOME,
 	MENU_MODES,
 	MENU_DOMINATION,
