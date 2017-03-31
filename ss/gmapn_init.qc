@@ -74,9 +74,8 @@ void gmapn_init()
 	if (hostname != "")
 	{
 		localcmd(hostname);
-		localcmd(" - ");
+		localcmd(" ");
 		localcmd(gamemode);
-		localcmd(" [cspree]");
 	}
 	else
 	{
@@ -115,7 +114,7 @@ void gmapn_init()
 
 	}
 
-	localcmd("\"\n");
+	localcmd(" - cspree\"\n");
 
 	// Configure map pool
 
