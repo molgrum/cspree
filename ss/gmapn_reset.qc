@@ -26,8 +26,7 @@
 void gmapn_reset_think()
 {
 	serverflags = 0;
-	//localcmd("exec configs/reset.cfg\n");
-	gmapn_config_exec("cfgs/reset.conf");
+	localcmd("exec cfgs/reset.conf\n");
 	self.nextthink = time + 0.1;
 	self.think = gmapn_reset_stoptimer;
 };
