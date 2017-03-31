@@ -37,7 +37,7 @@
 void gmapn_init()
 {
 	float map_count;
-	string hostname, geo_city, geo_state, geo_country;
+	string hostname, geo_city, geo_state, geo_country, gamemode;
 
 	dbgprintln("=== gmapn_init() ===");
 	gmapn_gamemode = gmapn_gamemodefromstring(getkey(game_mode));
@@ -64,13 +64,19 @@ void gmapn_init()
 	geo_city = getkey(info_city);
 	geo_country = getkey(info_country);
 	geo_state = getkey(info_state);
+	if (getkey(game_lockrules))
+		gamemode = gmapn_gamemodefullname(gmapn_gamemode);
+	else
+		gamemode = "various";
 
 	localcmd("serverinfo hostname \"");
 
 	if (hostname != "")
 	{
 		localcmd(hostname);
-		localcmd(" CSPREE");
+		localcmd(" - ");
+		localcmd(gamemode);
+		localcmd(" [cspree]");
 	}
 	else
 	{
