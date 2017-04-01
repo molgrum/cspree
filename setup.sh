@@ -9,6 +9,20 @@ printf "may quit the setup when you feel enough have\n"
 printf "been created.\n"
 printf "\n"
 
+createrun() {
+	FILE=run/port$port.sh
+	printf 'Writing %s...\n' $FILE
+	printf '#!/bin/sh\n'                                                    > $FILE
+	printf 'cd ..\n'                                                       >> $FILE
+	printf 'while true ; do\n'                                             >> $FILE
+	printf '	./fteqw.sv -game cspree'                               >> $FILE
+	printf ' -port %s +set port %s >> port%s.log 2>&1\n' $port $port $port >> $FILE
+	printf '	sleep 1\n'                                             >> $FILE
+	printf 'done\n'                                                        >> $FILE
+	printf 'Setting permissions...\n'
+	chmod +x $FILE
+}
+
 # i, servername, country, county, city
 createport() {
 	printf "\nNew port for %s\n\n" "$servername"
@@ -42,7 +56,7 @@ createport() {
 	# Write the config
 	FILE=cfgs/ports/port$port.cfg
 	printf 'Writing %s...\n' $FILE
-	printf '// Custom text to show in server browsers\n'               >> $FILE
+	printf '// Custom text to show in server browsers\n'                > $FILE
 	printf 'set g_info_hostname "%s"\n\n'                         "$2" >> $FILE
 	printf '// Optional custom information about location of server\n' >> $FILE
 	printf 'set g_info_country  "%s"\n'                           "$3" >> $FILE
@@ -52,6 +66,7 @@ createport() {
 	printf 'set g_game_mode "%s"\n'                            "$mode" >> $FILE
 	printf 'set g_game_lockrules "%d"\n\n'                "$lockrules" >> $FILE
 	printf 'alias startmap_dm "map %s"\n'                   "$homemap" >> $FILE
+	createrun "$port"
 }
 
 # maxports

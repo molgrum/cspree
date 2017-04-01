@@ -1,31 +1,17 @@
 #!/bin/bash
 
-printf "* Starting ftesv (port 27511)..."
-if ps ax | grep -v grep | grep "fteqw.sv -game cspree -set 27511 +set port 27511" > /dev/null
-then
-    echo "[ALREADY RUNNING]"
-else
-    ./run/port27511.sh > /dev/null &
-    echo "[OK]"
-fi
+port=27511
 
-printf "* Starting ftesv (port 27512)..."
-if ps ax | grep -v grep | grep "fteqw.sv -game cspree -port 27512 +set port 27512" > /dev/null
-then
-    echo "[ALREADY RUNNING]"
-else
-    ./run/port27512.sh > /dev/null &
-    echo "[OK]"
-fi
-
-printf "* Starting ftesv (port 27513)..."
-if ps ax | grep -v grep | grep "fteqw.sv -game cspree -port 27513 +set port 27513" > /dev/null
-then
-    echo "[ALREADY RUNNING]"
-else
-    ./run/port27513.sh > /dev/null &
-    echo "[OK]"
-fi
+while [ -f ./run/port$port.sh ]; do
+	printf "* Starting ftesv (port %s)..." $port
+	if ps ax | grep -v grep | grep "fteqw.sv -game cspree -port $port +set port $port" > /dev/null; then
+		echo "[ALREADY RUNNING]"
+	else
+		./run/port$port.sh > /dev/null &
+		echo "[OK]"
+	fi
+	let port=port+1
+done
 
 # UNCOMMENT IF YOU WANT QTV RUNNING HERE
 
