@@ -1,16 +1,17 @@
-How to install the mod:
+Installation from source:
 
-Change into you Quake directory and:
-git clone git://git.code.sf.net/p/gmapn/master gmapn
+Extract or clone the source inside your Quake directory. Mine would be ~/quake/cspree
 
-cd gmapn
-
-Download fteqcc+ftesv:
+Download compiler, server and game data:
 ./updatebinaries.sh
 
-Build the mod:
+Compile qwprogs.dat:
 make
 
-Copy gmapn.pk3 into gmapn/ directory.
+Setup your server ports:
+./setup.sh
+
+Start your engines:
+./start_servers.sh
 
 Happy gibbbing!
