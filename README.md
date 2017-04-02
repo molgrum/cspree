@@ -25,6 +25,7 @@ git clone https://github.com/molgrum/cspree.git cspree
 cd cspree
 ./updatebinaries.sh
 make
+./setup.sh
 ./start_servers.sh
 ```
 
