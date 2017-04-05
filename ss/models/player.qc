@@ -778,7 +778,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 		// The instagib coilgun
 		self.attack_finished = time + hasted_reload(getkey(coilgun_reload));
 
-		hazard_bullet(org, dir);
+		hazard_coilgun(org, dir);
 
 		sound(self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);
 

@@ -363,7 +363,7 @@ void hazard_coilgun(vector org, vector dir)
 	{
 		WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
 		WriteByte(MSG_MULTICAST, TE_GUNSHOT);
-		WriteByte(MSG_MULTICAST, 100);
+		WriteByte(MSG_MULTICAST, 2); // 2 to not show nail shot
 		WriteCoord(MSG_MULTICAST, trace_endpos_x);
 		WriteCoord(MSG_MULTICAST, trace_endpos_y);
 		WriteCoord(MSG_MULTICAST, trace_endpos_z);
