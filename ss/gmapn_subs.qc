@@ -625,8 +625,12 @@ void gmapn_centerprint_clear()
 	entity printer;
 
 	printer = find(world, classname, "gmapn_centerprint");
-	centerprint(printer, "\n");
-	remove(printer);
+
+	if (printer)
+	{
+		centerprint(printer.owner, "\n");
+		remove(printer);
+	}
 };
 
 const float printinterval = 0.01;
