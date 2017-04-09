@@ -307,7 +307,8 @@ void gmapn_checklastplayer(string theteam)
 	if (findliveteamplayer(player, theteam))
 		return;	//there's another player, no worries
 
-	stuffcmd(player, "play \"announcer/lastman.wav\"\n");
+	// FIXME: nonexistent sound file
+	//stuffcmd(player, "play \"announcer/lastman.wav\"\n");
 	centerprint(player, "You're the last man alive!");
 };
 
@@ -348,7 +349,8 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 			{
 				if (e.teamname == killer.teamname)
 				{
-					stuffcmd(killer, "play \"announcer/defence.wav\"\n");
+					// FIXME: nonexistent sound file
+					//stuffcmd(killer, "play \"announcer/defence.wav\"\n");
 					centerprint(killer, "Defended!");
 					delta += getkey(domination_defense);
 					break;
@@ -365,7 +367,8 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 			{
 				if (e.teamname == killer.teamname)
 				{
-					stuffcmd(killer, "play \"announcer/defence.wav\"\n");
+					// FIXME: nonexistent sound file
+					//stuffcmd(killer, "play \"announcer/defence.wav\"\n");
 					centerprint(killer, "Defended!");
 					delta += getkey(domination_defense);
 					break;
