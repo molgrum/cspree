@@ -622,9 +622,18 @@ void gmapn_blood(entity inflictor)
 
 void gmapn_centerprint_clear()
 {
-	entity printer;
+	entity printer = world;
 
-	printer = find(world, classname, "gmapn_centerprint");
+	if (self.classname == "gmapn_centerprint")
+		printer = self;
+	else
+	{
+		while (printer = find(printer, classname, "gmapn_centerprint"))
+		{
+			if (printer.owner == self)
+				break;
+		}
+	}
 
 	if (printer)
 	{
