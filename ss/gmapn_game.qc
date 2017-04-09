@@ -263,7 +263,7 @@ static float duel_spawn_challenger()
 	client_clearspectator(self);
 	self.challengertime = time;
 	respawn_living();
-	str = strcat("Round ", ftos(gmapn_roundnum + 1), "\nYou're up!");
+	str = strcat("Round ", ftos(gmapn_roundnum), "\nYou're up!");
 	centerprint(self, str);
 	bprint(PRINT_HIGH, self.netname, " is up!\n");
 	stuffcmd(self, "bf 1 1 1 0.3 0.5\n");	//white flash
@@ -655,9 +655,6 @@ void gmapn_round_start()
 	//let clients know the correct time.
 	gmapn_matchstarttimems = 1000*time;
 
-	//lets have 1-based rounds
-	gmapn_roundnum++;
-	
 	//rover re-randomizes teams on EVERY round restart
 	if (gmapn_gamemode == GM_ROVER)
 		gmapn_randomize_playerteams();
@@ -857,10 +854,11 @@ void gmapn_round_restart()
 {
 	self.nextthink = time + 1;
 	self.cnt--;
+
 	if (self.cnt > 0)
 	{
 		for (entity e = world; (e = find(e, classname, "player")); )
-			centerprint(e, sprintf(_("Round %s of %s starts in "), goldnmbr(ftos(gmapn_roundnum+1)), goldnmbr(ftos(getkey(game_rounds)))), goldnmbr(ftos(self.cnt)), " seconds");
+			centerprint(e, sprintf(_("Round %s of %s starts in "), goldnmbr(ftos(gmapn_roundnum)), goldnmbr(ftos(getkey(game_rounds)))), goldnmbr(ftos(self.cnt)), " seconds");
 		sound(self, CHAN_VOICE, sprintf("announcer/%g.wav", self.cnt), 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 	}
 	else
@@ -902,7 +900,10 @@ void gmapn_round_end()
 		if (other)
 			remove(other);
 	}
-	
+
+	//lets have 1-based rounds
+	gmapn_roundnum++;
+
 	if (gmapn_roundslimit == gmapn_roundnum)
 		gmapn_game_end();
 	else
@@ -920,7 +921,7 @@ void gmapn_game_start()
 {
 	//entity player;
 	entity oldself;
-	gmapn_roundnum = 0;
+	gmapn_roundnum = 1;
 	gmapn_roundslimit = 1;
 
 	oldself = self;
