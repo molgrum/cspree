@@ -1,4 +1,9 @@
-QCC = ./fteqcc
+VERSION_NUMBER:=`git describe --tags --abbrev=0`
+ifndef VERSION
+	VERSION:=git
+endif
+DATE:=`git log -1 --date="format:%Y %d %b %H:%M" --format=%cd`
+QCC:=./fteqcc
 
 SRC = \
 	ss/client.qc \
@@ -82,6 +87,9 @@ SRC = \
 	ss/monsters/zombie.qc
 
 ../cspree/qwprogs.dat: $(SRC)
+	git diff-index --quiet HEAD -- || $(eval DEVELOPED:="+dev") \
+	echo "#define VERSION \"$(VERSION_NUMBER) $(VERSION)$(DEVELOPED)\"" > version.qc
+	echo "#define DATE \"$(DATE)\"" >> version.qc
 	$(QCC)
 
 ctags: $(SRC)
@@ -93,4 +101,4 @@ etags: $(SRC)
 clean:
 	rm -f qwprogs.dat qwprogs.lno
 
-all: ../spree/qwprogs.dat
+all: ../cspree/qwprogs.dat
