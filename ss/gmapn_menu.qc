@@ -1463,7 +1463,7 @@ void gmapn_menu_any(float keys)
 	if (city != "" || region != "" || nation != "")
 		m = strcat(m, "\n");
 
-	m = strcat(m, sprintf("\n%s %s\n", NAME, redify(VERSION)));
+	m = strcat(m, sprintf("\n%s %s (%s)\n", NAME, redify(VERSION), DATE));
 	m = strcat(m, "\n");
 
 	if (gmapn_serverstate == gmapn_serverstate_countdown)
