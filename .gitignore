@@ -2,6 +2,7 @@
 .svn
 cfgs/ports/*.cfg
 run/*.sh
+private.cfg
 *~
 *#*#
 fteqcc*
