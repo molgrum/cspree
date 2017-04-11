@@ -89,7 +89,7 @@ SRC = \
 ../cspree/qwprogs.dat: $(SRC)
 	rm -f version.qc
 	git diff-index --quiet HEAD -- || $(eval DEVELOPED:="+dev") \
-	echo "#define VERSION \"$(VERSION_NUMBER) $(VERSION)$(DEVELOPED)\"" > version.qc
+	echo "#define VERSION \"$(VERSION_NUMBER) $(VERSION)$(DEVELOPED)\"" >> version.qc
 	echo "#define DATE \"$(DATE)\"" >> version.qc
 	$(QCC)
 
