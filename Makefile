@@ -1,8 +1,7 @@
 VERSION_NUMBER:=`git describe --tags --abbrev=0`
-ifndef VERSION
-	VERSION:=git
-endif
-DATE:=`git log -1 --date="format:%Y %d %b %H:%M" --format=%cd`
+VERSION:=$(shell git rev-parse --git-dir > /dev/null 2>&1 && echo "git" || echo "src")
+DATE:=$(shell if $(VERSION)=="git"; then echo "`git log -1 --date="format:%Y %d %b %H:%M" --format=%cd`"; fi)
+VERSION:=$(shell git diff-index --quiet HEAD -- && echo "$(VERSION)" || echo "$(VERSION)+dev")
 QCC:=./fteqcc
 
 SRC = \
@@ -87,7 +86,6 @@ SRC = \
 	ss/monsters/zombie.qc
 
 ../cspree/qwprogs.dat: $(SRC)
-	$(eval VERSION:=$(shell git diff-index --quiet HEAD -- && echo "$(VERSION)" || echo "$(VERSION)+dev"))
 	{ echo "#define VERSION \"$(VERSION_NUMBER) $(VERSION)\""; echo "#define DATE \"$(DATE)\""; } > version.qc
 	$(QCC)
 
