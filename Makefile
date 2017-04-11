@@ -87,8 +87,8 @@ SRC = \
 	ss/monsters/zombie.qc
 
 ../cspree/qwprogs.dat: $(SRC)
-	git diff-index --quiet HEAD -- || $(eval DEVELOPED:="+dev") \
-	{ echo "#define VERSION \"$(VERSION_NUMBER) $(VERSION)$(DEVELOPED)\""; echo "#define DATE \"$(DATE)\""; } > version.qc
+	$(eval VERSION:=$(shell git diff-index --quiet HEAD -- && echo "$(VERSION)" || echo "$(VERSION)+dev"))
+	{ echo "#define VERSION \"$(VERSION_NUMBER) $(VERSION)\""; echo "#define DATE \"$(DATE)\""; } > version.qc
 	$(QCC)
 
 ctags: $(SRC)
