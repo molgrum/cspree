@@ -29,7 +29,6 @@
 // Version is always git when laying in the repo, do change it on release
 // URL is a shortened link to the project page
 const string NAME    = "cspree";
-const string VERSION = "1.0 git";
 const string URL     = "https://git.io/vSGFe";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -500,9 +499,6 @@ enum
 	MENU_END,
 	MENU_SHOW
 };
-
-string DATE = __DATE__;
-string TIME = __TIME__;
 
 const struct
 {
