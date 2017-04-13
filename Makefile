@@ -1,7 +1,10 @@
-VERSION_NUMBER:=`git describe --tags --abbrev=0`
+# Version tag for this release, should match the current tag in Git
+TAG:=1.0-beta3
+
 VERSION:=$(shell git rev-parse --git-dir > /dev/null 2>&1 && echo "git" || echo "src")
-DATE:=$(shell if $(VERSION)=="git"; then echo "`git log -1 --date="format:%Y %d %b %H:%M" --format=%cd`"; fi)
-VERSION:=$(shell git diff-index --quiet HEAD -- && echo "$(VERSION)" || echo "$(VERSION)+dev")
+VERSION_NUMBER:=$(shell if [ "$(VERSION)" = "git" ]; then echo "`git describe --tags --abbrev=0`"; else echo "$(TAG)"; fi)
+DATE:=$(shell if [ "$(VERSION)" = "git" ]; then echo "`LC_ALL=C git log -1 --date=\"format:%a %d %b %Y %H:%M\" --format=%cd`"; else echo "`find . -type f -printf '%TY-%Tm-%Td %TH:%TM %P\n' | sort -n | tail -1 | awk '{print $1 " " $2}' | { read modified ; LC_ALL=C date -d \"$(modified)\" \"+%a %d %b %Y %H:%M\" ; }`"; fi)
+VERSION:=$(shell if [ "$(VERSION)" = "git" ]; then git diff-index --quiet HEAD -- && echo "$(VERSION)" || echo "$(VERSION)+dev"; else echo "$(VERSION)"; fi)
 QCC:=./fteqcc
 
 SRC = \
