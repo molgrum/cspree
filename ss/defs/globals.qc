@@ -69,6 +69,7 @@ float gmapn_serverstate;
    float gmapn_serverstate_playing = 2;
    float gmapn_serverstate_intermission = 3;
    float gmapn_serverstate_forcestart = 4;
+   float gmapn_serverstate_breather = 5;
 
 float gmapn_recording;
 

@@ -1189,6 +1189,11 @@ void client_attack()
 		return;
 	}
 
+	if (gmapn_serverstate == gmapn_serverstate_breather)
+	{
+		return; // break between rounds while playing, halt firing
+	}
+
 	// If quaded, play quad sound
 	if (self.items & IT_QUAD)
 	{

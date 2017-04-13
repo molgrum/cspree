@@ -655,6 +655,9 @@ void gmapn_round_start()
 	//let clients know the correct time.
 	gmapn_matchstarttimems = 1000*time;
 
+	// was in gmapn_game_start but moved since we need to reset this between rounds
+	gmapn_serverstate = gmapn_serverstate_playing;
+
 	//rover re-randomizes teams on EVERY round restart
 	if (gmapn_gamemode == GM_ROVER)
 		gmapn_randomize_playerteams();
@@ -904,6 +907,9 @@ void gmapn_round_end()
 	//lets have 1-based rounds
 	gmapn_roundnum++;
 
+	// this is a state where the players cannot shoot or be hurt
+	gmapn_serverstate = gmapn_serverstate_breather;
+
 	if (gmapn_roundslimit == gmapn_roundnum)
 		gmapn_game_end();
 	else
@@ -958,7 +964,6 @@ void gmapn_game_start()
 		bprint(PRINT_MEDIUM, _("The game has begun - "), gmapn_gamemodefullname(gmapn_gamemode), "\n");
 	else
 		bprint(PRINT_MEDIUM, _("The match has begun - "), gmapn_gamemodefullname(gmapn_gamemode), "\n");
-	gmapn_serverstate = gmapn_serverstate_playing;
 
 	gmapn_roundslimit = gmapn_gamemode_rounds(gmapn_gamemode);
 	if (gmapn_gamemode == GM_DA)

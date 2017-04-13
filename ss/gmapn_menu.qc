@@ -1452,33 +1452,33 @@ void gmapn_menu_any(float keys)
 	string host = getkey(info_hostname), city = getkey(info_city), region = getkey(info_state), nation = getkey(info_country);
 
 	string m = "";
-	m = strcat(m, host, "\n");
 
-	if (city != "")
-		m = strcat(m, city);
-	if (region != "")
-		m = strcat(m, (city!="")?", ":"", region);
-	if (nation != "")
-		m = strcat(m, (city!=""||region!="")?", ":"", nation);
-	if (city != "" || region != "" || nation != "")
-		m = strcat(m, "\n");
-
-	m = strcat(m, sprintf("\n%s %s\n", NAME, redify(VERSION)));
-	m = strcat(m, sprintf("(%s)\n", redify(DATE)));
-
-	if (gmapn_serverstate == gmapn_serverstate_countdown)
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
 	{
-		m = sprintf("\n%s starts in %s\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
-		m = strcat(m, gmapn_menu_settings());
-	}
-	else if (gmapn_serverstate == gmapn_serverstate_prewar)
-	{
+		m = strcat(m, host, "\n");
+
+		if (city != "")
+			m = strcat(m, city);
+		if (region != "")
+			m = strcat(m, (city!="")?", ":"", region);
+		if (nation != "")
+			m = strcat(m, (city!=""||region!="")?", ":"", nation);
+		if (city != "" || region != "" || nation != "")
+			m = strcat(m, "\n");
+
+		m = strcat(m, sprintf("\n%s %s\n", NAME, redify(VERSION)));
+		m = strcat(m, sprintf("(%s)\n", redify(DATE)));
 		if (!gmapn_gamemaster)
 			m = strcat(m, sprintf(_("\nNobody is %s\n"), redify("the Rulemaker")));
 		else if (self == gmapn_gamemaster)
 			m = strcat(m, sprintf(_("\nYou are %s\n"), redify("the Rulemaker")));
 		else
 			m = strcat(m, sprintf(_("\n%s is %s\n"), gmapn_gamemaster.netname, redify("the Rulemaker")));
+	}
+	else if (gmapn_serverstate == gmapn_serverstate_countdown)
+	{
+		m = sprintf("%s starts in %s\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
+		m = strcat(m, gmapn_menu_settings());
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)
 		m = strcat(m, flash("\nREADY UP NOW\n"));
@@ -1889,6 +1889,15 @@ float gmapn_display_rules()
 				self.viewingrules = time + 1;
 			}
 		}
+		return FALSE;
+	}
+
+	if (gmapn_serverstate == gmapn_serverstate_breather)
+	{
+		// FIXME: move serverstate logic into gmapn_menu_any and centerprint info
+		// about health/armor/round countdown/frozen/etc there
+		// breathers prints the time until the next round starts
+
 		return FALSE;
 	}
 
