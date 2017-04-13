@@ -1463,25 +1463,25 @@ void gmapn_menu_any(float keys)
 	if (city != "" || region != "" || nation != "")
 		m = strcat(m, "\n");
 
-	m = strcat(m, sprintf("\n%s %s (%s)\n", NAME, redify(VERSION), DATE));
-	m = strcat(m, "\n");
+	m = strcat(m, sprintf("\n%s %s\n", NAME, redify(VERSION)));
+	m = strcat(m, sprintf("(%s)\n", redify(DATE)));
 
 	if (gmapn_serverstate == gmapn_serverstate_countdown)
 	{
-		m = sprintf("\n\n%s starts in %s\n\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
+		m = sprintf("\n%s starts in %s\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
 		m = strcat(m, gmapn_menu_settings());
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_prewar)
 	{
 		if (!gmapn_gamemaster)
-			m = strcat(m, sprintf(_("\n\nNobody is %s\n\n"), redify("the Rulemaker")));
+			m = strcat(m, sprintf(_("\nNobody is %s\n"), redify("the Rulemaker")));
 		else if (self == gmapn_gamemaster)
-			m = strcat(m, sprintf(_("\n\nYou are %s\n\n"), redify("the Rulemaker")));
+			m = strcat(m, sprintf(_("\nYou are %s\n"), redify("the Rulemaker")));
 		else
-			m = strcat(m, sprintf(_("\n\n%s is %s"), gmapn_gamemaster.netname, redify("the Rulemaker")), "\n\n");
+			m = strcat(m, sprintf(_("\n%s is %s\n"), gmapn_gamemaster.netname, redify("the Rulemaker")));
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)
-		m = strcat(m, flash("READY UP NOW\n"));
+		m = strcat(m, flash("\nREADY UP NOW\n"));
 	else
 		m = strcat(m, "\n");
 
