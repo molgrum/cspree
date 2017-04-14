@@ -58,6 +58,10 @@ void gmapn_init()
 	localcmd("serverinfo pm_ktjump 1\n");
 	localcmd("serverinfo status standby\n");
 
+	// Version of progs info
+	localcmd("serverinfo cspversion ", VERSION, "\n");
+	localcmd("serverinfo cspdate ", DATE, "\n");
+
 	// Configure hostname
 
 	hostname = getkey(info_hostname);
