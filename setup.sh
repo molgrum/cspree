@@ -12,6 +12,8 @@ printf "\n"
 createrun() {
 	FILE=run/port$port.sh
 	printf 'Writing %s...\n' $FILE
+	mkdir -p "$(dirname "$FILE")"
+	touch "$FILE"
 	printf '#!/bin/sh\n'                                                    > $FILE
 	printf 'cd ..\n'                                                       >> $FILE
 	printf 'while true ; do\n'                                             >> $FILE
@@ -61,6 +63,8 @@ createport() {
 	# Write the config
 	FILE=cfgs/ports/port$port.cfg
 	printf 'Writing %s...\n' $FILE
+	mkdir -p "$(dirname "$FILE")"
+	touch "$FILE"
 	printf '// Custom text to show in server browsers\n'                > $FILE
 	printf 'set g_info_hostname "%s"\n\n'                         "$2" >> $FILE
 	printf '// Optional custom information about location of server\n' >> $FILE
