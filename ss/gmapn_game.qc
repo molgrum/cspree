@@ -965,6 +965,20 @@ void gmapn_game_start()
 	else
 		bprint(PRINT_MEDIUM, _("The match has begun - "), gmapn_gamemodefullname(gmapn_gamemode), "\n");
 
+	if (getkey(game_botskill) > 0)
+	{
+		if (cvar("teamplay") && coop == 0)
+			BotBalanceTeams(getkey(minteamsize));
+		else
+			BotEnforceMinimum(getkey(minplayers));
+
+		for (self = world; (self = find(self, classname, "player")); )
+		{
+			// Bots are balanced and enforced, flag them as ready so Duel Arena works
+			self.ready = TRUE;
+		}
+	}
+
 	gmapn_roundslimit = gmapn_gamemode_rounds(gmapn_gamemode);
 	if (gmapn_gamemode == GM_DA)
 	{
@@ -1006,14 +1020,6 @@ void gmapn_game_start()
 	}
 	if (gmapn_gamemode == GM_CTF)
 		ctf_enableflags(TRUE);
-
-	if (getkey(game_botskill) > 0)
-	{
-		if (cvar("teamplay") && coop == 0)
-			BotBalanceTeams(getkey(minteamsize));
-		else
-			BotEnforceMinimum(getkey(minplayers));	
-	}
 	
 	if ((gmapn_gamemode == GM_COOP) != coop || (coop && skill != cvar("skill")))
 	{
