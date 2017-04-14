@@ -26,8 +26,8 @@ createrun() {
 # i, servername, country, county, city
 createport() {
 	printf "\nNew port for %s\n\n" "$servername"
-	printf "Modes: darena, dom, headhunt, freeze, king, lms, rover\n"
-	printf "Pick ONE mode to associate this port with [freeze]: "
+	printf "Modes: various, freeze, darena, lms, headhunt, dom, king, rover\n"
+	printf "Pick ONE 'various' port, the rest are recommended to be picked in the order above [freeze]: "
 	read mode
 	if [ -z "$mode" ]; then
 		mode="freeze"
@@ -52,6 +52,11 @@ createport() {
 	if [ -z "$homemap" ]; then
 		homemap="dm3"
 	fi
+	printf "Bot skill (0-4) [3]: "
+	read skill
+	if [ -z "$skill" ]; then
+		skill="3"
+	fi
 
 	# Write the config
 	FILE=cfgs/ports/port$port.cfg
@@ -63,6 +68,7 @@ createport() {
 	printf 'set g_info_state    "%s"\n'                           "$4" >> $FILE
 	printf 'set g_info_city     "%s"\n\n'                         "$5" >> $FILE
 	printf '// Optional forced game mode for this port\n'              >> $FILE
+	printf 'set g_game_botskill "%s"\n'                       "$skill" >> $FILE
 	printf 'set g_game_mode "%s"\n'                            "$mode" >> $FILE
 	printf 'set g_game_lockrules "%d"\n\n'                "$lockrules" >> $FILE
 	printf 'alias startmap_dm "map %s"\n'                   "$homemap" >> $FILE
