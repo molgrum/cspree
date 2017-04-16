@@ -2427,11 +2427,6 @@ void ClientConnect()
 
 	self.connectedtime = time;
 	self.challengertime = time;	//make sure we can't bypass duel queues by just reconnecting
-
-	if (gmapn_serverstate == gmapn_serverstate_prewar)
-		self.menustate = MENU_HALT; // Display an explanation of the mod, stop shooting!
-	else
-		self.menustate = MENU_SHOW;
 };
 
 //======================================================================
@@ -2443,7 +2438,12 @@ void ClientConnect()
 //======================================================================
 void PutClientInServer()
 {
+	float firsttojoin = FALSE;
+
 	dbgprintln("=== PutClientInServer() ===");
+
+	if (clienttype(self) == CLIENTTYPE_REAL && find(world, classname, "player") == world)
+		firsttojoin = TRUE;
 
 	// Standard attributes for the client
 	self.classname = "player";			// The client is a player, always
@@ -2480,6 +2480,21 @@ void PutClientInServer()
 	gmapn_rules_handleconnect();
 
 	client_spawn(FALSE);
+
+	// start the next game when the first player connects
+	if ((serverflags & SV_MATCHLESS) && gmapn_ismatchless(gmapn_gamemode))
+	{
+		if (firsttojoin == TRUE)
+		{
+			gmapn_reset_stoptimer();
+			gmapn_game_start();
+		}
+	}
+
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
+		self.menustate = MENU_HALT; // Display an explanation of the mod, stop shooting!
+	else
+		self.menustate = MENU_SHOW;
 };
 
 /*

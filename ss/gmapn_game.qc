@@ -966,6 +966,8 @@ void gmapn_game_start()
 	else
 		bprint(PRINT_MEDIUM, _("The match has begun - "), gmapn_gamemodefullname(gmapn_gamemode), "\n");
 
+	gmapn_serverstate = gmapn_serverstate_playing;
+
 	if (getkey(game_botskill) > 0)
 	{
 		if (cvar("teamplay") && coop == 0)

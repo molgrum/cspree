@@ -269,8 +269,8 @@ void worldspawn()
 		test.nextthink = time + 0.5;
 	}
 
-	world.nextthink = time + 0.5;
-	world.think = gmapn_init_entities;
+	//world.nextthink = time + 0.5;
+	//world.think = gmapn_init_entities;
 
 	//make sure some data is downloaded to clients.
 //	whichpack("data/test.mnu", TRUE);

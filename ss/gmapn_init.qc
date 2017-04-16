@@ -172,10 +172,7 @@ void gmapn_init()
 
 	//match stats
 	gmapn_sql_init();
-	
-	if ((serverflags & SV_MATCHLESS) && gmapn_ismatchless(gmapn_gamemode))
-		gmapn_game_start();
-	
+
 	gmapn_latency_check_init();
 
 	vote_in_progress = FALSE;
@@ -262,6 +259,10 @@ void gmapn_init_entities()
 	gmapn_powerups_setitems(!getkey(noitems) && cvar("deathmatch") != 4 && cvar("deathmatch") != DMM_MIDAIR && cvar("deathmatch") != DMM_INSTAGIB);
 	
 	ctf_enableflags(gmapn_gamemode == GM_CTF);
+
+	// to stop servers from idling in matchless mode
+	if ((serverflags & SV_MATCHLESS) && gmapn_ismatchless(gmapn_gamemode))
+		gmapn_reset_starttimer();
 }
 
 /*
