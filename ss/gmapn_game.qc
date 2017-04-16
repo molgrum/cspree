@@ -861,13 +861,17 @@ void gmapn_round_restart()
 	if (self.cnt > 0)
 	{
 		for (entity e = world; (e = find(e, classname, "player")); )
-			centerprint(e, sprintf(_("Round %s of %s starts in "), goldnmbr(ftos(gmapn_roundnum)), goldnmbr(ftos(getkey(game_rounds)))), goldnmbr(ftos(self.cnt)), " seconds");
+			centerprint(e, sprintf(_("Round %s of %s starts in "), goldnmbr(ftos(gmapn_roundnum + 1)), goldnmbr(ftos(getkey(game_rounds)))), goldnmbr(ftos(self.cnt)), " seconds");
 		sound(self, CHAN_VOICE, sprintf("announcer/%g.wav", self.cnt), 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 	}
 	else
 	{
 		sound(self, CHAN_VOICE, "announcer/fight.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 		remove(self);
+
+		//lets have 1-based rounds
+		gmapn_roundnum++;
+
 		gmapn_round_start();
 		gmapn_countdown_start(timelimit, gmapn_round_end, gmapn_countdown_style_game);
 	}
@@ -903,9 +907,6 @@ void gmapn_round_end()
 		if (other)
 			remove(other);
 	}
-
-	//lets have 1-based rounds
-	gmapn_roundnum++;
 
 	// this is a state where the players cannot shoot or be hurt
 	gmapn_serverstate = gmapn_serverstate_breather;
