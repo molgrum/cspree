@@ -1171,10 +1171,22 @@ void client_impulses()
 
 void() ctf_firehook;
 
+float client_stopattacking()
+{
+	return (
+		self.button0 == 0 ||
+		self.maxspeed == 0 ||
+		self.movetype == MOVETYPE_NOCLIP || (
+			gmapn_serverstate != gmapn_serverstate_prewar &&
+			gmapn_serverstate != gmapn_serverstate_playing
+			)
+		);
+}
+
 void client_attack()
 {
 	// No attack
-	if (!self.button0 || self.maxspeed == 0 || self.movetype == MOVETYPE_NOCLIP)
+	if (client_stopattacking())
 	{
 		return;
 	}
@@ -1182,16 +1194,6 @@ void client_attack()
 	if (self.attack_finished > time)
 	{
 		return;
-	}
-
-	if (gmapn_serverstate == gmapn_serverstate_countdown)
-	{
-		return;
-	}
-
-	if (gmapn_serverstate == gmapn_serverstate_breather)
-	{
-		return; // break between rounds while playing, halt firing
 	}
 
 	// If quaded, play quad sound

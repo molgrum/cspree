@@ -94,6 +94,7 @@ $frame axattc1 axattc2 axattc3 axattc4 axattc5 axattc6
 $frame axattd1 axattd2 axattd3 axattd4 axattd5 axattd6
 
 float() client_bestweapon;
+float() client_stopattacking;
 void() player_run;
 
 void player_setweapon()
@@ -750,8 +751,10 @@ void() player_shot1 = [$shotatt1, player_shot2]
 	float  spread;
 	vector org, dir;
 	
-	if (!self.button0)
+	if (client_stopattacking())
 	{
+		player_setweapon();
+		player_run();
 		return;
 	}
 
@@ -835,7 +838,7 @@ void() player_spike1 = [$nailatt1, player_spike2]
 	float spd;
 	vector dir;
 
-	if (!self.button0)
+	if (client_stopattacking())
 	{
 		player_setweapon();
 		player_run();
@@ -906,7 +909,7 @@ void() player_spike2 = [$nailatt2, player_spike1]
 	float spd;
 	vector dir;
 
-	if (!self.button0)
+	if (client_stopattacking())
 	{
 		player_setweapon();
 		player_run();
@@ -976,8 +979,12 @@ void() player_grenade1 = [$rockatt1, player_grenade2]
 	float spd;
 	vector dir;
 
-	if (!self.button0)
+	if (client_stopattacking())
+	{
+		player_setweapon();
+		player_run();
 		return;
+	}
 
 	if (!client_weaponokay())
 	{
@@ -1015,8 +1022,12 @@ void() player_rocket1 = [$rockatt1, player_rocket2]
 	float spd;
 	vector dir;
 
-	if (!self.button0)
+	if (client_stopattacking())
+	{
+		player_setweapon();
+		player_run();
 		return;
+	}
 
 	if (!client_weaponokay())
 	{
@@ -1054,7 +1065,7 @@ void() player_railgun1 = [$rockatt1, player_railgun2]
 	float spd;
 	vector dir;
 
-	if (!self.button0 || self.ammo_cells < 10 || !(self.items & IT_RAILGUN))
+	if (client_stopattacking() || self.ammo_cells < 10 || !(self.items & IT_RAILGUN))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -1090,7 +1101,7 @@ void() player_portal1 = [$rockatt1, player_rocket2]
 {
 	vector dir;
 
-	if (!self.button0 || !(self.items & IT_PORTALGUN))
+	if (client_stopattacking() || !(self.items & IT_PORTALGUN))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -1114,7 +1125,7 @@ void() player_lightning1 = [$light1, player_lightning2]
 {
 	vector org, dir;
 
-	if (!self.button0)
+	if (client_stopattacking())
 	{
 		player_setweapon();
 		player_run();
@@ -1165,7 +1176,7 @@ void() player_lightning2 = [$light2, player_lightning1]
 {
 	vector org, dir;
 
-	if (!self.button0)
+	if (client_stopattacking())
 	{
 		player_setweapon();
 		player_run();
