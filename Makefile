@@ -1,10 +1,20 @@
+SHELL:=/bin/bash
+
 # Version tag for this release, should match the current tag in Git
 TAG:=1.0-beta3
 
 VERSION:=$(shell git rev-parse --git-dir > /dev/null 2>&1 && echo "git" || echo "release")
-VERSION_NUMBER:=$(shell if [ "$(VERSION)" = "git" ]; then echo "`git describe --tags --abbrev=0`"; else echo "$(TAG)"; fi)
-DATE:=$(shell if [ "$(VERSION)" = "git" ]; then echo "`LC_ALL=C git log -1 --date=\"format:%a %d %b %Y %H:%M\" --format=%cd`"; else echo "`find . -type f -printf '%TY-%Tm-%Td %TH:%TM %P\n' | sort -n | tail -1 | awk '{print $1 " " $2}' | { read modified ; LC_ALL=C date -d \"$(modified)\" \"+%a %d %b %Y %H:%M\" ; }`"; fi)
-VERSION:=$(shell if [ "$(VERSION)" = "git" ]; then git diff-index --quiet HEAD -- && echo "$(VERSION)" || echo "$(VERSION)+dev"; else echo "$(VERSION)"; fi)
+
+isgittree = $(filter "${VERSION}","git")
+
+VERSION_NUMBER:=$(if $(call isgittree),$(shell git describe --tags --abbrev=0),"${TAG}")
+
+formatdate = $(shell LC_ALL=C date -d "$1" "+%a %d %b %Y %H:%M")
+
+DATE:=$(if $(call isgittree),$(call formatdate,$(wordlist 1,2,$(shell git log --pretty=format:'%ai' -1))),$(call formatdate,$(wordlist 1,2,$(shell find . -type f -printf '%TY-%Tm-%Td %TH:%TM %P\n' | sort -n | tail -1))))
+
+VERSION:=$(if $(call isgittree),$(shell git diff-index --quiet HEAD -- && echo "${VERSION}" || echo "${VERSION}+dev"),"${VERSION}")
+
 QCC:=./fteqcc
 
 SRC = \
@@ -89,7 +99,7 @@ SRC = \
 	ss/monsters/zombie.qc
 
 ../cspree/qwprogs.dat: $(SRC)
-	{ echo "#define VERSION \"$(VERSION_NUMBER) $(VERSION)\""; echo "#define DATE \"$(DATE)\""; } > version.qc
+	{ echo "#define VERSION \"${VERSION_NUMBER} ${VERSION}\""; echo "#define DATE \"${DATE}\""; } > version.qc
 	$(QCC)
 
 ctags: $(SRC)
