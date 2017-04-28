@@ -670,6 +670,14 @@ void gmapn_rules_autojointeam()
 	}
 };
 
+void gmapn_rules_cliententered()
+{
+	if (clienttype(self) == CLIENTTYPE_BOT)
+		self.ready = TRUE; // bots are always ready on join
+
+	client_spawn(FALSE);
+}
+
 //new client just joined the server
 void gmapn_rules_handleconnect()
 {
@@ -729,8 +737,12 @@ void gmapn_rules_handleconnect()
 
 		sprint(self, PRINT_HIGH, "Game is already in progress\n");
 	}
-
-	self.ready = TRUE;
+	else
+	{
+		// delay for a bit so the sound plays
+		self.nextthink = time + 0.01;
+		self.think = gmapn_rules_cliententered;
+	}
 };
 
 #endif
