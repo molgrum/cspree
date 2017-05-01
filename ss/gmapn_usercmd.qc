@@ -233,7 +233,7 @@ void cmd_break()
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_countdown)
 	{
-		if (getkey(game_lockrules) != 0)
+		if (getkey(game_lockrules) > 0)
 		{
 			sprintln(self, PRINT_HIGH, _("Cannot break, the mode is forced."));
 			return;
