@@ -2490,7 +2490,7 @@ void PutClientInServer()
 	}
 
 	if (gmapn_serverstate == gmapn_serverstate_prewar)
-		self.menustate = MENU_HALT; // Display an explanation of the mod, stop shooting!
+		self.menustate = MENU_WELCOME; // Display an explanation of the modes
 	else
 		self.menustate = MENU_SHOW;
 };

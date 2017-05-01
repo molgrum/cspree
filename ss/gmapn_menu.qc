@@ -1529,30 +1529,15 @@ void gmapn_menu_any(float keys)
 	centerprint(self, m);
 };
 
-const string welcome_halt[] =
-{
-	"HALT!\n\n\n",
-	"DO NOT TRY TOO HARD NOW!\n\n\n",
-	"DO NOT SHOOT!\n\n\n",
-	"Just relax, follow reading\n",
-	"this text and still move and jump\n",
-	"around.\n"
-};
-
 const string welcome_main[] =
 {
 	"Greetings peasant, welcome to Chilling\nSpree\n\n",
 	"Contributors: bigfoot, molgrum, mushi,\nspike\n\n",
 	"Project page: https://git.io/vSGFe\n\n",
-	"Features seven modes apart from the\nclassical ones. Modes are variations of\nthe gameplay.\n\n",
+	"Features seven modes apart from the\n",
+	"classical ones. Modes are variations of\n",
+	"the gameplay.\n\n",
 	"To skip this introduction, simply FIRE.\n"
-};
-
-const string welcome_modes[] =
-{
-	"The additional modes that you can pick\nfrom are...\n\n",
-	"Domination, Duel Arena, Freeze Tag,\nHead Hunters, Kill The King,\nLast Man Standing, Rover.\n\n",
-	"Patience, good!\n"
 };
 
 const string welcome_domination[] =
@@ -1587,14 +1572,21 @@ const string welcome_freezetag[] =
 	"Freeze tag\n\n",
 	"Shoot every player in the other team to\n",
 	"freeze them, your team wins the round\n",
-	"when all enemies are frozen.\n"
+	"when all enemies are frozen.\n\n",
+	"If you get shot frozen signal it to a\n",
+	"team mate so he can thaw you. If you see\n",
+	"a mate standing still he is probably\n",
+	"in need of thawing.\n"
 };
 
 const string welcome_headhunters[] =
 {
 	"Head hunters\n\n",
-	"Gib other players, collect their head,\n",
-	"bring the head(s) to the altar.\n\n",
+	"Gib other players, every shot gibs in\n",
+	"this mode. Collect their head and stay\n",
+	"alive bringing the head(s) to the altar.\n\n",
+	"You will get a bonus every time you\n",
+	"collect heads as well as score.\n\n",
 	"TIP: cl_gibfilter 0\n"
 };
 
@@ -1647,39 +1639,11 @@ float gmapn_display_welcome()
 	{
 		switch (self.menustate)
 		{
-		case MENU_HALT:
-
-			if (i < welcome_halt.length)
-			{
-				msg = strcat(msg, welcome_halt[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_WELCOME;
-			}
-
-			break;
-
 		case MENU_WELCOME:
 
 			if (i < welcome_main.length)
 			{
 				msg = strcat(msg, welcome_main[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_MODES;
-			}
-
-			break;
-
-		case MENU_MODES:
-
-			if (i < welcome_modes.length)
-			{
-				msg = strcat(msg, welcome_modes[i]);
 			}
 			else
 			{
@@ -1826,7 +1790,7 @@ float gmapn_display_rules()
 		return TRUE;
 
 	// Skip introduction
-	if (self.button0 && self.menustate != MENU_WELCOME &&  self.menustate != MENU_SHOW)
+	if (self.button0 && self.menustate != MENU_SHOW)
 	{
 		self.menustate = MENU_SHOW;
 		self.menutime = time + 0.2;
