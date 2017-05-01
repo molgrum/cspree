@@ -89,16 +89,32 @@ void gmapn_powerups_toggle()
 		gmapn_powerups_disable();
 };
 
-void gmapn_powerups_setitems(float newstate)
+void gmapn_powerups_setitems()
 {
 	int i;
+	float newstate = 1; // show all items laying on the map per default
+
+	switch (cvar("deathmatch"))
+	{
+	case 4:
+	case DMM_MIDAIR:
+	case DMM_INSTAGIB:
+		newstate = 0;
+		break;
+	default:
+		newstate = !getkey(noitems);
+		break;
+	}
 
 	for (i = 0; i < itemnames.length; i++)
 	{
 		string n = itemnames[i];
 
+		if (getkey(powerups_enabled) == 0 && i >= (itemnames.length - 7))
+			newstate = 0;
+
 		if (cvar("deathmatch") == 4 && i >= (itemnames.length - 4))
-			newstate = 1;
+			newstate = 1; // dmm4 hides all items but armor & health is an exception
 
 		entity e = find(world, classname, n);
 		while(e)

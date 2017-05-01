@@ -236,7 +236,7 @@ void gmapn_apply_gamemode(float newmode)
 	}
 
 	getkey_reset();
-	gmapn_powerups_setitems(!getkey(noitems) && cvar("deathmatch") != 4 && cvar("deathmatch") != DMM_MIDAIR && cvar("deathmatch") != DMM_INSTAGIB);
+	gmapn_powerups_setitems();
 	gmapn_updatemaxclients();
 };
 

@@ -256,7 +256,7 @@ void gmapn_init_entities()
 	}
 
 	deathmatch = cvar("deathmatch");
-	gmapn_powerups_setitems(!getkey(noitems) && cvar("deathmatch") != 4 && cvar("deathmatch") != DMM_MIDAIR && cvar("deathmatch") != DMM_INSTAGIB);
+	gmapn_powerups_setitems();
 	
 	ctf_enableflags(gmapn_gamemode == GM_CTF);
 

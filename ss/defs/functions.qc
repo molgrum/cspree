@@ -147,7 +147,7 @@ void(entity source, vector destination) gmapn_telefrag_check;
 void() gmapn_powerups_disable;
 void() gmapn_powerups_enable;
 void() gmapn_powerups_toggle;
-void(float enablestate) gmapn_powerups_setitems;
+void() gmapn_powerups_setitems;
 
 /*
  * gmapn_menu.qc

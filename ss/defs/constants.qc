@@ -528,6 +528,8 @@ const string itemnames[] =
 {
 	"weapon_supershotgun", "weapon_nailgun", "weapon_supernailgun", "weapon_grenadelauncher", "weapon_rocketlauncher", "weapon_lightning", "weapon_railgun",
 	"item_shells", "item_spikes", "item_rockets", "item_cells", "item_weapon",
+	"item_artifact_invulnerability", "item_artifact_invisibility",
+	"item_artifact_super_damage",
 	"item_armor1", "item_armor2", "item_armorInv", "item_health",
 };
 

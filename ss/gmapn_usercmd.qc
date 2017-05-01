@@ -759,7 +759,7 @@ float gmapn_handle_usercmd(float argc)
 						else
 							cvar_set("coop", "1");
 							
-						gmapn_powerups_setitems(!getkey(noitems));
+						gmapn_powerups_setitems();
 					}
 					else
 					{
