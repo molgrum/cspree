@@ -320,14 +320,10 @@ float client_bestweapon()
 		return IT_COILGUN;
 	else if (self.waterlevel <= 1 && self.ammo_cells >= 1 && (self.items & IT_LIGHTNING_GUN))
 		return IT_LIGHTNING_GUN;
-	else if (self.ammo_rockets >= 1 && (self.items & IT_ROCKET_LAUNCHER))
-		return IT_ROCKET_LAUNCHER;
 	else if (self.ammo_nails >= 2 && (self.items & IT_SUPER_NAILGUN))
 		return IT_SUPER_NAILGUN;
 	else if (self.ammo_shells >= 2 && (self.items & IT_SUPER_SHOTGUN))
 		return IT_SUPER_SHOTGUN;
-	else if (self.ammo_rockets >= 1 && (self.items & IT_GRENADE_LAUNCHER))
-		return IT_GRENADE_LAUNCHER;
 	else if(self.ammo_nails >= 1 && (self.items & IT_NAILGUN))
 		return IT_NAILGUN;
 	else if (self.ammo_shells >= 1 && (self.items & IT_SHOTGUN))
