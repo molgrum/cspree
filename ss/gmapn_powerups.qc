@@ -113,8 +113,8 @@ void gmapn_powerups_setitems()
 		if (getkey(powerups_enabled) == 0 && i >= (itemnames.length - 7))
 			newstate = 0;
 
-		if (cvar("deathmatch") == 4 && i >= (itemnames.length - 4))
-			newstate = 1; // dmm4 hides all items but armor & health is an exception
+		if (cvar("deathmatch") <= DMM_LIMITED && i >= (itemnames.length - 4))
+			newstate = 1; // potentially hid armor & health, toggle on again
 
 		entity e = find(world, classname, n);
 		while(e)
