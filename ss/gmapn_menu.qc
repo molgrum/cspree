@@ -878,7 +878,7 @@ static string gamemode_desc[] =
 
 string gmapn_menu_rules_describe(float rulesel)
 {
-	if (rules_desc[rulesel] == "")
+	if (rules_desc[bound(0, rulesel, rules_desc.length)] == "")
 	{
 		string matchless;
 		if (gmapn_ismatchless(gmapn_gamemode))
