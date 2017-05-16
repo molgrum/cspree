@@ -171,6 +171,7 @@ float(string m) gmapn_gamemodefromstring;
 string(float m) gmapn_gamemodetostring;
 string(float m) gmapn_gamemodefullname;
 float(float m) gmapn_gamemode_rounds;
+void() gmapn_rules_cliententered;
 void() gmapn_rules_handleconnect;
 void() gmapn_evaluategamemaster;
 void(entity killer, entity victim, float delta) gmapn_scorefrags;

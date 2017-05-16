@@ -422,7 +422,7 @@ entity client_spawnpoint()
 		ignoreoccupied = TRUE;
 		self.lastroundnum = gmapn_roundnum;
 	}
-	
+
 	if (spawnmode == 1) // fair spawns (avoid spawning several times on the same spot)
 	{
 		// Count the number of spawns
@@ -453,9 +453,9 @@ entity client_spawnpoint()
 		nice_rnd = floor(random() * (spawns - occupiedspots)); // when not telefragging
 
 		// Get a random spawn point
-		spawnp = find(world, classname, spotclass);
+		spawnp = world;
 		bestspawn = spawnp;
-		while (spawnp)
+		while ((spawnp = find(spawnp, classname, spotclass)))
 		{
 			// If all spots are occupied, just get a random spot
 			if (occupiedspots == spawns)
@@ -465,34 +465,28 @@ entity client_spawnpoint()
 
 				bestspawn = spawnp;
 				force_rnd -= spawnp.cnt;
-				spawnp = find(spawnp, classname, spotclass);
-				continue;
 			}
-
-			// rule to not spawn on players typically on round start
-			if (ignoreoccupied)
+			else if (ignoreoccupied) // rule to not spawn on players typically on round start
 			{
 				if (nice_rnd < 0)
 					break; // the nice spot has been selected
-				
+
 				if (!spawnp.voided) // not occupied so pick it and continue
 				{
 					bestspawn = spawnp;
 					nice_rnd -= 1;
 				}
-
-				spawnp = find(spawnp, classname, spotclass);
-				continue;
 			}
-			
-			if (force_rnd < 0)
-				break; // done fetching and will telefrag mercilessly
-			
-			bestspawn = spawnp; // fetch it because it is ok
-			force_rnd = force_rnd - spawnp.cnt;
-			spawnp = find(spawnp, classname, spotclass);
+			else
+			{
+				if (force_rnd < 0)
+					break; // done fetching and will telefrag mercilessly
+
+				bestspawn = spawnp; // fetch it because it is ok
+				force_rnd = force_rnd - spawnp.cnt;
+			}
 		}
-		
+
 		// Fix weights
 		spawnp = find(world, classname, spotclass);
 		while (spawnp)
@@ -505,7 +499,7 @@ entity client_spawnpoint()
 			{
 				spawnp.cnt = spawnp.cnt + 1/(spawns);
 			}
-			
+
 			spawnp = find(spawnp, classname, spotclass);
 		}
 	}
@@ -2477,7 +2471,9 @@ void PutClientInServer()
 
 	gmapn_rules_handleconnect();
 
-	client_spawn(FALSE);
+	// delay for a bit so the sound plays
+	self.nextthink = time + 0.01;
+	self.think = gmapn_rules_cliententered;
 
 	// start the next game when the first player connects
 	if ((serverflags & SV_MATCHLESS) && gmapn_ismatchless(gmapn_gamemode))
