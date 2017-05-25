@@ -827,34 +827,34 @@ static string(float op) rules[] =
 
 static string rules_desc[] =
 {
-	"Ready to play",
-	"Displays a list of maps to vote from",
-	"The rulemaker can modify the settings",
+	"Ready to play\n ",
+	"Displays a list of maps\nto vote from",
+	"The rulemaker can modify\nthe settings",
 	"",
-	"Choose item respawns and starting items",
-	"Timelimit in minutes",
-	"Quad Damage, Pentagram, etc",
-	"Show a history of your progress <right>",
-	"Options for the game mode. <right>",
-	"Options for the server. <right>"
+	"Choose item respawns and\nstarting items",
+	"Timelimit in minutes\n ",
+	"Quad Damage, Pentagram, etc\n ",
+	"Show a history of your progress\n<right>",
+	"Options for the game mode.\n<right>",
+	"Options for the server.\n<right>"
 };
 
 static string rules_mod_desc[] =
 {
-	"Maximum clients to be playing",
-	"Minimum clients for the game to start",
-	"Rounds per match",
-	"Starting weapons and items",
-	"Back to main menu <left>"
+	"Maximum clients to be playing\n ",
+	"Minimum clients for\nthe game to start",
+	"Rounds per match\n ",
+	"Starting weapons and items\n ",
+	"Back to main menu <left>\n "
 };
 
 static string rules_srv_desc[] =
 {
-	"Aka antilag vastly increases accuracy",
-	"Force a simulated lag for all players",
-	"Set a skill for bots that autojoin",
-	"Spawn modes determine how you spawn",
-	"Back to main menu <left>"
+	"Aka antilag vastly increases\naccuracy",
+	"Force a simulated lag for all\nplayers",
+	"Set a skill for bots that autojoin\n ",
+	"Spawn modes determine how you spawn\n ",
+	"Back to main menu <left>\n "
 };
 
 static string gamemode_desc[] =
@@ -1442,6 +1442,7 @@ string gmapn_menu_settings()
 void gmapn_menu_any(float keys)
 {
 	entity p;
+	string prefix;
 
 	if (keys & (KEY_RIGHT|KEY_LEFT))
 	{
@@ -1493,11 +1494,16 @@ void gmapn_menu_any(float keys)
 		if (getkey(game_lockrules)>0 && !gmapn_gamemodeneedsteam(gmapn_gamemode))
 			cmd_ready();
 	}
+	
+	if (substring(infokey(self, "*ver"), 0, 3) == "FTE")
+		prefix = "/P";
+	else
+		prefix = "";
 
 	if (self.matchlistquery)
-		m = strcat("/P", m, gmapn_menu_matchlist(keys));
+		m = strcat(prefix, m, gmapn_menu_matchlist(keys));
 	else if (self.mapquery != 0) // -1 for URI GET
-		m = strcat("/P", m, gmapn_menu_maplist(keys));
+		m = strcat(prefix, m, gmapn_menu_maplist(keys));
 	else if (self.ready || self.movetime >= time)
 	{	//menu is temporarily hidden because the player is moving.
 		if (self.ready || self.movement || self.button0 || self.button2)
@@ -1508,21 +1514,21 @@ void gmapn_menu_any(float keys)
 	}
 	else if (self.subsel == SUBSEL_MAPS)
 	{
-		m = strcat("/P", m, gmapn_menu_maps(keys));
+		m = strcat(prefix, m, gmapn_menu_maps(keys));
 	}
 	else if (self.subsel == SUBSEL_MOD)
 	{
-		m = strcat("/P", m, gmapn_menu_mod(keys));
+		m = strcat(prefix, m, gmapn_menu_mod(keys));
 		m = strcat(m, "\n", gmapn_menu_mod_describe(self.modsel));
 	}
 	else if (self.subsel == SUBSEL_SERVER)
 	{
-		m = strcat("/P", m, gmapn_menu_server(keys));
+		m = strcat(prefix, m, gmapn_menu_server(keys));
 		m = strcat(m, "\n", gmapn_menu_server_describe(self.srvsel));
 	}
 	else
 	{
-		m = strcat("/P", m, gmapn_menu_rules(keys));
+		m = strcat(prefix, m, gmapn_menu_rules(keys));
 		m = strcat(m, "\n", gmapn_menu_rules_describe(self.rulesel));
 	}
 
@@ -1531,18 +1537,18 @@ void gmapn_menu_any(float keys)
 
 const string welcome_main[] =
 {
-	"Greetings peasant, welcome to Chilling\nSpree\n\n",
+	"Greetings peasant, welcome to\n\bChilling Spree\n\n",
 	"Contributors: bigfoot, molgrum, mushi,\nspike\n\n",
 	"Project page: https://git.io/vSGFe\n\n",
 	"Features seven modes apart from the\n",
 	"classical ones. Modes are variations of\n",
 	"the gameplay.\n\n",
-	"To skip this introduction, simply FIRE.\n"
+	"To skip this introduction, simply \bFIRE\b.\n"
 };
 
 const string welcome_domination[] =
 {
-	"Domination\n\n",
+	"\bDomination\n\n",
 	"There are control points that lay around\n",
 	"the map, in the shape of a purple\n",
 	"spikeball.\n\n",
@@ -1557,19 +1563,19 @@ const string welcome_domination[] =
 
 const string welcome_duelarena[] =
 {
-	"Duel arena\n\n",
+	"\bDuel arena\n\n",
 	"You play two at a time, more players\n",
 	"than two can be in queue to play.\n\n",
 	"Start with a stacked loadout with\n",
 	"limited ammo, try to frag the other\n",
 	"opponent while exploiting the items\n",
-	"layig around.\n\n",
+	"laying around.\n\n",
 	"The map resets and you both try again.\n"
 };
 
 const string welcome_freezetag[] =
 {
-	"Freeze tag\n\n",
+	"\bFreeze tag\n\n",
 	"Shoot every player in the other team to\n",
 	"freeze them, your team wins the round\n",
 	"when all enemies are frozen.\n\n",
@@ -1581,7 +1587,7 @@ const string welcome_freezetag[] =
 
 const string welcome_headhunters[] =
 {
-	"Head hunters\n\n",
+	"\bHead hunters\n\n",
 	"Gib other players, every shot gibs in\n",
 	"this mode. Collect their head and stay\n",
 	"alive bringing the head(s) to the altar.\n\n",
@@ -1592,7 +1598,7 @@ const string welcome_headhunters[] =
 
 const string welcome_killtheking[] =
 {
-	"Kill the king\n\n",
+	"\bKill the king\b\n\n",
 	"Frag the player that is king to become\n",
 	"the king. Only the king gets frags for\n",
 	"kills.\n"
@@ -1600,14 +1606,14 @@ const string welcome_killtheking[] =
 
 const string welcome_lastmanstanding[] =
 {
-	"Last man standing\n\n",
+	"\bLast man standing\n\n",
 	"Kill every player in the other team to\n",
 	"win the round.\n"
 };
 
 const string welcome_rover[] =
 {
-	"Rover\n\n",
+	"\bRover\n\n",
 	"Kill players in the other team,\n",
 	"capturing them into your own team. You\n",
 	"win the round when everyone is in your\n",
@@ -1616,7 +1622,7 @@ const string welcome_rover[] =
 
 const string welcome_end[] =
 {
-	"Usage\n\n",
+	"\bUsage\n\n",
 	"To use the menu: MOVEMENT KEYS\n",
 	"To disable the menu: JUMP or READY UP\n\n",
 	"If you joined without any players on the\n",
@@ -1890,20 +1896,4 @@ void Cmd_mkey_s(string s)
 		gmapn_menu_any(KEY_RIGHT);
 	else if (s == "l")
 		gmapn_menu_any(KEY_LEFT);
-};
-
-void bar(string T_Text,int array_size)
-{
-	float i;
-	float text_size;
-	text_size = strlen(T_Text);
-	string text_array;//[text_size];
-//	float text_array[text_size];
-	string foo = (string)alloca(text_size);
-	string foo2 = (string)alloca(64);
-
-	for(i = 0; i < text_size, i++;)
-	{
-		text_array[2] = 4;//"hej";
-	}
 };
