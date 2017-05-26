@@ -759,7 +759,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 	}
 
 	// If no ammo, choose another weapon
-	if (!client_weaponokay())
+	if (!client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -845,7 +845,7 @@ void() player_spike1 = [$nailatt1, player_spike2]
 		return;
 	}
 
-	if (!client_weaponokay())
+	if (!client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -916,7 +916,7 @@ void() player_spike2 = [$nailatt2, player_spike1]
 		return;
 	}
 
-	if (!client_weaponokay())
+	if (!client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -986,7 +986,7 @@ void() player_grenade1 = [$rockatt1, player_grenade2]
 		return;
 	}
 
-	if (!client_weaponokay())
+	if (!client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -1029,7 +1029,7 @@ void() player_rocket1 = [$rockatt1, player_rocket2]
 		return;
 	}
 
-	if (!client_weaponokay())
+	if (!client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -1132,7 +1132,7 @@ void() player_lightning1 = [$light1, player_lightning2]
 		return;
 	}
 
-	if (!client_weaponokay())
+	if (!client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -1183,7 +1183,7 @@ void() player_lightning2 = [$light2, player_lightning1]
 		return;
 	}
 
-	if (!client_weaponokay())
+	if (!client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();

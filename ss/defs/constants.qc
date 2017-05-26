@@ -145,6 +145,7 @@ enum
   DT_FALL,
   DT_SUICIDE,
   DT_TEAMREFLECT,
+  DT_MONSTER
 };
 
 

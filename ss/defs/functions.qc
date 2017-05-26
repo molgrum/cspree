@@ -36,7 +36,7 @@ void(entity targ, entity attacker) client_obituary;
 void() client_pack_throw;
 void(float sameplace) client_spawn;
 void() respawn_living;
-float() client_weaponokay;
+float(float theweapon) client_weaponokay;
 void(entity player) client_setsemispectator;
 void(entity player) client_clearsemispectator;
 void(float flag) client_setweapon;

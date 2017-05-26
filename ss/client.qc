@@ -375,7 +375,7 @@ void client_cycleweapon(float forward)
 				self.weapon = self.weapon / 2;
 		}
 		weapons_cycled++;
-	} while (!client_weaponokay());
+	} while (!client_weaponokay(self.weapon));
 };
 
 .float lastroundnum;
@@ -982,43 +982,36 @@ void client_setsemispectator(entity player)
 	player.dimension_seen = 0;
 };
 
-float client_weaponokay()
+float client_weaponokay(float w)
 {
-	float w = self.weapon;
-	if (w == IT_HOOK && getkey(hook_enabled) != 0)
-		return TRUE;
 	if (deathmatch == DMM_INSTAGIB)	//in instagib, any other gun but coilgun is disallowed / irrelevant
-		return w == IT_COILGUN;
-	if (w == IT_AXE)
-		return TRUE;
-	if (w == IT_COILGUN)
-		return FALSE;
-	if (self.items & w)
+		if (w != IT_HOOK)
+			return w == IT_COILGUN;
+	switch(w)
 	{
-		switch(w)
-		{
-		case IT_SHOTGUN:
-		case IT_SUPER_SHOTGUN:
-			return self.ammo_shells > 0;
-		case IT_NAILGUN:
-		case IT_SUPER_NAILGUN:
-			return self.ammo_nails > 0;
-		case IT_GRENADE_LAUNCHER:
-		case IT_ROCKET_LAUNCHER:
-			return self.ammo_rockets > 0;
-		case IT_LIGHTNING_GUN:
-		case IT_RAILGUN:
-			return self.ammo_cells > 0;
-		case IT_AXE:
-		case IT_PORTALGUN:
-			return TRUE;
-		}
+	case IT_HOOK:			return getkey(hook_enabled) != 0;
+	case IT_COILGUN:		return FALSE;
+	case IT_SHOTGUN:
+	case IT_SUPER_SHOTGUN:		return (self.items & w) && self.ammo_shells > 0;
+	case IT_NAILGUN:
+	case IT_SUPER_NAILGUN:		return (self.items & w) && self.ammo_nails > 0;
+	case IT_GRENADE_LAUNCHER:
+	case IT_ROCKET_LAUNCHER:	return (self.items & w) && self.ammo_rockets > 0;
+	case IT_LIGHTNING_GUN:
+	case IT_RAILGUN:		return (self.items & w) && self.ammo_cells > 0;
+	case IT_AXE:			return TRUE;
+#ifdef HAVE_PORTALS
+	case IT_PORTALGUN:		return (self.items & w);
+#endif
 	}
 	return FALSE;
 };
 
 void client_impulses()
-{	
+{
+	if (!self.impulse)	//tiny optimisation
+		return;
+
 	// Weapon change impulses can only be used if we're not shooting
 	/*
 	if (self.impulse >= 1 && self.impulse <= 12 || self.impulse == 22)
@@ -2235,7 +2228,7 @@ void PlayerPreThink()
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
-	if(time > self.attack_finished && !client_weaponokay())
+	if(time > self.attack_finished && !client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
 		//player_setweapon();
