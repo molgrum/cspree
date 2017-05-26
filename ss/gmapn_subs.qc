@@ -632,7 +632,7 @@ void gmapn_centerprint_clear()
 		printer = self;
 	else
 	{
-		while (printer = find(printer, classname, "gmapn_centerprint"))
+		while ((printer = find(printer, classname, "gmapn_centerprint")))
 		{
 			if (printer.owner == self)
 				break;

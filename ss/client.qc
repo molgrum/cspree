@@ -698,7 +698,7 @@ void client_spawn(float sameplace)
 	self.touch = 0;
 	
 	self.items = getkey(game_loadout);
-	self.items2 = serverflags * 32;
+	self.items2 = (serverflags & (SV_EPISODE1|SV_EPISODE2|SV_EPISODE3|SV_EPISODE4)) * 32;
 	
 	// in prewar and dmm4, give everything
 	if (gmapn_serverstate == gmapn_serverstate_prewar || deathmatch == 4)

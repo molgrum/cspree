@@ -228,12 +228,14 @@ void item_flag_team2()
 	item_flag();
 };
 
+#pragma warning disable F317
 void() player_hook1 = [$rockatt1, player_hook2] {self.weaponframe = 1;};
 void() player_hook2 = [$rockatt2, player_hook3] {self.weaponframe = 2;};
 void() player_hook3 = [$rockatt3, player_hook4] {self.weaponframe = 3;};
 void() player_hook4 = [$rockatt4, player_hook5] {self.weaponframe = 4;};
 void() player_hook5 = [$rockatt5, player_hook6] {self.weaponframe = 5;};
 void() player_hook6 = [$rockatt6, player_run]	  {self.weaponframe = 6;};
+#pragma warning enable F317
 
 void ctf_hook_release()
 {
