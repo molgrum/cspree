@@ -1062,6 +1062,12 @@ void hazard_missile_touch()
 		else if (self.classname == "superspike") {
 			WriteByte(MSG_MULTICAST, TE_SUPERSPIKE);
 		}
+		else if (self.classname == "wizspike") {
+			WriteByte(MSG_MULTICAST, TE_WIZSPIKE);
+		}
+		else if (self.classname == "knightspike") {
+			WriteByte(MSG_MULTICAST, TE_KNIGHTSPIKE);
+		}
 		else if (self.classname == "rocket") {
 			WriteByte(MSG_MULTICAST, TE_EXPLOSION);
 		}
@@ -1091,6 +1097,20 @@ void hazard_missile_touch()
 		}
 		damage = getkey(rocket_damage);
 		push = getkey(rocket_push);
+	}
+	else if (self.classname == "wizspike") {
+		if (other != world) {
+			other.deathtype = DT_MONSTER;
+		}
+		damage = 9;
+		push = 1;
+	}
+	else if (self.classname == "knightspike") {
+		if (other != world) {
+			other.deathtype = DT_MONSTER;
+		}
+		damage = 9;
+		push = 1;
 	}
 	else {
 		// unknown missile type, use some default values
