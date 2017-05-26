@@ -26,6 +26,7 @@
 // Armor pickup
 void armor_touch()
 {
+	string tint;
 	if (other.deadflag || other.classname != "player" || gmapn_serverstate != gmapn_serverstate_playing)
 	{
 		// Only players can pickup armor and only in a game
@@ -71,21 +72,25 @@ void armor_touch()
 	if (self.classname == "item_armor1")
 	{
 		other.stats_took[TK_GA]++;
+		tint = "0x103010";
 	}
 	else if (self.classname == "item_armor2")
 	{
 		other.stats_took[TK_YA]++;
+		tint = "0x303010";
 	}
 	else if (self.classname == "item_armorInv")
 	{
 		other.stats_took[TK_RA]++;
+		tint = "0x301010";
 	}
 	else
 	{
+		tint = "";
 		error("Unrecognized classname\n");
 	}
 
-	item_pickup(getkey(respawn_armor));			// Hide and wait for respawn
+	item_pickup(getkey(respawn_armor), tint);			// Hide and wait for respawn
 
 	//clean up armour accumulation
 	if (other.items & IT_ARMOR3)

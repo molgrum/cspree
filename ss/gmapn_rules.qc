@@ -434,6 +434,30 @@ void controlpoint_reset()
 	self.light_lev = 0;
 	self.color = '0 0 0';
 };
+
+void controlpoint_updateindicator(entity cp)
+{
+	entity i, p = world;
+	//find the player closest to capturing us
+	i = find(world, classname, "player");
+	do
+	{
+		if (i.thawplayer == cp)
+			if (!p || i.thawtime < i.thawtime)
+				p = i;
+		i = find(i, classname, "player");
+	} while(i);
+
+	//and change our timer indicator to match
+	if (!p)
+		stuffcmdflags(p, STUFFCMD_BROADCAST, sprintf("//it -1 %g %g %g 64 0x0 \"CP\" %i\n", rint(cp.origin_x), rint(cp.origin_y), rint(cp.origin_z + cp.mins_z), cp));
+	else if (p.teamname == "red")
+		stuffcmdflags(p, STUFFCMD_BROADCAST, sprintf("//it %g/%g %g %g %g 64 0xff0000 \"CP\" %i\n", p.thawtime-time, getkey(domination_capturetime), rint(cp.origin_x), rint(cp.origin_y), rint(cp.origin_z + cp.mins_z), cp));
+	else if (p.teamname == "blue")
+		stuffcmdflags(p, STUFFCMD_BROADCAST, sprintf("//it %g/%g %g %g %g 64 0x0000ff \"CP\" %i\n", p.thawtime-time, getkey(domination_capturetime), rint(cp.origin_x), rint(cp.origin_y), rint(cp.origin_z + cp.mins_z), cp));
+	else
+		stuffcmdflags(p, STUFFCMD_BROADCAST, sprintf("//it %g/%g %g %g %g 64 0x808080 \"CP\" %i\n", p.thawtime-time, getkey(domination_capturetime), rint(cp.origin_x), rint(cp.origin_y), rint(cp.origin_z + cp.mins_z), cp));
+}
 static void controlpoint_touch()
 {
 	if (other.classname != "player" || other.deadflag || gmapn_serverstate != gmapn_serverstate_playing)
@@ -444,6 +468,8 @@ static void controlpoint_touch()
 		return;
 	other.thawplayer = self;
 	other.thawtime = time + getkey(domination_capturetime);
+
+	controlpoint_updateindicator(self);
 };
 static void controlpoint_think()
 {

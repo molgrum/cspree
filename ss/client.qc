@@ -1595,7 +1595,7 @@ void client_pack_touch()
 	float bestwep = client_bestweapon();
 	self = oself;
 	
-	item_pickup(-1);
+	item_pickup(-1, "");
 
 	self = other;
 	switchweapon(bestwep, w, b_switch);
@@ -2322,10 +2322,12 @@ void PlayerPostThink()
 	{
 		if (self.thawplayer)
 		{
+			entity cp = self.thawplayer;
 			if (vlen(self.origin - self.thawplayer.origin) > 128)
 			{	//we moved too far away from them.
 				self.thawplayer = world;
 				centerprint(self, "Capture aborted");
+				controlpoint_updateindicator(cp);
 			}
 			else if (self.thawplayer.teamname == self.teamname)
 			{
@@ -2346,9 +2348,10 @@ void PlayerPostThink()
 					self.thawplayer.color = self.thawplayer.colormod = '0 0 1';
 				else
 					self.thawplayer.color = self.thawplayer.colormod = '0 1 0';
-				
+
 				self.thawplayer = world;
 				centerprint(self, "Control Point Captured!");
+				controlpoint_updateindicator(cp);
 				self.frags += getkey(domination_cap);
 			}
 			else

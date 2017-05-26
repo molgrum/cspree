@@ -35,25 +35,25 @@ void powerup_touch()
 		setmodel(other, "progs/eyes.mdl");	// Switch to invisible model instantly
 		other.ring_finished = time + 30;
 		other.stats_took[TK_RING]++;
-		item_pickup(getkey(respawn_ring));
+		item_pickup(getkey(respawn_ring), "0x303030");
 	}
 	else if (self.items == IT_PENT)
 	{
 		other.pent_finished = time + 30;
 		other.stats_took[TK_PENT]++;
-		item_pickup(getkey(respawn_pent));
+		item_pickup(getkey(respawn_pent), "0x500000");
 	}
 	else if (self.items == IT_SUIT)
 	{
 		other.suit_finished = time + 30;
 		other.stats_took[TK_SUIT]++;
-		item_pickup(getkey(respawn_suit));
+		item_pickup(getkey(respawn_suit), "0x005000");
 	}
 	else if (self.items == IT_QUAD)
 	{
 		other.quad_finished = time + 30;
 		other.stats_took[TK_QUAD]++;
-		item_pickup(getkey(respawn_quad));
+		item_pickup(getkey(respawn_quad), "0x101050");
 	}
 
 };

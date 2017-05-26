@@ -36,7 +36,7 @@ void key_touch()
 	//keys have infinite uses in coop. and if they don't, maps will just have to use killtargets. that's a standard quake thing.
 	//we'll add a little respawn timer to it, just because we can.
 	other.items |= self.items;
-	item_pickup(5);
+	item_pickup(5, "0x202020");
 };
 
 /*
@@ -57,8 +57,8 @@ void item_key1()
 {
 	self.attenuation = ATTN_NORM;
 	self.channel = CHAN_ITEM;
-	self.maxsize = '16 16 52';
-	self.minsize = '-16 -16 0';
+	self.maxsize = '16 16 32';
+	self.minsize = '-16 -16 -24';
 	self.time_respawn = 0;				// Special respawn
 	self.items = IT_KEY1;				// Items stored
 	self.touch = key_touch;				// Function to call if touched
@@ -98,8 +98,8 @@ void item_key2()
 {
 	self.time_respawn = 0;				// Special respawn
 	self.items = IT_KEY2;				// Items stored
-	self.maxsize = '16 16 52';
-	self.minsize = '-16 -16 0';
+	self.maxsize = '16 16 32';
+	self.minsize = '-16 -16 -24';
 	self.touch = key_touch;			// Function to call if touched
 
 	if (world.worldtype == 0)

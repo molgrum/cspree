@@ -41,8 +41,8 @@ void megahealth_deplete()
 	self.nextthink = time + getkey(respawn_mega);
 	self.think = item_respawn;
 
-	if (getkey(game_itemtimers)	)
-		stuffcmd(other, sprintf("//it %g %g %g %g\n", self.nextthink-time, rint((self.absmin_x + self.absmax_x)*0.5), rint((self.absmin_y + self.absmax_y)*0.5), rint(self.origin_z + self.mins_z)));
+	if (getkey(game_itemtimers))
+		stuffcmdflags(other, STUFFCMD_BROADCAST, sprintf("//it %g %g %g %g 32 0x400000\n", self.nextthink-time, rint((self.absmin_x + self.absmax_x)*0.5), rint((self.absmin_y + self.absmax_y)*0.5), rint(self.origin_z + self.mins_z)));
 
 	// Also reset the health stored
 	self.health = self.max_health;
@@ -75,7 +75,7 @@ void megahealth_touch()
 
 	other.stats_took[TK_MH]++;
 
-	item_pickup(0);			// Hide, mega has special respawn
+	item_pickup(0, "0x400000");			// Hide, mega has special respawn
 };
 
 void health_touch()
@@ -98,7 +98,7 @@ void health_touch()
 		other.health = other.max_health;
 	}
 
-	item_pickup(getkey(respawn_health));			// Hide and wait for respawn
+	item_pickup(getkey(respawn_health), "0x200000");			// Hide and wait for respawn
 };
 
 /*

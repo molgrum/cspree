@@ -52,11 +52,11 @@ void weapon_touch()
 	
 	if (deathmatch == 2)
 	{
-		item_pickup(getkey(respawn_weapon_dmm2));	 // Hide and wait for respawn
+		item_pickup(getkey(respawn_weapon_dmm2), "0x302030");	 // Hide and wait for respawn
 	}
 	else
 	{
-		item_pickup(getkey(respawn_weapon_dmm1));	 // Hide and wait for respawn
+		item_pickup(getkey(respawn_weapon_dmm1), "0x302030");	 // Hide and wait for respawn
 	}
 
 	self = other;

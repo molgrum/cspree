@@ -179,6 +179,7 @@ void(entity victim, float delta) gmapn_suicidefrags;
 void(entity killer, entity victim, float delta) gmapn_teamkillfrags;
 string() gmapn_nextmap;
 
+void controlpoint_updateindicator(entity cp);
 void() domination_startup;
 void() headhunter_startup;
 void() ctf_player_died;	//player died/disconnected. chucks the flag away.

@@ -620,6 +620,7 @@ const string INFOKEY_P_TOPCOLOR = "topcolor";	/* The player's upper/shirt colour
 const string INFOKEY_P_BOTTOMCOLOR = "bottomcolor";	/* The player's lower/pants/trouser colour (palette index). */
 const float STUFFCMD_IGNOREINDEMO = 1;	/* The protocol we are connected to the server with. */
 const float STUFFCMD_DEMOONLY = 2;	/* The protocol we are connected to the server with. */
+const float STUFFCMD_BROADCAST = 4;	/* The protocol we are connected to the server with. */
 const float FL_FLY = 1;
 const float FL_SWIM = 2;
 const float FL_CLIENT = 8;

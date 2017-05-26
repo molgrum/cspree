@@ -147,7 +147,7 @@ void item_respawn_all()
 
 };
 
-void item_pickup(float respawn_time)
+void item_pickup(float respawn_time, string tint)
 {
 	string str;
 	string w;
@@ -158,9 +158,13 @@ void item_pickup(float respawn_time)
 
 	if (coop)	//FIXME: is this condition correct?
 	{
+		//in coop, weapons normally stay permanently, available for someone else to grab later.
+		//instead, to make things more interesting, we respawn them.
+		//other things do NOT respawn. ever.
+#message Keys should not really respawn, but its easier than tracking when a carrier dies/disconnects/etc.
 		usetargets();
-		if (!self.weapon)
-			respawn_time = -1;	//non-weapons do not respawn in coop. no infinite health, no infinite ammo, no infinite quads either.
+		if (!self.weapon && !(self.items&(IT_KEY1|IT_KEY2)))
+			respawn_time = -1;
 	}
 
 	if (deathmatch != 3 || !self.weapon)
@@ -181,10 +185,11 @@ void item_pickup(float respawn_time)
 			self.think = item_respawn;
 		}
 		
-		if (respawn_time >= 0 && getkey(game_itemtimers))
+		if (respawn_time >= 0 && getkey(game_itemtimers) && tint != "")
 		{	//note: megahealth sends a timer of 0. the client interprets this special value as infinity.
 			//args are: timeout,x,y,z,radius=32,rgb=202020,name="",ent=0(unk)
-			stuffcmd(other, sprintf("//it %g %g %g %g\n", respawn_time, rint((self.absmin_x + self.absmax_x)*0.5), rint((self.absmin_y + self.absmax_y)*0.5), rint(self.origin_z + self.mins_z)));
+			
+			stuffcmdflags(other, STUFFCMD_BROADCAST, sprintf("//it %g %g %g %g 32 %s\n", respawn_time, rint((self.absmin_x + self.absmax_x)*0.5), rint((self.absmin_y + self.absmax_y)*0.5), rint(self.origin_z + self.mins_z), tint));
 		}
 	}
 
@@ -334,7 +339,7 @@ void item_sigil()
 		{	//and items2 is used INSTEAD of serverflags if its defined. *sigh*
 			p.items2 |= (serverflags & (SV_EPISODE1|SV_EPISODE2|SV_EPISODE3|SV_EPISODE4)) * 32;
 		}
-		item_pickup(-1);
+		item_pickup(-1, "0x202020");
 	};
 	setitem();
 };

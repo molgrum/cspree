@@ -107,7 +107,7 @@ void ammo_touch()
 	if (ammo_add())
 	{
 		// Only pick up the ammo if the maximum isn't already hit
-		item_pickup(getkey(respawn_ammo));
+		item_pickup(getkey(respawn_ammo), "0x202005");
 	}
 };
 
