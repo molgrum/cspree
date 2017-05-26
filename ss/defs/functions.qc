@@ -224,7 +224,7 @@ void gmapn_game_stats();
 void(vector tdest, float tspeed, void() func) calcmove;
 void() gmapn_id_angles_sucks;
 float(entity targ, entity inflictor) candamage;
-void(entity inflictor) gmapn_blood;
+void(entity inflictor, entity victim, float damage) gmapn_blood;
 void(entity targ, entity attacker) gmapn_death;
 void() gmapn_dropspawn;
 float(entity inflictor, float damage, float push, entity ignore, float dtflag) gmapn_explosion;

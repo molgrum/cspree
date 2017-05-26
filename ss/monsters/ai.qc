@@ -67,15 +67,6 @@ walkmove(angle, speed) primitive is all or nothing
 entity	sight_entity;
 float	sight_entity_time;
 
-void SUB_AttackFinished(float duration)
-{
-	self.attack_finished = time + duration;
-};
-void SUB_CheckRefire(void() fnc)
-{
-	fnc();
-};
-
 /*
 ==============================================================================
 
@@ -229,6 +220,24 @@ float infront(entity targ)
 		return TRUE;
 	}
 	return FALSE;
+};
+
+
+
+void SUB_AttackFinished(float duration)
+{
+	self.attack_finished = time + duration;
+};
+void SUB_CheckRefire(void() fnc)
+{
+	if (skill < 3)
+		return;	//nightmare monsters are the only ones that spam their attacks (and bug thier animations...).
+	if (self.cnt == 1)
+		return;	//don't do it twice!
+	if (!visible(self.enemy))
+		return;
+	self.cnt = 1;
+	self.think = fnc;
 };
 
 

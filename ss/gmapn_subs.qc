@@ -344,7 +344,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 
 	if (victim.takedamage == DAMAGE_TRIGGER)
 	{
-		gmapn_blood(inflictor);		// Standard QW
+		gmapn_blood(inflictor, victim, damage);		// Standard QW
 
 		activator = attacker;
 
@@ -423,7 +423,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	{
 		// Another player is hit
 
-		gmapn_blood(inflictor);
+		gmapn_blood(inflictor, victim, damage);
 	}
 
 	if (gmapn_serverstate != gmapn_serverstate_playing)
@@ -587,7 +587,7 @@ void gmapn_death(entity victim, entity attacker)
 	self = stemp;
 };
 
-void gmapn_blood(entity inflictor)
+void gmapn_blood(entity inflictor, entity victim, float damage)
 {
 	if (inflictor.weapon == IT_LIGHTNING_GUN || inflictor.weapon == IT_RAILGUN)
 	{
@@ -600,9 +600,13 @@ void gmapn_blood(entity inflictor)
 	}
 	else if (inflictor.weapon == IT_SHOTGUN || inflictor.weapon == IT_SUPER_SHOTGUN)
 	{
+		entity tmp = other;
+		other = victim;
+		traceline(inflictor.origin, (victim.absmin+victim.absmax)*0.5, MOVE_OTHERONLY, inflictor);
+		other = tmp;
 		WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
 		WriteByte(MSG_MULTICAST, TE_BLOOD);
-		WriteByte(MSG_MULTICAST, trace_ent.cnt);
+		WriteByte(MSG_MULTICAST, ceil(damage / 5));
 		WriteCoord(MSG_MULTICAST, trace_endpos_x);
 		WriteCoord(MSG_MULTICAST, trace_endpos_y);
 		WriteCoord(MSG_MULTICAST, trace_endpos_z);
@@ -612,11 +616,11 @@ void gmapn_blood(entity inflictor)
 	{
 		WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
 		WriteByte(MSG_MULTICAST, TE_BLOOD);
-		WriteByte(MSG_MULTICAST, 1);
-		WriteCoord(MSG_MULTICAST, inflictor.origin_x);
-		WriteCoord(MSG_MULTICAST, inflictor.origin_y);
-		WriteCoord(MSG_MULTICAST, inflictor.origin_z);
-		multicast(inflictor.origin, MULTICAST_PHS);
+		WriteByte(MSG_MULTICAST, ceil(damage / 5));
+		WriteCoord(MSG_MULTICAST, victim.origin_x);
+		WriteCoord(MSG_MULTICAST, victim.origin_y);
+		WriteCoord(MSG_MULTICAST, victim.origin_z);
+		multicast(victim.origin, MULTICAST_PHS);
 	}
 };
 

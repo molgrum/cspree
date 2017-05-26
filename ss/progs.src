@@ -36,7 +36,6 @@ gmapn_subs.qc
 gmapn_hazards.qc
 
 models/player.qc
-// FIXME: Add monsters too, for coop
 
 entities/buttons.qc
 entities/doors.qc
@@ -53,7 +52,6 @@ entities/monsters.qc
 entities/powerups.qc
 entities/weapons.qc
 entities/teleports.qc
-//entities/wui.qc
 
 
 client.qc

@@ -30,11 +30,6 @@ void() ai_face;
 float	enemy_vis, enemy_infront, enemy_range;
 float	enemy_yaw;
 
-inline void FireBullets(float count, vector direction, vector spread)
-{
-	// FIXME: make this work
-	//hazard_bullets(self.origin, direction, spread, count);
-};
 inline void DropBackpack()
 {
 	client_pack_throw();

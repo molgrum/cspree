@@ -151,6 +151,12 @@ void hazard_axehit(vector org, vector dir)
  * Sets the .dmg field in the entity that is hit, if any. This is used for calculating
  * damage for each entity that is hit and apply all at once.
  */
+struct
+{
+	entity victim;
+	float damage;
+} bullethits[20];
+int numbullethits;
 void hazard_bullet(vector org, vector dir)
 {
 	/* float  damage; */
@@ -179,9 +185,20 @@ void hazard_bullet(vector org, vector dir)
 		WriteCoord(MSG_MULTICAST, trace_endpos_z);
 		multicast(trace_endpos, MULTICAST_PHS);
 	}
-	else {
-		trace_ent.dmg += getkey(bullet_damage);
-		trace_ent.cnt += 1;
+	else
+	{
+		float dmg = getkey(bullet_damage);
+		for (int i = 0; i < numbullethits; i++)
+		{
+			if (bullethits[i].victim == trace_ent)
+			{
+				bullethits[i].damage += dmg;
+				return;
+			}
+		}
+		bullethits[numbullethits].victim = trace_ent;
+		bullethits[numbullethits].damage = dmg;
+		numbullethits++;
 	}
 	/* else if (trace_ent.takedamage) */
 	/* { */
@@ -259,28 +276,17 @@ void hazard_bullets(vector org, vector dir, string type)
 
 	push = getkey(bullet_push);
 	if (type == "shotgun") {
-		entity sg_ents[shotgun_pattern.length/2];
-		
 		spread = getkey(shotgun_spread);
+		numbullethits = 0;
 		for (f = 0; f < shotgun_pattern.length/2; f++) {
 			hazard_bullet(org, dir + v_right*shotgun_pattern[f*2]*spread + v_up*shotgun_pattern[f*2+1]*spread);
-			sg_ents[f] = trace_ent;
 		}
-		for (f = 0; f < sg_ents.length; f++) {
-			for (g = f+1; g < sg_ents.length; g++) {
-				if (sg_ents[f] == sg_ents[g]) {
-					sg_ents[g] = __NULL__;
-				}
-			}
-		}
-		for (f = 0; f < sg_ents.length; f++) {
-			if (sg_ents[f] != __NULL__) {
-				g = gmapn_impact(sg_ents[f], self, sg_ents[f].dmg, push);
-				sg_ents[f].cnt = 0;
-				if (gmapn_serverstate == gmapn_serverstate_playing) {
-					self.stats_hit[W_SG] += g;
-				}
-				sg_ents[f].dmg = 0;
+		while (numbullethits --> 0)
+		{
+			g = gmapn_impact(bullethits[numbullethits].victim, self, bullethits[numbullethits].damage, push);
+			if (gmapn_serverstate == gmapn_serverstate_playing)
+			{
+				self.stats_hit[W_SG] += g;
 			}
 		}
 		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*2*spread); */
@@ -293,28 +299,16 @@ void hazard_bullets(vector org, vector dir, string type)
 		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*1*spread); */
 	}
 	else if (type == "supershotgun") {
-		entity ssg_ents[supershotgun_pattern.length/2];
-		
 		spread = getkey(shotgun2_spread);
+		numbullethits = 0;
 		for (f = 0; f < supershotgun_pattern.length/2; f++) {
 			hazard_bullet(org, dir + v_right*supershotgun_pattern[f*2]*spread + v_up*supershotgun_pattern[f*2+1]*spread);
-			ssg_ents[f] = trace_ent;
 		}
-		for (f = 0; f < ssg_ents.length; f++) {
-			for (g = f+1; g < ssg_ents.length; g++) {
-				if (ssg_ents[f] == ssg_ents[g]) {
-					ssg_ents[g] = __NULL__;
-				}
-			}
-		}
-		for (f = 0; f < ssg_ents.length; f++) {
-			if (ssg_ents[f] != __NULL__) {
-				g = gmapn_impact(ssg_ents[f], self, ssg_ents[f].dmg, push);
-				ssg_ents[f].cnt = 0;
-				if (gmapn_serverstate == gmapn_serverstate_playing) {
-					self.stats_hit[W_SSG] += g;
-				}
-				ssg_ents[f].dmg = 0;
+		while (numbullethits --> 0)
+		{
+			g = gmapn_impact(bullethits[numbullethits].victim, self, bullethits[numbullethits].damage, push);
+			if (gmapn_serverstate == gmapn_serverstate_playing) {
+				self.stats_hit[W_SSG] += g;
 			}
 		}
 		/* // Inner pattern */

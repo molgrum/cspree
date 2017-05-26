@@ -37,6 +37,26 @@ $frame prowl_1 prowl_2 prowl_3 prowl_4 prowl_5 prowl_6 prowl_7 prowl_8
 $frame prowl_9 prowl_10 prowl_11 prowl_12 prowl_13 prowl_14 prowl_15 prowl_16
 $frame prowl_17 prowl_18 prowl_19 prowl_20 prowl_21 prowl_22 prowl_23 prowl_24
 
+void(int shotcount, vector dir, vector spread) FireBullets =
+{
+	local	vector	src;
+	float 	g;
+
+	makevectors(self.v_angle);
+
+	src = self.origin + v_forward*10;
+	src_z = self.absmin_z + self.size_z * 0.7;
+
+	numbullethits = 0;
+	while (shotcount --> 0)
+		hazard_bullet(src, dir + crandom()*spread_x*v_right + crandom()*spread_y*v_up);
+	while (numbullethits --> 0)
+	{
+		g = gmapn_impact(bullethits[numbullethits].victim, self, bullethits[numbullethits].damage, 1);
+		if (gmapn_serverstate == gmapn_serverstate_playing)
+			self.stats_hit[W_SSG] += g;
+	}
+}
 /*
 ==============================================================================
 SOLDIER CODE
