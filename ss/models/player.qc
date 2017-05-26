@@ -236,6 +236,9 @@ void() player_stand = [$axstnd1, player_stand]
 		player_run();
 		return;
 	}
+
+	self.weaponframe = 0;
+
 /*
 	if (self.oldweapon != self.weapon && self.attack_finished < time)
 	{
@@ -288,6 +291,9 @@ void() player_run = [$rockrun1, player_run]
 		player_stand();
 		return;
 	}
+
+	self.weaponframe = 0;
+
 /*
 	if (self.oldweapon != self.weapon && self.attack_finished < time)
 	{
@@ -313,7 +319,7 @@ void() player_run = [$rockrun1, player_run]
 	{
 		self.frame = $rockrun1 + self.walkframe;
 	}
-	
+
 	self.walkframe++;
 };
 
@@ -488,15 +494,18 @@ vector(float dm) VelocityForDamage;
 void player_gibbed()
 {
 	self.movetype = MOVETYPE_BOUNCE;
+	self.flags -= self.flags&FL_ONGROUND;
 	self.solid = SOLID_TRIGGER;
 	if (gmapn_gamemode == GM_HEADHUNTER)
 		self.touch = player_headhunter_touch;
 	setmodel(self, "progs/h_player.mdl");
-	setsize(self, '0 0 0', '0 0 0');
+	self.view_ofs = '0 0 8';
+	self.origin_z += self.mins_z;
+	setsize (self, '-16 -16 0', '16 16 56');
 	self.velocity = VelocityForDamage(self.health);
 	self.avelocity = randomv('600 600 600');
 	//FIXME: use a different model in headhunters, because most qw clients have client-side gib filters enabled by default.
-	
+
 	ThrowGib("progs/gib1.mdl", self.health);
 	ThrowGib("progs/gib2.mdl", self.health);
 	ThrowGib("progs/gib3.mdl", self.health);
