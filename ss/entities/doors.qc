@@ -78,6 +78,10 @@ void door_open()
 
 	if (self.state == STATE_CLOSED || self.state == STATE_CLOSING)
 	{
+		//open the q3 areaportal now that its opening.
+		if (self.state == STATE_CLOSED && self == self.owner)
+			openportal(self, TRUE);
+
 		calcmove(self.pos2, self.speed, door_done);
 		self.state = STATE_OPENING;
 		sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM);
@@ -142,6 +146,10 @@ void door_done()
 			self.takedamage = DAMAGE_TRIGGER;
 			self.health = self.max_health;
 		}
+
+		//close the q3 areaportal too
+		if (self == self.owner)
+			openportal(self, FALSE);
 	}
 
 	sound(self, CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0, SOUND_RELIABLE, 0);
