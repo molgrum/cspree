@@ -552,6 +552,8 @@ void trigger_push_touch()
 	{
 		return;
 	}
+	if (other.movetype == MOVETYPE_FLY || other.movetype == MOVETYPE_NOCLIP)
+		return;	//don't fuck with player velocities if they're cheating
 
 	if (other.classname == "player")
 	{
@@ -562,12 +564,26 @@ void trigger_push_touch()
 		}
 	}
 
-	other.velocity = other.velocity * 0.1 + self.speed * self.movedir * 10;
+	if (self.enemy)	//q3-style jumppad, fling the player at the target
+	{
+		vector vel = self.enemy.origin-other.origin;
+		float ftime = sqrt( vel_z / ( 0.5 * autocvar_sv_gravity ) );
+		vel /= ftime;
+		vel_z = ftime * autocvar_sv_gravity;
+		other.velocity = vel;
+	}
+	else
+		other.velocity = other.velocity * 0.1 + self.speed * self.movedir * 10;
 
 	if (self.spawnflags & PUSH_ONCE)
 	{
 		remove(self);
 	}
+};
+
+void trigger_push_link()
+{
+	self.enemy = find(world, targetname, self.target);
 };
 
 void trigger_push()
@@ -584,6 +600,12 @@ void trigger_push()
 	self.touch = trigger_push_touch;
 	if (!self.speed)
 		self.speed = 1000;
+
+	if (self.target != "")
+	{
+		self.think = trigger_push_link;
+		self.nextthink = time + 0.1;
+	}
 };
 
 //======================================================================
