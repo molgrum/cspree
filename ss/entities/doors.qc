@@ -29,11 +29,15 @@ void door_reset()
 	self.velocity = '0 0 0';
 	if (0 && self.spawnflags & DOOR_START_OPEN)
 	{
+		if (self.state == STATE_CLOSED && self == self.owner)
+			openportal(self, TRUE);
 		setorigin(self, self.pos2);
 		self.state = STATE_OPENED;
 	}
 	else
 	{
+		if (self.state != STATE_CLOSED && self == self.owner)
+			openportal(self, FALSE);
 		setorigin(self, self.pos1);
 		self.state = STATE_CLOSED;
 	}
