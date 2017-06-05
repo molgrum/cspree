@@ -1168,16 +1168,14 @@ float client_stopattacking()
 
 void client_attack()
 {
+	if (self.attack_finished > time)
+		return;
+	if (self.newweapon != self.weapon)
+		player_setweapon();
+
 	// No attack
 	if (client_stopattacking())
-	{
 		return;
-	}
-
-	if (self.attack_finished > time)
-	{
-		return;
-	}
 
 	// If quaded, play quad sound
 	if (self.items & IT_QUAD)
@@ -1186,8 +1184,6 @@ void client_attack()
 	}
 
 	makevectors(self.v_angle);
-	
-	//player_setweapon();
 
 	// Attack with axe
 	if (self.weapon == IT_AXE)
@@ -2212,10 +2208,6 @@ void PlayerPreThink()
 	if (self.deadflag == DEAD_DYING)
 		return; // dying, so do nothing
 
-	if (self.attack_finished < time && self.weapon != self.newweapon)
-	{
-		player_setweapon();
-	}
 	client_attack();
 	client_jump();
 
