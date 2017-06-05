@@ -8,8 +8,8 @@ void URI_Get_Callback(float reqid, float responsecode, string resourcebody)
 
 	if (reqid == URI_GET_MAPLIST)
 	{
+		int nummaps = 0;
 		float argc;
-		float populated = FALSE;
 
 		if (responsecode != 0)
 		{
@@ -17,9 +17,8 @@ void URI_Get_Callback(float reqid, float responsecode, string resourcebody)
 			return;
 		}
 
-		argc = min(tokenize(resourcebody), MAPLIMIT);
-
-		for (int i = 0; i < argc; i++)
+		argc = tokenize(resourcebody);
+		for (int i = 0; i < argc && nummaps < maps.length-4; i++)
 		{
 			int mapidx;
 			string map = argv(i);
@@ -27,18 +26,14 @@ void URI_Get_Callback(float reqid, float responsecode, string resourcebody)
 			if (map == "")
 				continue;
 
-			for (mapidx = 0; infokey(world, strcat("gmapn_map", ftos(mapidx))) != ""; mapidx++)
-			{
-				if (infokey(world, strcat("gmapn_map", ftos(mapidx))) == map)
-				{
-					self.maps[i] = mapidx;
-					populated = TRUE;
-					break;
-				}
-			}
+			mapidx = gmapn_map_pool_findidx(map);
+			if (mapidx >= 0)
+				self.maps[nummaps++] = mapidx;
 		}
 
-		if (populated == FALSE)
+		if (!nummaps)
 			gmapn_menu_mapvote_sql();
+		else
+			menu_mapvote_randomize(nummaps);
 	}
 }

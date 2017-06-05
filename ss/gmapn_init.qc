@@ -36,7 +36,6 @@
  */
 void gmapn_init()
 {
-	float map_count;
 	string hostname, geo_city, geo_state, geo_country, gamemode;
 
 	dbgprintln("=== gmapn_init() ===");
@@ -45,7 +44,7 @@ void gmapn_init()
 		gmapn_apply_gamemode(GM_FFA);
 	else
 		gmapn_apply_gamemode(gmapn_gamemode);
-		
+
 	gmapn_config_load();
 
 	coop = cvar("coop");
@@ -121,43 +120,7 @@ void gmapn_init()
 	localcmd(" - cspree\"\n");
 
 	// Configure map pool
-
-	if (gmapn_qsg_has_dp_qc_fs_search && infokey(world, "gmapn_map0") == "")
-	{
-		float search_handle;
-		float i;
-		float offset;
-		string name;
-		float namelength;
-
-		search_handle = search_begin("maps/*.bsp", 0, 0);
-
-		offset = 0;
-
-		map_count = search_getsize(search_handle);
-		for(i=0;i<map_count;i++)
-		{
-			/* Blacklist the b_ files :/ */
-			name = search_getfilename(search_handle, i);
-			if (substring(name, 0, 7) == "maps/b_")
-			{
-				offset++;
-				continue;
-			}
-
-			name = search_getfilename(search_handle, i);
-			namelength = strlen(name);
-			name = substring(name, 5, namelength-5-4);
-
-			localcmd("localinfo gmapn_map");
-			localcmd(ftos(i-offset));
-			localcmd(" ");
-			localcmd(name);
-			localcmd("\n");
-		}
-
-		search_end(search_handle);
-	}
+	gmapn_map_pool_init();
 
 	if (gmapn_qsg_has_ext_csqc)
 	{

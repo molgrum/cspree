@@ -238,6 +238,7 @@ void gmapn_apply_gamemode(float newmode)
 	getkey_reset();
 	gmapn_powerups_setitems();
 	gmapn_updatemaxclients();
+	gmapn_map_pool_init();
 };
 
 void gmapn_evaluategamemaster()

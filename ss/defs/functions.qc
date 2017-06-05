@@ -128,6 +128,11 @@ void() gmapn_lightstyle_fade_stop;
  * gmapn_mapvote.qc
  */
 
+void() gmapn_map_pool_init;
+float(string mapname) gmapn_map_pool_findidx;
+string gmapn_map_pool_readidx(float idx);
+float gmapn_map_pool_count(void);
+
 void() gmapn_mapvote_countvotes;
 string() gmapn_mapvote_getvote;
 void() gmapn_mapvote_removevote;

@@ -312,20 +312,18 @@ void cmd_forcestart()
 
 void cmd_rndmap()
 {
-	int mapsavailable, rnd;
+	int mapsavailable;
+	string map;
 
-	mapsavailable = 0;
-	while (infokey(world, strcat("gmapn_map", ftos(mapsavailable))) != "")
-		mapsavailable++;
-
+	mapsavailable = gmapn_map_pool_count();
 	if (mapsavailable == 0)
 	{
 		dprintln("no maps on the server!");
 		return;
 	}
 
-	rnd = floor(random() * mapsavailable);
-	if (infokey(world, strcat("gmapn_map", ftos(rnd))) == "")
+	map = gmapn_map_pool_readidx(floor(random() * mapsavailable));
+	if (map == "")
 	{
 		dprintln("rndmap picked a nonexistent map!");
 		return;
@@ -334,7 +332,7 @@ void cmd_rndmap()
 	bprintln(PRINT_HIGH, sprintf(_("%s votes for random map!"), self.netname));
 
 	stuffcmd(self, "cmd votemap ");
-	stuffcmd(self, infokey(world, strcat("gmapn_map", ftos(rnd))));
+	stuffcmd(self, map);
 	stuffcmd(self, "\n");
 };
 

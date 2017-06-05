@@ -100,12 +100,9 @@ void gmapn_aliasstuffer_think()
 		else
 		{
 			string name;
-			string number;
 			string aliascmd;
 
-			number = ftos(self.cnt - stufflist.length);
-			name = strcat("gmapn_map", number);
-			name = infokey(world, name);
+			name = gmapn_map_pool_readidx(self.cnt - stufflist.length);
 			if (name != "")
 			{
 				aliascmd = strcat("alias ", name);

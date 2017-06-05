@@ -1,5 +1,3 @@
-#define MAPLIMIT 11
-
 #define MENU_TITLE 0
 #define MENU_VALUE 1
 #define MENU_LEFT 2
@@ -33,7 +31,7 @@ string gmapn_menu_maplist(float keys);
 .float mapsel;	//map or election
 .float modsel;  //mod submenu
 .float srvsel;  //advanced submenu
-.float maps[MAPLIMIT]; // list of maps displayed
+.float maps[11]; // list of maps displayed. randomizedish per player. FIXME: should probably just make this a string array, or tokens string.
 string gmapn_menuarg;
 
 .float csqcactive;	//our csprogs is running on this client. yay.
@@ -178,19 +176,33 @@ static string menu_team(float op)
 };
 */
 
-void menu_mapvote_randomize()
+void menu_mapvote_randomize(int first)
 {
 	float mappoolsize, rnd;
+	int retries = 30, i = first, j;
 
-	for (mappoolsize = 0; infokey(world, strcat("gmapn_map", ftos(mappoolsize))) != ""; mappoolsize++) { }
-
-	for (float i = 0; i < MAPLIMIT; i++)
+	mappoolsize = gmapn_map_pool_count();
+	if (mappoolsize)
 	{
-		rnd = floor(random() * mappoolsize);
-		self.maps[i] = rnd;
+		while (i < maps.length)
+		{
+			rnd = floor(random() * mappoolsize);
+		
+			for (j = 0; j < i; j++)
+				if (self.maps[j] == rnd)
+					break;
+			if (j == i)
+				self.maps[i++] = rnd;
+			else if (retries --< 0)
+				break;
+		}
 	}
+	for (; i < maps.length; i++)
+		self.maps[i++] = -1;
+	
 
 	self.subsel = SUBSEL_MAPS;
+	self.viewingrules = time;
 };
 
 void gmapn_menu_mapvote_sql();
@@ -215,10 +227,10 @@ static string menu_mapvote(float op)
 	}
 	else if (op == MENU_RIGHT && getkey(maprotation) == "")
 	{
-		for (int i = 0; i < MAPLIMIT; i++)
+		for (int i = 0; i < maps.length; i++)
 			self.maps[i] = -1; // empty out map list
 
-		self.mapsel = 1; // place marker on first map in the list
+		self.mapsel = 0; // place marker on first map in the list
 
 		if (uri_get(URL_MAPLIST(getkey(staturl), gmapn_gamemode, cvar("deathmatch")), URI_GET_MAPLIST) == 1)
 		{
@@ -941,18 +953,16 @@ string balancestrings(string left, string separator, string right)
 
 string gmapn_menu_maps(float keys)
 {
-	float i;
-	float lim;
+	int i;
+	int  lim, first;
 	float currentsel = self.mapsel;
 	string m = 0;
-
-	if (self.mapsel <= 0)
-		self.mapsel = 1;
+	const float showmax = 20;
 	
 	if (keys & KEY_RIGHT)
 	{
 		gmapn_mapvote_removevote();
-		gmapn_mapvote_addvote(infokey(world, strcat("gmapn_map", ftos(self.maps[self.mapsel-1]))));
+		gmapn_mapvote_addvote(gmapn_map_pool_readidx(self.maps[self.mapsel]));
 	}
 	if (keys & KEY_UP)
 	{
@@ -960,12 +970,12 @@ string gmapn_menu_maps(float keys)
 		{
 			self.mapsel -= 1;
 			
-			if (!self.mapsel)
-				self.mapsel = MAPLIMIT;
+			if (self.mapsel<0)
+				self.mapsel = maps.length-1;
 			
 			if (self.mapsel == currentsel)
 				break;
-		} while (infokey(world, strcat("gmapn_map", ftos(self.maps[self.mapsel-1]))) == "");
+		} while (gmapn_map_pool_readidx(self.maps[self.mapsel]) == "");
 	}
 	if (keys & KEY_DOWN)
 	{
@@ -973,30 +983,33 @@ string gmapn_menu_maps(float keys)
 		{
 			self.mapsel += 1;
 			
-			if (self.mapsel > MAPLIMIT)
-				self.mapsel = 1;
+			if (self.mapsel >= maps.length)
+				self.mapsel = 0;
 
 			if (self.mapsel == currentsel)
 				break;
-		} while (infokey(world, strcat("gmapn_map", ftos(self.maps[self.mapsel-1]))) == "");
+		} while (gmapn_map_pool_readidx(self.maps[self.mapsel]) == "");
 	}
 
-	i = self.mapsel - (MAPLIMIT / 2);
+	//usually, the first option displayed is the one half the max from the current option
+	first = self.mapsel - floor(showmax / 2);
+	if (first < 0)	//but sometimes its one of the first displayable
+		first = 0;
 
-	for (lim = (MAPLIMIT / 2); lim > 0; lim--)
+	//and sometimes its one of the last. nudge the first upwards in that case.
+	for (lim = floor(showmax / 2); lim > 0 && first > 0; lim--)
 	{
-		if ("" != infokey(world, strcat("gmapn_map", ftos(i+MAPLIMIT-1))))
-			break;
-		i--;
+		if (first+showmax <= maps.length)
+			if ("" != gmapn_map_pool_readidx(self.maps[first+showmax-1]))
+				break;
+		first--;
 	}
-	if (i < 1)
-		i = 1;
 
-	lim = i + MAPLIMIT;
-	for (; i < lim; i++)
+	//generate the display string now.
+	lim = first + showmax;
+	for (i = first; i < lim && i < maps.length; i++)
 	{
-
-		string name = infokey(world, strcat("gmapn_map", ftos(self.maps[i-1])));
+		string name = gmapn_map_pool_readidx(self.maps[i]);
 		if (name == "")
 			break;
 		if (i == self.mapsel)
@@ -1798,11 +1811,12 @@ float gmapn_display_rules()
 	// Skip introduction
 	if (self.button0 && self.menustate != MENU_SHOW)
 	{
+		self.viewingrules = time;
 		self.menustate = MENU_SHOW;
-		self.menutime = time + 0.2;
-		self.movetime = time + 0.2;
+		self.menutime = time;
+		if (self.ready || self.movement || self.button2)
+			self.movetime = time + 3;
 		gmapn_centerprint_clear();
-		return TRUE;
 	}
 
 	if (time < self.menutime)

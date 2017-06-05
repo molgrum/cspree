@@ -399,40 +399,26 @@ void gmapn_sql_welcome()
 
 void gmapn_menu_populatemaps_sql(float serveridx, float queryidx, float rows, float columns, float eof, float firstrow)
 {
-	int i, mapidx;
+	int i, r, mapidx;
+//	int rows = sqlreadfloat(gmapn_sql_matchlogdb, self.mapquery, SQL_ROWCOUNT, SQL_ROWCOUNT);
 
 	// write the popular played maps on the server
-	for (i = 0; i < MAPLIMIT; i++)
+	for (i = 0, r = 0; i < maps.length-4 && r < rows; r++)
 	{
-		string sqlmapname;
-
-		if (i >= sqlreadfloat(gmapn_sql_matchlogdb, self.mapquery, SQL_ROWCOUNT, SQL_ROWCOUNT))
-		{
-			if (i == 0)
-				menu_mapvote_randomize();
-			break;
-		}
-		
-		sqlmapname = sqlreadfield(gmapn_sql_matchlogdb, self.mapquery, i, 0);
-
-		for (mapidx = 0; infokey(world, strcat("gmapn_map", ftos(mapidx))) != ""; mapidx++)
-		{
-			if (infokey(world, strcat("gmapn_map", ftos(mapidx))) == sqlmapname)
-				break;
-		}
-
-		
-		self.maps[i] = mapidx;
+		string sqlmapname = sqlreadfield(gmapn_sql_matchlogdb, self.mapquery, r, 0);
+		mapidx = gmapn_map_pool_findidx(sqlmapname);
+		if (mapidx >= 0)
+			self.maps[i++] = mapidx;
 	}
-	
-	self.subsel = SUBSEL_MAPS;
+
+	menu_mapvote_randomize(i);
 }
 
 void gmapn_menu_mapvote_sql()
 {
 	if (gmapn_sql_matchlogdb < 0)
 	{
-		menu_mapvote_randomize();
+		menu_mapvote_randomize(0);
 		return;
 	}
 
