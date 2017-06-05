@@ -287,10 +287,12 @@ float gmapn_isgamemaster(entity e)
 	return FALSE;
 };
 
-static entity findliveteamplayer(entity last, string theteam)
+static entity findliveteamplayer(entity last, entity ignore, string theteam)
 {
 	while ((last = find(last, classname, "player")))
 	{
+		if (last == ignore)
+			continue;
 		if (last.deadflag)
 			continue;
 		if (last.teamname == theteam)
@@ -298,19 +300,22 @@ static entity findliveteamplayer(entity last, string theteam)
 	}
 	return world;	//no more
 }
-void gmapn_checklastplayer(string theteam)
+void gmapn_checklastplayer(entity ignore, string theteam)
 {
 	if (!teamplay)
 		return;
-	entity player = findliveteamplayer(world, theteam);
+	entity player = findliveteamplayer(world, ignore, theteam);
 	if (!player)
 		return;	//err, that WAS the last player!
-	if (findliveteamplayer(player, theteam))
+	if (findliveteamplayer(player, ignore, theteam))
 		return;	//there's another player, no worries
 
 	// FIXME: nonexistent sound file
 	//stuffcmd(player, "play \"announcer/lastman.wav\"\n");
-	centerprint(player, "You're the last man alive!");
+	if (random() < 0.5)
+		centerprint(player, "You're our only hope!");
+	else
+		centerprint(player, "Your team is counting on you!");
 };
 
 void(entity killer, entity victim, float delta) gmapn_scorefrags = 
@@ -391,8 +396,8 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 		}*/
 	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_FREEZETAG)
 	{
-		gmapn_checklastplayer(victim.teamname);
-		return;	//LMS awards points only if you are the last player alive. FT is basically LMS+respawns
+		gmapn_checklastplayer(victim, victim.teamname);
+		return;	//LMS awards points per-round rather than per-kill, so no points are rewarded here. FT is basically LMS+respawns
 	}
 	killer.frags += delta;
 	if (teamplay)
@@ -402,7 +407,7 @@ void(entity victim, float delta) gmapn_suicidefrags =
 {
 	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_FREEZETAG)
 	{
-		gmapn_checklastplayer(victim.teamname);
+		gmapn_checklastplayer(victim, victim.teamname);
 		return;	//LMS doesn't care too much about idiots
 	}
 	victim.frags += delta;
@@ -413,7 +418,7 @@ void(entity killer, entity victim, float delta) gmapn_teamkillfrags =
 {
 	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_FREEZETAG)
 	{
-		gmapn_checklastplayer(victim.teamname);
+		gmapn_checklastplayer(victim, victim.teamname);
 		return;	//should probably disable team damage.
 	}
 	killer.frags += delta;
