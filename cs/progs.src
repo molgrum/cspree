@@ -1,6 +1,9 @@
-csprogs.dat
+../../cspree/csprogs.dat
 
+../version.qc
+
+csqcsysdefs.qc
+#pragma warning disable F301	//noone cares.
 constants.qc
-csbuiltins.qc
-entrypoints.qc
 
+entrypoints.qc

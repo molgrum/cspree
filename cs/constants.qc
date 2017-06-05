@@ -50,7 +50,8 @@ float INPUT_KEYUP = 1;
 float INPUT_MOUSEMOVE = 2;
 
 
-
+enum
+{
 //stats 0-31 are filled by the engine.
 //they are for the 'fixed function' stuff, that works without requiring csqc.
 //these stats need to be standardized amoung engines, so you're not allowed to mod them, so nur.
@@ -72,6 +73,15 @@ float INPUT_MOUSEMOVE = 2;
 #define STAT_VIEWHEIGHT 16
 #define STAT_VIEWZOOM 21	//DP extension
 //stats 32 onwards are filled by the csqc.
+
+	STAT_MATCHSTARTTIME = 18,	//engine-specified
+	STAT_READY = 32,		//mod-specific stats.
+	STAT_GAMEMODE,
+	STAT_CURROUND,
+	STAT_MAXROUND,
+	STAT_TEAMSCORES_RED,
+	STAT_TEAMSCORES_BLUE,
+};
 
 
 #define FL_ONGROUND 1
