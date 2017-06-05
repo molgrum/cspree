@@ -53,6 +53,7 @@ entities/monsters.qc
 entities/powerups.qc
 entities/weapons.qc
 entities/teleports.qc
+entities/quake3.qc
 
 
 client.qc
