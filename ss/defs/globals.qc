@@ -83,6 +83,7 @@ float gmapn_roundnum;
 
 float gmapn_gamemode;
 
+int gmapn_coop_respawntokens;
 entity gmapn_monarchofthemound;	//The current king-of-the-hill. only this player's kills/deaths reward frags (and killers of the king become the new king)
 entity gmapn_gamemaster;	//this is the player that is currently in charge of the game rules.
 

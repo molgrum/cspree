@@ -134,6 +134,7 @@ string NULL = __NULL__;
 	GVF(dmm5_nails,			70,		NULL)\
 	GVF(dmm5_rockets,		20,		NULL)\
 	GVF(dmm5_cells,			50,		NULL)\
+	GVF(coop_respawntokens,	-1,		"The number of times players may respawn in coop. Unlimited if negative")\
 	GVF(ctf_returntime,		20,	"Length of time until the flag is returned after being dropped.")\
 	GVF(ctf_returnscore,		0,	"Points rewarded for returning your own flag.")\
 	GVF(ctf_grabscore,		0,	"Points rewarded for grabbing an enemy flag.")\

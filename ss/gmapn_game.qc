@@ -657,6 +657,8 @@ void gmapn_round_start()
 
 	// was in gmapn_game_start but moved since we need to reset this between rounds
 	gmapn_serverstate = gmapn_serverstate_playing;
+	
+	gmapn_coop_respawntokens = getkey(coop_respawntokens);
 
 	//rover re-randomizes teams on EVERY round restart
 	if (gmapn_gamemode == GM_ROVER)

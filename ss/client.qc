@@ -1844,6 +1844,23 @@ void PlayerDeathThink()
 	// wait for any button down
 	if (time < self.death_finished && !self.button2 && !self.button1 && !self.button0)
 		return;
+
+	if (gmapn_gamemode == GM_COOP && gmapn_coop_respawntokens >= 0)
+	{
+		if (!gmapn_coop_respawntokens)
+		{
+			entity live = world;
+			live = find(live, classname, "player");
+			while (live && live.deadflag == DEAD_RESPAWNABLE)
+				live = find(live, classname, "player");
+			if (!live) //everyone's dead jim. Game Over.
+				localcmd("map .\n");	//aka restart, but slightly safer _IN FTE_ (due to alias issues). unlike "map $mapname" this will revert items etc to the start of the map.
+			return;
+		}
+		gmapn_coop_respawntokens--;
+
+		bprint(PRINT_HIGH, sprintf("%i spawn tokens remaining\n", gmapn_coop_respawntokens));
+	}
 		
 	player_headhunter_respawned();
 
