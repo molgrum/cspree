@@ -75,6 +75,8 @@ void() boss_rise17	=[	$rise17, boss_missile1 ] {};
 void() boss_idle1	=[	$walk1, boss_idle2 ]
 {
 // look for other players
+	if (self.enemy.health > 0)
+		boss_missile1();
 };
 void() boss_idle2	=[	$walk2, boss_idle3 ] {boss_face();};
 void() boss_idle3	=[	$walk3, boss_idle4 ] {boss_face();};
@@ -296,9 +298,9 @@ void lightning_fire()
 	if (time >= lightning_end)
 	{	// done here, put the terminals back up
 		self = le1;
-		door_open ();
+		door_close ();
 		self = le2;
-		door_open ();
+		door_close ();
 		return;
 	}
 	
@@ -360,7 +362,7 @@ void lightning_use()
 	if (!self)
 		return;
 	self.enemy = activator;
-	if (le1.state == STATE_CLOSED && self.health > 0)
+	if (le1.state == STATE_OPENED && self.health > 0)
 	{
 		sound (self, CHAN_VOICE, "boss1/pain.wav", 1, ATTN_NORM);
 		self.health = self.health - 1;
