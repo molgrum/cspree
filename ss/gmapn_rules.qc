@@ -390,7 +390,7 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 		}*/
 	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_FREEZETAG)
 	{
-		gmapn_checklastplayer(victim.teamname);
+		gmapn_checklastplayer(killer.teamname);
 		return;	//LMS awards points only if you are the last player alive. FT is basically LMS+respawns
 	}
 	killer.frags += delta;
