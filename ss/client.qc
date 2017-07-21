@@ -2374,16 +2374,18 @@ void PlayerPostThink()
 //======================================================================
 void ClientKill()
 {
-	if (gmapn_serverstate != gmapn_serverstate_prewar)
-	{	//FIXME: in GT_FREEZETAG a player could use this to get free health by getting a player to res them.
+	// need to be playing and not a spectator in order to suicide
+	if (gmapn_serverstate == gmapn_serverstate_playing && stof(infokey(self, "*spectator")) == 0)
+	{
+		//FIXME: in GT_FREEZETAG a player could use this to get free health by getting a player to res them.
 		self.deathtype = DT_SUICIDE;
 		// FIXME: should gmapn_kill require 2 arguments or 1 + setting self.enemy before calling it?
 		self.enemy = self;
 		gmapn_kill(self, self);
 	}
-	else
+	else if (gmapn_serverstate == gmapn_serverstate_prewar)
 	{
-		respawn_living();
+		respawn_living(); // can spawn around a little in prewar
 	}
 };
 
