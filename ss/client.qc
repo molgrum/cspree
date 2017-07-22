@@ -290,8 +290,6 @@ void client_setweapon(float flag)
 
 	// Weapon is recognized so we can set the weaponflag
 	self.newweapon = flag;
-	//self.weaponframe = 0;
-	//player_setweapon();
 };
 
 float client_checkammo()
@@ -796,8 +794,6 @@ void client_spawn(float sameplace)
 
 	DecodeLevelParms();
 	
-	//player_setweapon();
-	
 	if (!sameplace)
 	{
 		if (getkey(spawn_mode) == 2 && self.my_spawn != world)
@@ -1186,6 +1182,11 @@ void client_attack()
 		return;
 	}
 
+	if (self.attack_finished < time && self.weapon != self.newweapon)
+	{
+		player_setweapon();
+	}
+
 	// If quaded, play quad sound
 	if (self.items & IT_QUAD)
 	{
@@ -1194,8 +1195,6 @@ void client_attack()
 
 	makevectors(self.v_angle);
 	
-	//player_setweapon();
-
 	// Attack with axe
 	if (self.weapon == IT_AXE)
 	{
@@ -2219,10 +2218,6 @@ void PlayerPreThink()
 	if (self.deadflag == DEAD_DYING)
 		return; // dying, so do nothing
 
-	if (self.attack_finished < time && self.weapon != self.newweapon)
-	{
-		player_setweapon();
-	}
 	client_attack();
 	client_jump();
 
@@ -2238,7 +2233,6 @@ void PlayerPreThink()
 	if(time > self.attack_finished && !client_weaponokay())
 	{
 		client_setweapon(client_bestweapon());
-		//player_setweapon();
 	}
 };
 

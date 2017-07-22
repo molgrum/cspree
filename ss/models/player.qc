@@ -197,7 +197,6 @@ void player_setweapon()
 	}
 
 	self.weaponframe = 0;
-	player_run();
 
 	if (gmapn_qsg_has_zq_vwep)
 		self.vw_index = precache_vwep_model(vwep);
@@ -236,16 +235,10 @@ void() player_stand = [$axstnd1, player_stand]
 		player_run();
 		return;
 	}
-/*
-	if (self.oldweapon != self.weapon && self.attack_finished < time)
-	{
-		// Non attacking animation
-		self.weaponframe = 0;
 
-		// Not running a firing animation, set the weapon model
-		player_setweapon();
-	}
-*/	
+	// Not running a firing animation, set the weapon model since it's ok to switch now
+	player_setweapon();
+
 	// Special animation for axe and gun respectively
 	if (self.weapon == IT_AXE)
 	{
@@ -288,16 +281,10 @@ void() player_run = [$rockrun1, player_run]
 		player_stand();
 		return;
 	}
-/*
-	if (self.oldweapon != self.weapon && self.attack_finished < time)
-	{
-		// Non attacking animation
-		self.weaponframe = 0;
 
-		// Not running a firing animation, set the weapon model
-		player_setweapon();
-	}
-*/
+	// Not running a firing animation, set the weapon model since it's ok to switch now
+	player_setweapon();
+
 	// Animation
 
 	if (self.walkframe >= 6)
