@@ -309,8 +309,6 @@ void client_setweapon(float flag)
 
 	// Weapon is recognized so we can set the weaponflag
 	self.newweapon = flag;
-	//self.weaponframe = 0;
-	//player_setweapon();
 };
 
 float client_checkammo()
@@ -837,8 +835,6 @@ void client_spawn(float sameplace)
 
 	DecodeLevelParms();
 	
-	//player_setweapon();
-	
 	if (!sameplace)
 	{
 		if (getkey(spawn_mode) == 2 && self.my_spawn != world)
@@ -1226,6 +1222,11 @@ void client_attack()
 	// No attack
 	if (client_stopattacking())
 		return;
+
+	if (self.attack_finished < time && self.weapon != self.newweapon)
+	{
+		player_setweapon();
+	}
 
 	// If quaded, play quad sound
 	if (self.items & IT_QUAD)
@@ -2290,7 +2291,6 @@ void PlayerPreThink()
 	if(time > self.attack_finished && !client_weaponokay(self.weapon))
 	{
 		client_setweapon(client_bestweapon());
-		//player_setweapon();
 	}
 };
 
@@ -2429,21 +2429,18 @@ void PlayerPostThink()
 //======================================================================
 void ClientKill()
 {
-	if (infokey(self, "*spectator") == "2")	//spectators should not be randomly suiciding.
-		return;
-	if (gmapn_serverstate != gmapn_serverstate_prewar && gmapn_serverstate != gmapn_serverstate_playing)
-		return;	//no killing during outdown, intermission, etc.
-
-	if (gmapn_serverstate != gmapn_serverstate_prewar)
-	{	//FIXME: in GT_FREEZETAG a player could use this to get free health by getting a player to res them.
+	// need to be playing and not a spectator in order to suicide
+	if (gmapn_serverstate == gmapn_serverstate_playing && stof(infokey(self, "*spectator")) == 0)
+	{
+		//FIXME: in GT_FREEZETAG a player could use this to get free health by getting a player to res them.
 		self.deathtype = DT_SUICIDE;
 		// FIXME: should gmapn_kill require 2 arguments or 1 + setting self.enemy before calling it?
 		self.enemy = self;
 		gmapn_kill(self, self);
 	}
-	else
+	else if (gmapn_serverstate == gmapn_serverstate_prewar)
 	{
-		respawn_living();
+		respawn_living(); // can spawn around a little in prewar
 	}
 };
 
