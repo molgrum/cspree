@@ -1438,7 +1438,7 @@ void BSPDumpWaypoints()
 
 // FrikaC's file access tutorial...
 //FRIK_FILE
-float file;
+filestream file;
 
 void SaveWaypoint()
 {

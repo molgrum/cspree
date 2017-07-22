@@ -163,7 +163,12 @@ void gmapn_game_beginpregamecountdown(float countdowntime)
 void gmapn_game_endpregamecountdown()
 {
 	if (gmapn_recording)
-		localcmd("stop;rmdemonum 1\n");
+	{
+		if (gmapn_serverstate == gmapn_serverstate_countdown)
+			localcmd("cancel;rmdemonum 1\n");
+		else
+			localcmd("stop;rmdemonum 1\n");
+	}
 	gmapn_recording = FALSE;
 	localcmd("serverinfo status standby\n");
 
@@ -181,20 +186,23 @@ void gmapn_game_end()
 	if (e)
 		remove(e);
 
+	//attempt to put disconnected players back onto the scoreboard at game end.
 	e = find(world, classname, "gmapn_disconnected_player");
 	while (e)
 	{
 		disconnected_player = spawnclient();
-
-		disconnected_player.classname = "player";
-		disconnected_player.netname = e.netname;
-		if (gmapn_reconnected_player(disconnected_player) == TRUE)
+		if (disconnected_player)
 		{
-			disconnected_player.netname = strcat(chr2str(0x87), " ", disconnected_player.netname);
-			e = find(world, classname, "gmapn_disconnected_player");
+			disconnected_player.classname = "player";
+			disconnected_player.netname = e.netname;
+			if (gmapn_reconnected_player(disconnected_player) == TRUE)
+			{
+				disconnected_player.netname = strcat(chr2str(0x87), " ", disconnected_player.netname);
+				e = find(world, classname, "gmapn_disconnected_player");
+			}
+			else
+				break; // nothing left to do
 		}
-		else
-			break; // nothing left to do
 	}
 
 	gmapn_game_stats();
@@ -932,6 +940,7 @@ void gmapn_game_start()
 	entity oldself;
 	gmapn_roundnum = 1;
 	gmapn_roundslimit = 1;
+	global_items = 0;
 
 	oldself = self;
 

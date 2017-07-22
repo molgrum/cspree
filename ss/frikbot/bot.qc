@@ -628,7 +628,7 @@ void WaypointWatch()
 		return;
 	if (waypoint_mode == WM_UNINIT)
 	{
-		float f = fopen(sprintf("maps/%s.way", mapname), FILE_READ);
+		filestream f = fopen(sprintf("maps/%s.way", mapname), FILE_READ);
 		if (f >= 0)
 		{
 			float saved1=0, saved2=0, saved3=0, saved4=0;

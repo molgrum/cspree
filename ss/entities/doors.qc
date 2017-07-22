@@ -216,9 +216,16 @@ void door_touch()
 
 	if (self.items)
 	{
-		if ((other.items & self.items) == self.items)
+		if (((coop?global_items:other.items) & self.items) == self.items)
 		{
-			other.items -= self.items;
+			if (coop)
+			{
+				for(entity e = world; (e = find(e, classname, "player")); )
+					e.items &~= self.items;
+				global_items -= self.items;
+			}
+			else
+				other.items -= self.items;
 			self.items = 0;
 			
 			self.attack_finished = time + 1;
@@ -490,8 +497,7 @@ void func_door()
 	}
 
 	// If a key is required, the door stays open when opened
-	if ((self.items & IT_KEY1) ||
-		(self.items & IT_KEY2))
+	if (self.items & (IT_KEY1|IT_KEY2))
 	{
 		self.wait = -1;
 		self.touch = door_touch;

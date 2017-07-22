@@ -158,13 +158,15 @@ void item_pickup(float respawn_time, string tint)
 
 	if (coop)	//FIXME: is this condition correct?
 	{
-		//in coop, weapons normally stay permanently, available for someone else to grab later.
-		//instead, to make things more interesting, we respawn them.
-		//other things do NOT respawn. ever.
-#message Keys should not really respawn, but its easier than tracking when a carrier dies/disconnects/etc.
 		usetargets();
-		if (!self.weapon && !(self.items&(IT_KEY1|IT_KEY2)))
-			respawn_time = -1;
+		respawn_time = -1;
+		
+		if (self.weapon)
+		{	//if its a weapon, give it to everyone, in the interests of fairness and less annoyance.
+			for (entity e = world; (e = find(e, classname, "player")); )
+				e.items |= self.items;
+			global_items |= self.items;	//so its given to respawners too.
+		}
 	}
 
 	if (deathmatch != 3 || !self.weapon)
@@ -246,7 +248,7 @@ void item_pickup(float respawn_time, string tint)
 	}
 };
 
-void setitem()
+void setitem(float nodrop = FALSE)
 {
 	vector localcenter;
 	vector offset;
@@ -259,9 +261,9 @@ void setitem()
 
 	// Can be touched and walked through
 	self.solid = SOLID_TRIGGER;
-	
+
 	// Placeholder movetype until its safe
-	self.movetype = SOLID_NOT;
+	self.movetype = MOVETYPE_NONE;
 
 	// No speed
 	self.velocity = '0 0 0';
@@ -297,9 +299,12 @@ void setitem()
 
 	setsize(self, self.minsize, self.maxsize);
 
-	// Items wait 200 ms before calling droptofloor
-	self.nextthink = self.ltime + 0.2;
-	self.think = item_drop;
+	if (!nodrop)
+	{
+		// Items wait 200 ms before calling droptofloor
+		self.nextthink = self.ltime + 0.2;
+		self.think = item_drop;
+	}
 };
 
 

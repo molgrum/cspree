@@ -30,8 +30,8 @@ void() spawnfunc_team_CTF_blueplayer = {remove(self);};	//used for initial spawn
 
 void() spawnfunc_shooter_grenade = {remove(self);};
 void() spawnfunc_func_rotating = {if (!self.dmg) self.dmg = 2;if (!self.speed) self.speed = 1000; self.solid = SOLID_BSP; self.movetype = MOVETYPE_PUSH; if (self.spawnflags&4)self.avelocity_z = self.speed;else if (self.spawnflags&8)self.avelocity_x = self.speed;else self.avelocity_y = self.speed; setmodel(self, self.model); self.think = func_null; self.nextthink = 99999999999;};
-void() spawnfunc_func_bobbing = {remove(self);};	//q3dm14
-void() spawnfunc_func_pendulum = {remove(self);};	//q3dm15
+void() spawnfunc_func_bobbing = {remove(self);};	//eg q3dm14
+void() spawnfunc_func_pendulum = {remove(self);};	//eg q3dm15
 
 void() spawnfunc_info_player_intermission =
 {
@@ -45,10 +45,6 @@ void() spawnfunc_info_secondplace = {remove(self);};
 void() spawnfunc_info_notnull = {};
 void() spawnfunc_trigger_always = {};	//FIXME: should fire on round start.
 void() spawnfunc_misc_teleporter_dest = {self.classname = "info_teleport_destination";};
-
-void() spawnfunc_misc_portal_camera = {remove(self);};	//the target
-void() spawnfunc_misc_portal_surface = {remove(self);};	//placed within 64qu of the actual surface geometry. shows the targetted camera (or mirror if no target)
-
 
 //armour
 void() spawnfunc_item_armor_shard =

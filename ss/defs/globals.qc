@@ -47,6 +47,8 @@ float	skill;	//mostly so monsters can spam stuff on nightmare.
 
 string	nextmap;	//for coop.
 
+float global_items;	//for coop. contains silver/gold keys, so disconnecting players won't destroy shared items
+
 
 
 ///////////////////////////////////////////////////////////////////////////////

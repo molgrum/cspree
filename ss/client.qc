@@ -38,22 +38,21 @@ float	intermission_running;
 float	intermission_exittime;
 float   intermission_mapchange;
 
+infostring parm_string;
+
 //we only write/read parms in coop.
 //health will be 0 if the player has not transferred from the previous coop map
 void SetChangeParms()
 {
+	setspawnparms(self);
+
 	//this function is called on map changes where ClientDisconnect might not be.
 	//this gives us a chance to fix up *spectator so that they don't appear as spectators on the next map too.
 	if (self.classname == "player" && stof(infokey(self, "*spectator")) == 2)
 		forceinfokey(self, "*spectator", "");
 
-	if (self.deadflag || !coop)
-	{
-		// reset inventory
-		SetNewParms ();
-	}
-	else
-	{
+	if (coop && (serverflags & SV_MATCHLESS))
+	{	//if we're continuing a coop game on the next map, then be sure to let the player carry stuff over.
 		parm1 = self.items & ~(IT_KEY1 | IT_KEY2 | IT_RING | IT_PENT | IT_SUIT | IT_QUAD | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 		parm2 = bound(50, self.health, 100);
 		parm3 = self.armorvalue;
@@ -64,14 +63,33 @@ void SetChangeParms()
 		parm8 = self.weapon;
 		parm9 = self.armortype;
 	}
+	else
+	{
+		// reset inventory
+		SetNewParms ();
+	}
+
+	parm_string = __NULL__;
+	//reset their team, so we get the proper value for the next map
+	if (self.classname == "player")
+	{
+		//only save stuff for the next map if the game is meant to be continuing (otherwise just revert to the user's preferred setting)
+		if (serverflags & SV_MATCHLESS)
+			parm_string = infoadd(parm_string, "team", self.teamname);
+		forceinfokey(self, "team", self.userteam);
+		
+		print(sprintf("saving %s: user=%s, game=%s\n", self.netname, self.userteam, self.teamname));
+	}
 
 	// rulemaker status is idependent of single player status
 	parm10 = (gmapn_gamemaster == self);
+	parm11 = self.ready;
 };
 
 void SetNewParms()
 {
 	//client spawn code will figure it out itself if 'health' is 0.
+	parm_string = __NULL__;
 	parm1 = 0;
 	parm2 = 0;
 	parm3 = 0;
@@ -82,12 +100,13 @@ void SetNewParms()
 	parm8 = 0;
 	parm9 = 0;
 	parm10 = 0; // rulemaker status for this client
+	parm11 = 0;
 };
 
 //player has already been given their defaults
 void DecodeLevelParms()
 {
-		if ((!coop && gmapn_serverstate != gmapn_serverstate_playing) || (coop && gmapn_serverstate == gmapn_serverstate_playing))
+	if (!coop && gmapn_serverstate != gmapn_serverstate_playing)
 	{
 		// FIXME: this triggers on prewar, countdown, intermission, forcestart. maybe it shouldn't
 		setspawnparms(self);
@@ -102,27 +121,27 @@ void DecodeLevelParms()
 
 		return;
 	}
-
-	//start maps of any kind never let you carry weapons over.
-	if (strstrofs(mapname, "start") >= 0)
-		return;
 		
 	setspawnparms(self);
 	
-	//make sure that this stuff is actually valid.
-	if (!parm2)
-		return;
-	//its all good, overwrite it now.
-
-	self.items = parm1;
-	self.health = parm2;
-	self.armorvalue = parm3;
-	self.ammo_shells = parm4;
-	self.ammo_nails = parm5;
-	self.ammo_rockets = parm6;
-	self.ammo_cells = parm7;
-	self.weapon = parm8;
-	self.armortype = parm9;
+	//make sure that this stuff is actually valid (health > 0).
+	//start maps of any kind never let you carry weapons over.
+	if (parm2>0 && strstrofs(mapname, "start") < 0)
+	{
+		//its all good, overwrite it now.
+		self.items = parm1;
+		self.health = parm2;
+		self.armorvalue = parm3;
+		self.ammo_shells = parm4;
+		self.ammo_nails = parm5;
+		self.ammo_rockets = parm6;
+		self.ammo_cells = parm7;
+		self.newweapon = parm8;
+		self.weapon = !self.newweapon;	//just make sure the weapon gets changed, so we reload the weaponmodel properly
+		self.armortype = parm9;
+	}
+	//isrulemaker = parm10;
+	//isready = parm11;
 };
 
 /*
@@ -334,48 +353,61 @@ float client_bestweapon()
 
 void client_cycleweapon(float forward)
 {
-	float weapons_cycled = 0;
-
-	do
+	float o = self.newweapon;
+	float w = o;
+	float weaponorder[] =
 	{
-		if (weapons_cycled > 16)
-			break; // no weapon found
+		IT_AXE,
+		IT_HOOK,
+		IT_PORTALGUN,
+		IT_PORTALGUN_ALT,
+		IT_COILGUN,
+		IT_SHOTGUN,
+		IT_SUPER_SHOTGUN,
+		IT_NAILGUN,
+		IT_SUPER_NAILGUN,
+		IT_GRENADE_LAUNCHER,
+		IT_ROCKET_LAUNCHER,
+		IT_LIGHTNING_GUN,
+		IT_RAILGUN,
+	};
+	int i;
+	for (i = 0; i < weaponorder.length-1; i++)
+	{
+		if (weaponorder[i] == w)
+			break;
+	}
+	if (i == weaponorder.length)
+	{ 	//erk
+		print(sprintf("client_cycleweapon: Weapon %x is not known\n", w));
+		i = 0;
+		w = o = weaponorder[i];
+	}
 
-		if (forward == TRUE && self.weapon == IT_COILGUN)
+	for(;;)
+	{
+		if (forward)
 		{
-			self.weapon = IT_AXE;
-		}
-		else if (forward == FALSE && self.weapon == IT_AXE)
-		{
-			self.weapon = IT_COILGUN;
-		}
-		else if (forward == TRUE && self.weapon == IT_AXE)
-		{
-			self.weapon = IT_PORTALGUN;
-		}
-		else if (forward == FALSE && self.weapon == IT_PORTALGUN)
-		{
-			self.weapon = IT_AXE;
-		}
-		else if (forward == TRUE && self.weapon == IT_PORTALGUN)
-		{
-			// we cannot bitshift since IT_AXE is 4096
-			self.weapon = IT_SHOTGUN;
-		}
-		else if (forward == FALSE && self.weapon == IT_SHOTGUN)
-		{
-			self.weapon = IT_PORTALGUN;
+			i++;
+			if (i == weaponorder.length)
+				i = 0;
 		}
 		else
 		{
-			// ok to shift
-			if (forward == TRUE)
-				self.weapon = self.weapon * 2;
-			else
-				self.weapon = self.weapon / 2;
+			if (i == 0)
+				i = weaponorder.length;
+			i--;
 		}
-		weapons_cycled++;
-	} while (!client_weaponokay(self.weapon));
+
+		w = weaponorder[i];
+		if (client_weaponokay(w))
+		{
+			client_setweapon(w);
+			return;
+		}
+		if (w == o)
+			return;	//failure. we looped through them all!
+	}
 };
 
 .float lastroundnum;
@@ -593,7 +625,10 @@ entity client_spawnpoint()
 	if (bestspawn)
 		bestspawn.attack_finished = time + 0.5;
 	else
-		dprintln("Error: spawn spot doesn't exist");
+	{
+		bestspawn = find(world, classname, "info_player_start");//we might get lucky.
+		dprint("Error: spawn spot ", spotclass, " doesn't exist\n");
+	}
 
 	return bestspawn;
 };
@@ -690,20 +725,22 @@ void client_spawn(float sameplace)
 	}
 	self.waterlevel = 0;
 	self.watertype = CONTENT_EMPTY;
-	
+
 	self.pent_finished = 0;
 	self.quad_finished = 0;
 	self.ring_finished = 0;
 	self.suit_finished = 0;
-	
+
 	self.velocity = '0 0 0';			// No speed
 	self.maxspeed = autocvar(sv_maxspeed, 320);
 	self.hasted = 0;
 	self.touch = 0;
-	
+
 	self.items = getkey(game_loadout);
 	self.items2 = (serverflags & (SV_EPISODE1|SV_EPISODE2|SV_EPISODE3|SV_EPISODE4)) * 32;
-	
+
+	self.items |= global_items;		// coop weapons+keys are shared, which stops things being annoying, or triggering things multiple times or infinite ammo.
+
 	// in prewar and dmm4, give everything
 	if (gmapn_serverstate == gmapn_serverstate_prewar || deathmatch == 4)
 	{
@@ -750,7 +787,7 @@ void client_spawn(float sameplace)
 	{	//standard deathmatch
 		self.ammo_shells = 25;				// Always start with 0 shells
 		self.items |= IT_AXE | IT_SHOTGUN;		// Starting items
-		client_setweapon(IT_SHOTGUN);			// Starting weapon
+		client_setweapon(client_bestweapon());			// Starting weapon
 	}
 
 	//make sure powerups work
@@ -2392,6 +2429,11 @@ void PlayerPostThink()
 //======================================================================
 void ClientKill()
 {
+	if (infokey(self, "*spectator") == "2")	//spectators should not be randomly suiciding.
+		return;
+	if (gmapn_serverstate != gmapn_serverstate_prewar && gmapn_serverstate != gmapn_serverstate_playing)
+		return;	//no killing during outdown, intermission, etc.
+
 	if (gmapn_serverstate != gmapn_serverstate_prewar)
 	{	//FIXME: in GT_FREEZETAG a player could use this to get free health by getting a player to res them.
 		self.deathtype = DT_SUICIDE;
@@ -2415,7 +2457,16 @@ called when a player connects to a server
 void ClientConnect()
 {
 	dbgprintln("=== ClientConnect() ===");
-	self.teamname = infokey(self, "team");
+
+	setspawnparms(self);
+	//track both mod-set team AND user-set team.
+	//only really needed because of game modes like coop with team names that transfer.
+	self.userteam = infokey(self, "team");
+	self.teamname = infoget(parm_string, "team");
+	if (self.teamname != "")
+		forceinfokey(self, "team", self.teamname);
+	self.ready = (parm11 && (serverflags & SV_MATCHLESS) && gmapn_serverstate != gmapn_serverstate_prewar);
+	
 
 	ClientInRankings();
 	
@@ -2568,7 +2619,6 @@ void ClientDisconnect()
 	{
 		gmapn_monarchofthemound = world;
 		cvar_set("teamplay", "0");	//need to clear teamplay to rework clientside enemyskin forcing so everyone appears as a valid target.
-		
 	}
 
 	/* Stop match if no players are left */

@@ -22,7 +22,6 @@
         Boston, MA  02111-1307, USA
 
 */
-
 void key_touch()
 {
 	if (!coop || other.classname != "player" || gmapn_serverstate != gmapn_serverstate_playing)
@@ -33,9 +32,18 @@ void key_touch()
 	if (other.items & self.items)
 		return;
 
-	//keys have infinite uses in coop. and if they don't, maps will just have to use killtargets. that's a standard quake thing.
-	//we'll add a little respawn timer to it, just because we can.
-	other.items |= self.items;
+	if (coop)
+	{
+		//keys have infinite uses in coop. and if they don't, maps will just have to use killtargets. that's a standard quake thing.
+		//we'll add a little respawn timer to it, just because we can.
+		global_items |= self.items;
+
+		for(entity e = world; (e = find(e, classname, "player")); )
+			e.items |= self.items;
+	}
+	else
+		other.items |= self.items;
+
 	item_pickup(5, "0x202020");
 };
 

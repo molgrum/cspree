@@ -87,7 +87,9 @@ void cmd_ready()
 	{
 		if (cvar("teamplay"))
 		{
-			if (self.teamname == "")
+			if (gmapn_gamemode == GM_COOP)
+				forceinfokey(self, "team", (self.teamname="coop"));
+			else if (self.teamname == "")
 			{
 				sprintln(self, PRINT_HIGH, _("Set your team first!"));
 				return;
@@ -124,7 +126,7 @@ void cmd_ready()
 		case GM_DUEL:
 		case GM_2ON2:
 		case GM_TDEATHMATCH:
-			playersneeded = getkey(maxplayers) * !getkey(game_botskill);
+			playersneeded = getkey(minplayers) * !getkey(game_botskill);
 			playersneeded += playerstotal * !!getkey(game_botskill);
 			break;
 		default:
@@ -279,6 +281,12 @@ void cmd_break()
 	}
 
 	self.ready = 0;
+	
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
+	{	//if they used the menu to switch team, or the game forced their team then reset them back to their preferred team.
+		self.teamname = self.userteam;
+		forceinfokey(self, "team", self.userteam);
+	}
 };
 
 void cmd_forcestart()
@@ -552,12 +560,38 @@ void cmd_writeconfig()
 	sprintln(self, PRINT_HIGH, "Wrote config.");
 }
 
+float gmapn_handle_setinfo(string key, string value)
+{
+	if (key == "team")
+	{
+		self.userteam = value;
+		if (self.classname == "player" && (self.ready || gmapn_serverstate == gmapn_serverstate_countdown || gmapn_serverstate == gmapn_serverstate_playing))
+		{
+			if (self.teamname != self.userteam)
+				sprint(self, PRINT_HIGH, "Your team will be changed at the end of the match.\n");
+			return TRUE;
+		}
+		forceinfokey(self, "team", value);
+		self.teamname = infokey(self, "team");
+		return TRUE;
+	}
+	if (key == "name")
+	{
+		if (self.classname == "player" && (gmapn_serverstate == gmapn_serverstate_countdown || gmapn_serverstate == gmapn_serverstate_playing))
+		{
+			if (self.netname != value)
+				sprint(self, PRINT_HIGH, "You cannot change name while the game is in progress.\n");
+			return TRUE;
+		}
+	}
+	return FALSE;
+};
+
 float gmapn_handle_usercmd(float argc)
 {
 	string cmd;
 	string mapstr;
 	string tempstr;
-	string tempstr2;
 
 	float dmm;
 
@@ -893,38 +927,9 @@ float gmapn_handle_usercmd(float argc)
 		return 1;
 	}
 	if (cmd == "setinfo")
-	{
-		if (argc >= 2)
-		{
-			if (argv(1) == "team" && (argc == 2 || argv(2) != infokey(self, "team")))
-			{
-				if (gmapn_serverstate == gmapn_serverstate_countdown || gmapn_serverstate == gmapn_serverstate_playing)
-				{
-					sprint(self, PRINT_HIGH, "You cannot change team while the game is in progress.\n");
-
-					tempstr = infokey(self, "team");
-					tempstr2 = "team ";
-					tempstr2 = strcat(tempstr2, tempstr);
-					tempstr2 = strcat(tempstr2, "\n");
-
-					stuffcmd(self, tempstr2);
-
-					return 1;
-				}
-				forceinfokey(self, "team", argv(2));
-				self.teamname = infokey(self, "team");
-				return 1;
-			}
-			if (argv(1) == "name" && (argc == 2 || argv(2) != infokey(self, "name")))
-			{
-				if (gmapn_serverstate == gmapn_serverstate_countdown || gmapn_serverstate == gmapn_serverstate_playing)
-				{
-					sprint(self, PRINT_HIGH, "You cannot change name while the game is in progress.\n");
-					return 1;
-				}
-			}
-		}
-	}
+		return gmapn_handle_setinfo(argv(1), argv(2));
+	if (cmd == "team" || cmd == "name")	//for NQ users that lack userinfos clientside.
+		return gmapn_handle_setinfo(cmd, argv(1));
 	if (cmd == "rpickup")
 	{
 		if (self.vote_rpickup == 0)

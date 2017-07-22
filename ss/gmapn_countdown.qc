@@ -59,6 +59,18 @@ void gmapn_countdown_stop()
 		{
 			gmapn_lightstyle_fade_stop();
 			gmapn_lightstyle_reset();
+			
+			//if a countdown is abandoned, release any unready players back to their preferred teams
+			entity p = find(world, classname, "player");
+			while (p)
+			{
+				if (!p.ready)
+				{
+					p.teamname = p.userteam;
+					forceinfokey(p, "team", p.teamname);
+				}
+				p = find(p, classname, "player");
+			}
 		}
 
 		remove(e);

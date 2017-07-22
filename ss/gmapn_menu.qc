@@ -39,7 +39,7 @@ string gmapn_menuarg;
 .float menutime;	//for hiding the menu completely
 
 entity gmapn_gamemaster;	//this is the player who is currently nominated to be the leader.
-entity gmapn_monarchofthemound;
+entity gmapn_monarchofthemound;	//this player is currently the king, the only player that rewards frags.
 
 void() cmd_ready;
 void() cmd_break;
@@ -647,17 +647,33 @@ static string menu_antilag(float op)
 {
 	if (op == MENU_TITLE)
 		return "Lag Compensation";
+		
+	float v = cvar("sv_antilag");
 	if (op == MENU_VALUE)
 	{
-		if (cvar("sv_antilag"))
-			return "on";
+		if (v==3)
+			return "on (+knockback compensation)";	//compensates for the aiming player having moved differently from how the client had predicted, as well as the target players.
+		else if (v==2)
+			return "force (!!!)";	//hack all tracelines, which can break stuff, which is why we don't select it here.
+		else if (v)
+			return "on";	//compensates only for the other player moving around.
 		else
-			return "off";
+			return "off";	//all MOVE_LAGGED etc stuff will be silently ignored.
 	}
 	if (op == MENU_LEFT)
-		cvar_set("sv_antilag", "");
+	{
+		if (v == 3)
+			cvar_set("sv_antilag", "1");
+		else
+			cvar_set("sv_antilag", "");
+	}
 	if (op == MENU_RIGHT)
-		cvar_set("sv_antilag", "1");
+	{
+		if (v)
+			cvar_set("sv_antilag", "3");
+		else
+			cvar_set("sv_antilag", "1");
+	}
 	return 0;
 
 };
@@ -916,23 +932,6 @@ string gmapn_menu_server_describe(float srvsel)
 static float rulechangetime[rules.length];
 static float modchangetime[rules_mod.length];
 static float srvchangetime[rules_srv.length];
-
-/* void SV_RunClientCommand() */
-/* { */
-/* 	if (!self.ishuman) */
-/* 		input_angles = self.v_angle; */
-
-/* 	if (!self.maxspeed) */
-/* 	{	//in menus or frozen */
-/* 		input_buttons = 0; */
-/* 		input_movevalues = '0 0 0'; */
-/* 	} */
-
-/* 	if (self.hook) */
-/* 		ctf_hookupdate(); */
-/* 	else */
-/* 		runstandardplayerphysics(self); */
-/* }; */
 
 string balancestrings(string left, string separator, string right)
 {

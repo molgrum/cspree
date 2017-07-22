@@ -141,14 +141,16 @@ void item_health()
 	{
 		self.model = "maps/b_bh10.bsp";		// Broken healthbox
 		self.noise = "items/r_item1.wav";	// Broken health picked up
-		self.health = 15;			// Amount of health stored
+		if (!self.health)
+			self.health = 15;			// Amount of health stored
 		self.touch = health_touch;		// Function to call if touched
 	}
 	else
 	{
 		self.model = "maps/b_bh25.bsp";		// Regular healthbox
 		self.noise = "items/health1.wav";	// Good health picked up
-		self.health = 25;			// Amount of health stored
+		if (!self.health)
+			self.health = 25;			// Amount of health stored
 		self.touch = health_touch;		// Function to call if touched
 	}
 

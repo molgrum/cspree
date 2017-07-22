@@ -669,7 +669,9 @@ void headhunter_startup()
 
 void gmapn_rules_autojointeam()
 {
-	if (self.teamname == "red")
+	if (coop)	//just force their team to coop in coop.
+		forceinfokey(self, "team", (self.teamname = "coop"));
+	else if (self.teamname == "red")
 		gmapn_setteamandcolour(self, "red", 4, 4);
 	else if (self.teamname == "blue")
 		gmapn_setteamandcolour(self, "blue", 13, 13);
@@ -756,6 +758,7 @@ void gmapn_rules_handleconnect()
 	case GM_FREEZETAG:
 	case GM_LASTMANSTANDING:
 		dospec = 1;
+	case GM_COOP:
 		gmapn_rules_autojointeam();
 		break;
 	}

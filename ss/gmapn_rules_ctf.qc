@@ -310,3 +310,20 @@ void() ctf_hookupdate =
 //	if (newdist > olddist && newdist > 64)
 //		self.velocity *= 1 - 0.5*input_timelength;
 };
+
+void SV_RunClientCommand() 
+{
+	if (!self.ishuman)
+		input_angles = self.v_angle;
+
+	if (!self.maxspeed)
+	{	//in menus or frozen
+		input_buttons = 0;
+		input_movevalues = '0 0 0';
+	} 
+
+	if (self.hook)
+		ctf_hookupdate();
+	else
+		runstandardplayerphysics(self);
+};

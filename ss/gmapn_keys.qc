@@ -165,7 +165,7 @@ void setkey(string key, string val)
 
 float getkey_parseconfig(string cfgname)
 {
-	float f = fopen(cfgname, FILE_READ);
+	filestream f = fopen(cfgname, FILE_READ);
 	string line;
 	if (f >= 0)
 	{
@@ -197,7 +197,7 @@ float getkey_parseconfig(string cfgname)
 
 void getkey_writeconfig(string cfgname)
 {
-	float f = fopen(cfgname, FILE_WRITE);
+	filestream f = fopen(cfgname, FILE_WRITE);
 	if (f < 0)
 		return;
 

@@ -47,6 +47,7 @@ noref .string wad;
 // player only fields
 //
 
+.string userteam;		// the user's original team infokey, so we can restore it when the game ends etc.
 .string	teamname;		// save some infokeys
 .float	attack_finished;	// Reload interval
 .float	beam_finished;		// LG charge interval
