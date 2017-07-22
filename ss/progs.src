@@ -34,6 +34,7 @@ frikbot/bot_ed.qc
 //../../pourtall/src/goodies/portals.qc
 
 gmapn_subs.qc
+gmapn_portals.qc
 gmapn_hazards.qc
 
 models/player.qc

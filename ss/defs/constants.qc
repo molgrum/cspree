@@ -206,6 +206,7 @@ float  IT_ARMOR2				= 16384;	// Yellow armor
 float  IT_ARMOR3				= 32768;	// Red armor
 
 float  IT_PORTALGUN				= 65536;	// old Megahealth
+float  IT_PORTALGUN_ALT			= IT_PORTALGUN|IT_CELLS;
 
 float  IT_KEY1					= 131072;	// Silver key
 float  IT_KEY2					= 262144;	// Gold key
@@ -390,6 +391,7 @@ float  SVC_SMALLKICK			= 34;
 float  SVC_BIGKICK				= 35;
 float  SVC_MUZZLEFLASH			= 39;
 
+//FIXME: remove these, use the builtins instead.
 float  TE_SPIKE					= 0;
 float  TE_SUPERSPIKE			= 1;
 float  TE_GUNSHOT				= 2;
@@ -441,11 +443,13 @@ float  SP_WEIGHT				= 0.5;
 #define DMM_MIDAIR	6
 #define DMM_INSTAGIB	7
 
-//#define HAVE_PORTALS
+#define HAVE_PORTALS
 
 
 enum
 {
+	STAT_ACTIVEWEAPON = 10,
+	STAT_ITEMS = 15,
 	STAT_MATCHSTARTTIME = 18,	//engine-specified
 	STAT_READY = 32,		//mod-specific stats.
 	STAT_GAMEMODE,

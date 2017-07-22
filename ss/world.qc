@@ -246,7 +246,7 @@ void worldspawn()
 #ifdef HAVE_PORTALS
 	//portal gun
 	precache_model("progs/b_portal.bsp");
-	precache_model("progs/v_portal.mdl");
+//	precache_model("progs/v_portal.mdl");
 	if (gmapn_qsg_has_zq_vwep)
 		precache_vwep_model ("progs/w_portal.mdl");
 	particleeffectnum("portal.tr_portalgun_1");

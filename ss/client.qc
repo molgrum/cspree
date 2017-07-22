@@ -611,7 +611,11 @@ void giveallweapons()
 	self.items = self.items | IT_ROCKET_LAUNCHER;
 	self.items = self.items | IT_LIGHTNING_GUN;
 //		self.items = self.items | IT_RAILGUN;
-//		self.items = self.items | IT_PORTALGUN;
+
+#ifdef HAVE_PORTALS
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
+		self.items = self.items | IT_PORTALGUN;
+#endif
 
 	noweapons = tokenize(getkey(noweapon));
 
@@ -1001,7 +1005,8 @@ float client_weaponokay(float w)
 	case IT_RAILGUN:		return (self.items & w) && self.ammo_cells > 0;
 	case IT_AXE:			return TRUE;
 #ifdef HAVE_PORTALS
-	case IT_PORTALGUN:		return (self.items & w);
+	case IT_PORTALGUN:		return (self.items & IT_PORTALGUN);
+	case IT_PORTALGUN_ALT:		return (self.items & IT_PORTALGUN);
 #endif
 	}
 	return FALSE;
@@ -1145,8 +1150,16 @@ void client_impulses()
 	{
 		if (getkey(hook_enabled) != 0)
 		{
-			self.weapon = IT_HOOK;
+			self.newweapon = IT_HOOK;
 		}
+	}
+	else if (self.impulse == 23)
+	{
+		client_setweapon(IT_PORTALGUN);
+	}
+	else if (self.impulse == 24)
+	{
+		client_setweapon(IT_PORTALGUN_ALT);
 	}
 
 	self.impulse = 0;
@@ -1271,7 +1284,7 @@ void client_attack()
 	{
 		ctf_firehook();
 	}
-	else if (self.weapon == IT_PORTALGUN)
+	else if (self.weapon == IT_PORTALGUN || self.weapon == IT_PORTALGUN_ALT)
 	{
 #ifdef HAVE_PORTALS
 		player_portal1();

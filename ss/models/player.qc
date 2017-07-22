@@ -168,9 +168,12 @@ void player_setweapon()
 		self.weaponmodel = "progs/v_coil.mdl";
 		vwep = "progs/w_coil.mdl";
 	}
-	else if (self.weapon == IT_PORTALGUN)
+	else if (self.weapon == IT_PORTALGUN || self.weapon == IT_PORTALGUN_ALT)
 	{
-		self.currentammo = 0;
+		if (self.weapon == IT_PORTALGUN)
+			self.currentammo = 111;
+		else
+			self.currentammo = 222;
 		self.weaponmodel = "";
 		vwep = "-";
 	}
@@ -1110,7 +1113,7 @@ void() player_portal1 = [$rockatt1, player_rocket2]
 {
 	vector dir;
 
-	if (client_stopattacking() || !(self.items & IT_PORTALGUN))
+	if (client_stopattacking())// || !(self.items & IT_PORTALGUN))
 	{
 		client_setweapon(client_bestweapon());
 		player_setweapon();
@@ -1123,10 +1126,18 @@ void() player_portal1 = [$rockatt1, player_rocket2]
 	self.attack_finished = time + 0.6;
 
 	self.weaponframe = 1;
-	spawnaportal(self.origin + '0 0 16', dir, self, self.portalnum);
-	self.portalnum = 1-self.portalnum;	//alternate it.
 	
-	self.currentammo = self.ammo_rockets;
+	if (self.weapon == IT_PORTALGUN)
+	{
+		if (spawnaportal(self.origin + '0 0 16', dir, self, 0))
+			client_setweapon(IT_PORTALGUN_ALT);
+	}
+	else
+	{
+		if (spawnaportal(self.origin + '0 0 16', dir, self, 1))
+			client_setweapon(IT_PORTALGUN);
+	}
+	
 };
 #endif
 
