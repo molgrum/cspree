@@ -99,7 +99,7 @@ SRC = \
 	ss/monsters/zombie.qc
 
 ../cspree/qwprogs.dat: $(SRC)
-	{ echo "#define VERSION \"${VERSION_NUMBER} ${VERSION}\""; echo "#define DATE \"${DATE}\""; } > version.qc
+	#{ echo "#define VERSION \"${VERSION_NUMBER} ${VERSION}\""; echo "#define DATE \"${DATE}\""; } > version.qc
 	$(QCC)
 
 ctags: $(SRC)

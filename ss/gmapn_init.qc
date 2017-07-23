@@ -118,7 +118,9 @@ void gmapn_init()
 
 	}
 
-	localcmd(" - cspree\"\n");
+	localcmd(" - ");
+	localcmd(NAME);
+	localcmd("\"\n");
 
 	// Configure map pool
 
