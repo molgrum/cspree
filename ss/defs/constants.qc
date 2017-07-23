@@ -28,7 +28,6 @@
 // Name is the shortened variant
 // Version is always git when laying in the repo, do change it on release
 // URL is a shortened link to the project page
-const string NAME    = "cspree";
 const string URL     = "https://git.io/vSGFe";
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -29,17 +29,17 @@ createrun() {
 createport() {
 	printf "\nNew port for %s\n\n" "$servername"
 	printf "Modes: various, freeze, darena, lms, headhunt, dom, king, rover\n"
-	printf "Pick ONE 'various' port, the rest are recommended to be picked in the order above [freeze]: "
+	printf "Pick at least ONE 'various' port, the rest are recommended to be picked in the order above [various]: "
 	read mode
 	if [ -z "$mode" ]; then
-		mode="freeze"
+		mode="various"
 	fi
-	printf "Do you want to lock this mode to the port? [y]/n: "
+	printf "Do you want to lock this mode to the port? y/[n]: "
 	read yn
 	if [ -z "$yn" ]; then
-		yn="y"
+		yn="n"
 	fi
-	if [ "$yn" == "y" ]; then
+	if [ "$yn" = "y" ]; then
 		lockrules=1
 	else
 		lockrules=0
@@ -54,10 +54,10 @@ createport() {
 	if [ -z "$homemap" ]; then
 		homemap="dm3"
 	fi
-	printf "Bot skill (0-4) [3]: "
+	printf "Bot skill (0-4) [0]: "
 	read skill
 	if [ -z "$skill" ]; then
-		skill="3"
+		skill="0"
 	fi
 
 	# Write the config
@@ -88,33 +88,34 @@ createports() {
 	read servername
 	if [ -z "$servername" ]; then
 		servername="unnamed.com"
-	elif [ "$servername" == "q" ]; then
+	elif [ "$servername" = "q" ]; then
 		exit 0
 	fi
 	printf "Optional country info of server location []/q: "
 	read country
 	if [ -z "$country" ]; then
 		country=""
-	elif [ "$country" == "q" ]; then
+	elif [ "$country" = "q" ]; then
 		exit 0
 	fi
 	printf "Optional state info of server location []/q: "
 	read state
 	if [ -z "$state" ]; then
 		state=""
-	elif [ "$state" == "q" ]; then
+	elif [ "$state" = "q" ]; then
 		exit 0
 	fi
 	printf "Optional city info of server location []/q: "
 	read city
 	if [ -z "$city" ]; then
 		city=""
-	elif [ "$city" == "q" ]; then
+	elif [ "$city" = "q" ]; then
 		exit 0
 	fi
 	for i in `seq 1 $1`; do
 		createport "$i" "$servername" "$country" "$state" "$city"
 	done
+	printf "\nAll done. Don't forget to put PAK0.PAK and PAK1.PAK in id1/\n"
 }
 
 queryports() {
@@ -127,11 +128,11 @@ queryports() {
 	read yn
 	if [ -z "$yn" ]; then
 		yn="n"
-	elif [ "$yn" == "y" ]; then
+	elif [ "$yn" = "y" ]; then
 		createports "$maxports"
-	elif [ "$yn" == "n" ]; then
+	elif [ "$yn" = "n" ]; then
 		queryports
-	elif [ "$yn" == "q" ]; then
+	elif [ "$yn" = "q" ]; then
 		exit 0
 	fi
 }
