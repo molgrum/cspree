@@ -88,28 +88,28 @@ createports() {
 	read servername
 	if [ -z "$servername" ]; then
 		servername="unnamed.com"
-	elif [ "$servername" == "q" ]; then
+	elif [ "$servername" = "q" ]; then
 		exit 0
 	fi
 	printf "Optional country info of server location []/q: "
 	read country
 	if [ -z "$country" ]; then
 		country=""
-	elif [ "$country" == "q" ]; then
+	elif [ "$country" = "q" ]; then
 		exit 0
 	fi
 	printf "Optional state info of server location []/q: "
 	read state
 	if [ -z "$state" ]; then
 		state=""
-	elif [ "$state" == "q" ]; then
+	elif [ "$state" = "q" ]; then
 		exit 0
 	fi
 	printf "Optional city info of server location []/q: "
 	read city
 	if [ -z "$city" ]; then
 		city=""
-	elif [ "$city" == "q" ]; then
+	elif [ "$city" = "q" ]; then
 		exit 0
 	fi
 	for i in `seq 1 $1`; do
@@ -127,11 +127,11 @@ queryports() {
 	read yn
 	if [ -z "$yn" ]; then
 		yn="n"
-	elif [ "$yn" == "y" ]; then
+	elif [ "$yn" = "y" ]; then
 		createports "$maxports"
-	elif [ "$yn" == "n" ]; then
+	elif [ "$yn" = "n" ]; then
 		queryports
-	elif [ "$yn" == "q" ]; then
+	elif [ "$yn" = "q" ]; then
 		exit 0
 	fi
 }
