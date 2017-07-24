@@ -2462,8 +2462,7 @@ void ClientConnect()
 	self.teamname = infoget(parm_string, "team");
 	if (self.teamname != "")
 		forceinfokey(self, "team", self.teamname);
-	self.ready = (parm11 && (serverflags & SV_MATCHLESS) && gmapn_serverstate != gmapn_serverstate_prewar);
-	
+	self.ready = (parm11 && (serverflags & SV_MATCHLESS));
 
 	ClientInRankings();
 	
