@@ -397,7 +397,7 @@ void player_frozen_touch()
 		if (other.teamname == self.teamname)
 		{
 			centerprint(other, "Thawing ", self.netname);
-			centerprint(self, other.netname, " takes pitty on you");
+			centerprint(self, other.netname, " takes pity on you");
 			other.thawplayer = self;
 			other.thawtime = time + getkey(freezetag_thawtime);
 		}
