@@ -304,11 +304,44 @@ void respawn_living()
 
 void client_setweapon(float flag)
 {
+	int shells, nails, rockets, cells; // required ammo by the weapon
+	
 	if (self.newweapon == flag)
 		return;
 
-	// Weapon is recognized so we can set the weaponflag
-	self.newweapon = flag;
+	if (!(self.items & flag))
+		return; // we don't have the weapon
+
+	// default setup is no ammo required to fire
+	shells = 0;
+	nails = 0;
+	rockets = 0;
+	cells = 0;
+
+	// set a minimum required ammo for some weapons. axe/portalgun is free!
+	if ((flag & IT_SHOTGUN))
+		shells = 1;
+	else if ((flag & IT_SUPER_SHOTGUN))
+		shells = 2;
+	else if ((flag & IT_NAILGUN))
+		nails = 1;
+	else if ((flag & IT_SUPER_NAILGUN))
+		nails = 2;
+	else if ((flag & IT_GRENADE_LAUNCHER))
+		rockets = 1;
+	else if ((flag & IT_ROCKET_LAUNCHER))
+		rockets = 1;
+	else if ((flag & IT_LIGHTNING_GUN))
+		cells = 1;
+	else if ((flag & IT_RAILGUN))
+		cells = 10;
+	else if ((flag & IT_COILGUN))
+		shells = 1;
+
+	if (self.ammo_shells < shells || self.ammo_nails < nails || self.ammo_rockets < rockets || self.ammo_cells < cells)
+		self.newweapon = client_bestweapon(); // not enough ammo so pick another
+	else
+		self.newweapon = flag; // Weapon is recognized so we can set the weaponflag
 };
 
 float client_checkammo()
@@ -1047,156 +1080,121 @@ float client_weaponokay(float w)
 
 void client_impulses()
 {
-	if (!self.impulse)	//tiny optimisation
+	switch (self.impulse)
+	{
+	case 0: // tiny optimisation
+
 		return;
 
-	// Weapon change impulses can only be used if we're not shooting
-	/*
-	if (self.impulse >= 1 && self.impulse <= 12 || self.impulse == 22)
-	{
-		if (self.attack_finished > time)
- 			return;
-	}
-	*/
-
-	if (self.impulse == 1 && (self.items & IT_AXE))
-	{
+	case 1:
+		
 		client_setweapon(IT_AXE);
-	}
-	else if (self.impulse == 2 && ((self.items & IT_SHOTGUN) || (self.items & IT_COILGUN)))
-	{
-		// coilgun is bound to shotgun
-		if (self.items & IT_COILGUN)
-			client_setweapon(IT_COILGUN);
-		else if (self.ammo_shells >= 1)
-		{
-			client_setweapon(IT_SHOTGUN);
-		}
-		else
-		{
-			client_setweapon(client_bestweapon());
-		}
-	}
-	else if (self.impulse == 3 && (self.items & IT_SUPER_SHOTGUN))
-	{
-		// Change weapon to Super Shotgun
-		if (self.ammo_shells >= 2)
-		{
-			client_setweapon(IT_SUPER_SHOTGUN);
-		}
-		else
-		{
-			client_setweapon(client_bestweapon());
-		}
-	}
-	else if (self.impulse == 4 && (self.items & IT_NAILGUN))
-	{
-		// Change weapon to Nailgun
-		if (self.ammo_nails >= 1)
-		{
-			client_setweapon(IT_NAILGUN);
-		}
-		else
-		{
-			client_setweapon(client_bestweapon());
-		}
-	}
-	else if (self.impulse == 5 && (self.items & IT_SUPER_NAILGUN))
-	{
-		// Change weapon to Super Nailgun
-		if (self.ammo_nails >= 2)
-		{
-			client_setweapon(IT_SUPER_NAILGUN);
-		}
-		else
-		{
-			client_setweapon(client_bestweapon());
-		}
-	}
-	else if (self.impulse == 6 && (self.items & IT_GRENADE_LAUNCHER))
-	{
-		// Change weapon to Greande Launcher
-		if (self.ammo_rockets >= 1)
-		{
-			client_setweapon(IT_GRENADE_LAUNCHER);
-		}
-		else
-		{
-			client_setweapon(client_bestweapon());
-		}
-	}
-	else if (self.impulse == 7 && (self.items & IT_ROCKET_LAUNCHER))
-	{
-		// Change weapon to Rocket Launcher
-		if (self.ammo_rockets >= 1)
-		{
-			client_setweapon(IT_ROCKET_LAUNCHER);
-		}
-		else
-		{
-			client_setweapon(client_bestweapon());
-		}
-	}
-	else if (self.impulse == 8 && (self.items & IT_LIGHTNING_GUN))
-	{
-		// Change weapon to Lightning Gun
-		if (self.ammo_cells >= 1)
-		{
-			client_setweapon(IT_LIGHTNING_GUN);
-		}
-		else
-		{
-			client_setweapon(client_bestweapon());
-		}
-	}
-	else if (self.impulse == 9)
-	{
+
+		break;
+
+	case 2:
+
+		client_setweapon(IT_COILGUN); // try coilgun first
+
+		if (self.newweapon != IT_COILGUN)
+			client_setweapon(IT_SHOTGUN); // fall back on shotgun
+
+		break;
+
+	case 3:
+		
+		client_setweapon(IT_SUPER_SHOTGUN);
+
+		break;
+
+	case 4:
+		
+		client_setweapon(IT_NAILGUN);
+
+		break;
+
+	case 5:
+
+		client_setweapon(IT_SUPER_NAILGUN);
+
+		break;
+
+	case 6:
+
+		client_setweapon(IT_GRENADE_LAUNCHER);
+
+		break;
+
+	case 7:
+
+		client_setweapon(IT_ROCKET_LAUNCHER);
+
+		break;
+
+	case 8:
+
+		client_setweapon(IT_LIGHTNING_GUN);
+
+		break;
+
+	case 9:
+
 		// If railgun is disabled, set to Coilgun instead
-		if (getkey(rail) == 0 && (self.items & IT_COILGUN))
+		if (getkey(rail) == 0)
 		{
 			client_setweapon(IT_COILGUN);
 		}
-		else if (self.items & IT_RAILGUN)
+		else
 		{
-			// Change weapon to Railgun
-			if (self.ammo_cells >= 4)
-			{
-				client_setweapon(IT_RAILGUN);
-			}
-			else
-			{
-				client_setweapon(client_bestweapon());
-			}
+			client_setweapon(IT_RAILGUN);
 		}
-	}
-	else if (self.impulse == 10)
-	{
+
+		// fall back on portalgun
+		if (self.newweapon != IT_COILGUN && self.newweapon != IT_RAILGUN)
+		{
+			client_setweapon(IT_PORTALGUN);
+		}
+
+		break;
+
+	case 10:
+
 		// Cycle weapon forward
 		client_cycleweapon(TRUE);
-	}
-	else if (self.impulse == 12)
-	{
+
+		break;
+
+	case 12:
+
 		// Cycle weapon backward
 		client_cycleweapon(FALSE);
-	}
-	else if (self.impulse == 22)
-	{
+
+		break;
+
+	case 22:
+
 		if (getkey(hook_enabled) != 0)
 		{
-			self.newweapon = IT_HOOK;
+			client_setweapon(IT_HOOK);
 		}
-	}
-	else if (self.impulse == 23)
-	{
+
+		break;
+
+	case 23:
+
 		client_setweapon(IT_PORTALGUN);
-	}
-	else if (self.impulse == 24)
-	{
+
+		break;
+
+	case 24:
+
 		client_setweapon(IT_PORTALGUN_ALT);
+
+		break;
 	}
 
 	self.impulse = 0;
-};
+}
 
 void() ctf_firehook;
 
