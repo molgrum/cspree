@@ -56,6 +56,31 @@ void SV_ParseClientCommand(string str)
 		}
 	}
 
+	// FIXME: uncomment when LASTMANSTANDING spectating is working
+	
+	/* if (argv(0) == "ptrack" && infokey(self, INFOKEY_P_SPECTATOR) == "2") */
+	/* { */
+	/* 	entity tracking = world, newtarget; */
+
+	/* 	while ((tracking = find(tracking, classname, "player"))) */
+	/* 	{ */
+	/* 		if (infokey(tracking, INFOKEY_P_USERID) == argv(1) || tracking == world) */
+	/* 			break; */
+	/* 	} */
+
+	/* 	newtarget = tracking; */
+	/* 	while (self.teamname != newtarget.teamname || stof(infokey(newtarget, INFOKEY_P_SPECTATOR))) */
+	/* 	{ */
+	/* 		newtarget = find(newtarget, classname, "player"); */
+	/* 		if (newtarget == tracking) */
+	/* 			break; */
+	/* 	} */
+
+	/* 	str = argv(0); */
+	/* 	str = strcat(str, " "); */
+	/* 	str = strcat(str, infokey(newtarget, INFOKEY_P_USERID)); */
+	/* } */
+
 	if (gmapn_handle_usercmd(numargs) == 0)
 		clientcommand(self, str);
 };

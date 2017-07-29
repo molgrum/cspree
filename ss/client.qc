@@ -1880,7 +1880,8 @@ void PlayerDeathThink()
 	 //last man standing does not allow respawning, nor do duel arena.  FIXME: make spectator
 	if (gmapn_gamemode == GM_LASTMANSTANDING)
 	{
-		client_setspectator(self);
+		//client_setspectator(self);
+		centerprint(self, "Unable to spectate due to client bugs...");
 		return;
 	}
 	if (gmapn_gamemode == GM_DA)
