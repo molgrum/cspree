@@ -398,7 +398,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 		victim.velocity = victim.velocity + vel;
 	}
 	
-	if (victim.takedamage == DAMAGE_INVINCIBLE)
+	if (victim.takedamage == DAMAGE_INVINCIBLE && victim.deathtype != DT_TELEFRAG && victim.deathtype != DT_TELEFRAG_PENT && victim.deathtype != DT_TELEFRAG_PENT_BOTH)
 		return 0;	//frozen players can be pushed around, but you can't otherwise hurt them.
 
 	if (deathmatch == DMM_MIDAIR)

@@ -507,6 +507,7 @@ void player_death()
 		if (self.deathtype == DT_TELEFRAG || self.deathtype == DT_TELEFRAG_PENT || self.deathtype == DT_TELEFRAG_PENT_BOTH)
 		{
 			//don't do weird stuff. that would result in players inside players.
+			self.takedamage = DAMAGE_INVINCIBLE;
 		}
 		else
 		{

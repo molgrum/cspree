@@ -860,6 +860,16 @@ void gmapn_round_start()
 		for (e = world; (e = find(e, classname, "player")); )
 			stuffcmd(e, "skins\n");
 	}
+
+	// unfreeze all players
+	if (gmapn_gamemode == GM_FREEZETAG)
+	{
+		e = world;
+		while ((e = find(e, classname, "player")))
+		{
+			e.takedamage = DAMAGE_BLEED;
+		}
+	}
 };
 
 //called after intra-round breather

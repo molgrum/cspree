@@ -712,7 +712,7 @@ void client_spawn(float sameplace)
 	entity spawn_point;
 	
 	float spectatormode = stof(infokey(self, "*spectator"));	//potentially set in duels when there are 3+ players.
-	
+
 	// Restore some attributes
 	self.ammo_shells = 0;				// Always start with 0 shells
 	self.ammo_nails = 0;				// Always start with 0 nails
@@ -736,6 +736,8 @@ void client_spawn(float sameplace)
 	self.pausetime = 0;
 	self.show_hostile = 0;
 	self.weaponframe = 0; // reset shooting animation on respawn
+	self.solid = SOLID_SLIDEBOX;			//
+	self.movetype = MOVETYPE_WALK;			//
 	if (spectatormode == 1 || spectatormode == 2)
 	{
 		self.solid = SOLID_NOT;
@@ -748,11 +750,9 @@ void client_spawn(float sameplace)
 		client_setsemispectator(self);
 		forceinfokey(self, "*spectator", "");
 	}
-	else
+	else if (self.takedamage != DAMAGE_INVINCIBLE) // keep frozen state in freeze tag when respawning
 	{
-		self.solid = SOLID_SLIDEBOX;			//
 		self.takedamage = DAMAGE_BLEED;			// Set bleeding behaviour
-		self.movetype = MOVETYPE_WALK;			//
 	}
 	self.waterlevel = 0;
 	self.watertype = CONTENT_EMPTY;
@@ -887,7 +887,7 @@ void client_spawn(float sameplace)
 		{
 			//no telefrag or anything
 		}
-		else if (gmapn_serverstate != gmapn_serverstate_playing || !getkey(spawn_telefrag))		{
+		else if (gmapn_serverstate == gmapn_serverstate_prewar || !getkey(spawn_telefrag))		{
 			// Spawns (usually) never telefrag in prewar. sometimes we don't get a choice.
 			float giveup = 256;
 			
@@ -981,9 +981,12 @@ void client_spawn(float sameplace)
 
 		makevectors(self.angles);
 		teleport_effect(self.origin + v_forward*20);
-		
+
 		// Begin standing animation
 		player_stand();
+
+		if (self.takedamage == DAMAGE_INVINCIBLE)
+			player_death(); // freeze instantly in freeze tag
 	}
 	
 	if (gmapn_gamemode == GM_HEADHUNTER && gmapn_serverstate == gmapn_serverstate_playing)
@@ -1882,8 +1885,8 @@ void PlayerDeathThink()
 	}
 	if (gmapn_gamemode == GM_DA)
 		return;
-	if (gmapn_gamemode == GM_FREEZETAG && self.watertype != CONTENT_LAVA && self.watertype != CONTENT_SLIME)
-		return;	//in freezetag, players can't respawn themselves, but rather are respawned by other players (unless they died or were knocked into lava/slime/void).
+	if (gmapn_gamemode == GM_FREEZETAG && self.watertype != CONTENT_LAVA && self.watertype != CONTENT_SLIME && self.maxspeed == 0)
+	return;	//in freezetag, players can't respawn themselves, but rather are respawned by other players (unless they died or were knocked into lava/slime/void).
 	if (gmapn_gamemode == GM_HIDENSEEK)
 	{
 		if (self.teamname == gmapn_team_hiders)
