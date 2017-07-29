@@ -67,7 +67,7 @@ void gmapn_init()
 	geo_city = getkey(info_city);
 	geo_country = getkey(info_country);
 	geo_state = getkey(info_state);
-	if (getkey(game_lockrules))
+	if (getkey(game_lockrules) > 0)
 		gamemode = gmapn_gamemodefullname(gmapn_gamemode);
 	else
 		gamemode = "various";
