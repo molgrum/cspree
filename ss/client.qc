@@ -2371,6 +2371,7 @@ void PlayerPostThink()
 				other = self;
 				self = self.thawplayer;
 				other.thawplayer = world;
+				self.takedamage = DAMAGE_BLEED;
 				te_teleport(self.origin);
 				SetNewParms();
 				client_spawn(getkey(freezetag_thawinplace));
