@@ -1640,7 +1640,8 @@ void client_pack_touch()
 	entity oself = self;
 	float w = self.weapon;
 	self = other;
-	float bestwep = client_bestweapon();
+	//float bestwep = client_bestweapon();
+	float bestwep = self.weapon; // why do a bestweapon check here?
 	self = oself;
 	
 	item_pickup(-1, "");
