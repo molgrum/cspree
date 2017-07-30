@@ -2158,7 +2158,7 @@ void client_obituary(entity targ, entity attacker)
 						bprint (PRINT_MEDIUM,sprintf(_("%s accepts %s's shaft\n"), targ.netname, attacker.netname));
 				}
 				else if (rnum == IT_RAILGUN)
-					bprint (PRINT_MEDIUM,sprintf(_("%s ate %s railgun slug\n"), targ.netname, attacker.netname));
+					bprint (PRINT_MEDIUM,sprintf(_("%s ate %s's railgun slug\n"), targ.netname, attacker.netname));
 				else if (rnum == IT_COILGUN)	//FIXME: add more variants.
 					bprint (PRINT_MEDIUM,sprintf(_("%s was coiled by %s\n"), targ.netname, attacker.netname));
 				else
