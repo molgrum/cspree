@@ -102,11 +102,11 @@ void gmapn_game_stats_printtop()
 		float f;
 		f = quota(p.stats_kills, p.stats_kills + p.stats_deaths);
 		// FIXME: implement teamkills, streak and quadrun
-		if (topfrags.stats_kills < p.stats_kills)
+		if (!topfrags || topfrags.stats_kills < p.stats_kills)
 			topfrags = p;
-		if (topdeaths.stats_deaths < p.stats_deaths)
+		if (!topdeaths || topdeaths.stats_deaths < p.stats_deaths)
 			topdeaths = p;
-		if (quota(topeffi.stats_kills, topeffi.stats_kills + topeffi.stats_deaths) < f)
+		if (!topeffi || quota(topeffi.stats_kills, topeffi.stats_kills + topeffi.stats_deaths) < f)
 			topeffi = p;
 		p = find(p, classname, "player");
 	}

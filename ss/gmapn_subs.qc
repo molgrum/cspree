@@ -278,7 +278,7 @@ void killed(entity targ, entity attacker)
 
 	self = oself;
 
-	if (attacker != world && attacker.teamname != targ.teamname)
+	if (attacker && (!teamplay || attacker.teamname != targ.teamname))
 	{
 		// Only count enemies killed
 
