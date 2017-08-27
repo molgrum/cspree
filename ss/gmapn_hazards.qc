@@ -1122,7 +1122,7 @@ void hazard_missile_touch()
 	f = gmapn_impact(other, self, damage, push);
 		
 	if (self.classname == "rocket") {
-		damage += 10; // modifier for original QW behaviour
+		//damage += 10; // modifier for original QW behaviour
 		f += gmapn_explosion(self, damage, push, other, DT_ROCKET);
 	}
 			

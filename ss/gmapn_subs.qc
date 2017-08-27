@@ -1,26 +1,26 @@
 /*
-    gmapn_subs.qc
+	gmapn_subs.qc
 
-    Copyright (C) 1996-1997  Id Software, Inc.
-    Copyright (C) 2009       Andreas Nilsson
+	Copyright (C) 1996-1997	 Id Software, Inc.
+	Copyright (C) 2009		 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -60,7 +60,7 @@ void usetargets()
 
 		return;
 	}
-	
+
 	if (self.killtarget)
 	{
 		targ = find(world, targetname, self.killtarget);
@@ -69,11 +69,11 @@ void usetargets()
 			remove(targ);
 			targ = find(targ, targetname, self.target);
 		}
-		
+
 		//FIXME: WTF! but this matches vanilla!
 		return;
 	}
-	
+
 	// Call use function on target
 	targ = find(world, targetname, self.target);
 	while (targ)
@@ -121,7 +121,7 @@ void calcmove(vector goalpos, float vel, void() move_done)
 	{
 		// Need some time to think, not an actual travel time
 		traveltime = 0.1;
-		
+
 		// Nowhere to go, no speed to get
 		self.velocity = '0 0 0';
 	}
@@ -147,7 +147,7 @@ void gmapn_id_angles_sucks()
 	}
 	makevectors(self.angles);
 	self.movedir = v_forward;
-	
+
 	// Since angles are used to calculate a moving direction, this
 	// field is not used to rotate the entity. Void it.
 	self.angles = '0 0 0';
@@ -163,12 +163,12 @@ void gmapn_dropspawn()
 	self.solid = SOLID_BBOX;
 	setsize(self, VEC_HULL_MIN, VEC_HULL_MAX);
 	self.origin = self.origin + '0 0 24';
-	
+
 	if (!droptofloor())
 	{
 		self.origin = self.origin + '0 0 -24';
 	}
-	
+
 	self.solid = SOLID_TRIGGER;
 	setorigin(self, self.origin);
 	setsize(self, '0 0 0', '0 0 0');
@@ -178,7 +178,7 @@ float entities_touching(entity e1, entity e2)
 {
 	// Check that the entities is out of range from touching each
 	// other, otherwise they are.
-	
+
 	if (e1.mins_x > e2.maxs_x)
 	{
 		return FALSE;
@@ -203,7 +203,7 @@ float entities_touching(entity e1, entity e2)
 	{
 		return FALSE;
 	}
-	
+
 	return TRUE;
 };
 
@@ -227,7 +227,7 @@ float candamage(entity targ, entity inflictor)
 			return TRUE;
 		return FALSE;
 	}
-	
+
 	traceline(inflictor.origin, targ.origin, TRUE, self);
 	if (trace_fraction == 1)
 		return TRUE;
@@ -352,7 +352,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 		self = victim;
 		self.use();
 		self = stemp;
-		
+
 		return damage;				// Triggers takes full damage
 	}
 
@@ -365,7 +365,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	{
 		quadmod = 1;
 	}
-	
+
 	if (inflictor.items2 & IT2_RUNE_STRENGTH)
 	{
 		quadmod *= 2;
@@ -377,7 +377,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	}
 	if (victim.items2 & IT2_RUNE_RESISTANCE)
 	{
-		quadmod *= 0.5;	//should affect armour too		
+		quadmod *= 0.5;	//should affect armour too
 		if (time > victim.runetime)
 		{
 			sound(victim, CHAN_BODY, "rune/rune1.wav", 1, ATTN_NORM);
@@ -397,7 +397,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 		vel = 8 * dir * damage * quadmod * push;
 		victim.velocity = victim.velocity + vel;
 	}
-	
+
 	if (victim.takedamage == DAMAGE_INVINCIBLE && victim.deathtype != DT_TELEFRAG && victim.deathtype != DT_TELEFRAG_PENT && victim.deathtype != DT_TELEFRAG_PENT_BOTH)
 		return 0;	//frozen players can be pushed around, but you can't otherwise hurt them.
 
@@ -405,7 +405,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	{
 		if (victim.flags & FL_ONGROUND)
 			return 0;
-		
+
 	}
 
 	// Pent check
@@ -447,7 +447,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 
 	// Damage health
 	hthdmg = pentmod * ceil(damage * quadmod - amrdmg);
-	
+
 	if (victim.deathtype == DT_TELEFRAG || victim.deathtype == DT_TELEFRAG_PENT || victim.deathtype == DT_TELEFRAG_PENT_BOTH || victim.deathtype == DT_TEAMREFLECT)
 	{}	//telefrag always does full damage, even to team members.
 	else if (victim == attacker)
@@ -508,7 +508,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 			player_pain();
 		self = stemp;
 	}
-	
+
 	if (reflect)
 	{
 		attacker.deathtype = DT_TEAMREFLECT;
@@ -538,7 +538,7 @@ float gmapn_explosion(entity inflictor, float damage, float push, entity ignore,
 			{
 				points = 0;
 			}
-			points = rint(damage - points);
+			points = damage - points;
 
 			if (points > 0)
 			{
@@ -568,18 +568,18 @@ float gmapn_explosion(entity inflictor, float damage, float push, entity ignore,
 void gmapn_death(entity victim, entity attacker)
 {
 	entity stemp;
-	
+
 	killed(victim, attacker);
 	stemp = self;
 	self = victim;
-	
+
 	if (victim.flags & FL_MONSTER)
 	{
 		victim.flags &= ~(FL_FLY | FL_SWIM);
 		activator = attacker;
 		usetargets();
 	}
-	
+
 	if (self.th_die)
 		self.th_die();
 	else
@@ -685,7 +685,7 @@ void gmapn_centerprint(entity client, string msg, float duration)
 void item_drop()
 {
 	self.movetype = MOVETYPE_TOSS;
-	
+
 	self.origin_z = self.origin_z + 6;
 	if (!droptofloor())
 	{
@@ -715,19 +715,19 @@ void remove_wall()
 entity is_occupied(vector spot)
 {
 	entity p, list, oldself, fake_player;
-	
+
 	vector tmin;
 	vector pmin;
-	
+
 	fake_player = spawn();
 	setsize(fake_player, VEC_HULL_MIN, VEC_HULL_MAX);
-	
+
 	tmin = spot + fake_player.mins;
 
 	oldself = self;
 	list = spawn();
 	self = list;
-	
+
 	p = find(world, classname, "player");
 	while (p)
 	{
@@ -746,10 +746,10 @@ entity is_occupied(vector spot)
 		}
 		p = find(p, classname, "player");
 	}
-	
+
 	self = oldself;
 	remove(fake_player);
-	
+
 	return list;
 };
 
