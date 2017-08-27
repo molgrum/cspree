@@ -29,8 +29,8 @@ string gmapn_menu_maplist(float keys);
 .float subsel; // current submenu or main menu
 .float rulesel;	//main option on the menu
 .float mapsel;	//map or election
-.float modsel;  //mod submenu
-.float srvsel;  //advanced submenu
+.float modsel;	//mod submenu
+.float srvsel;	//advanced submenu
 .float maps[11]; // list of maps displayed. randomizedish per player. FIXME: should probably just make this a string array, or tokens string.
 string gmapn_menuarg;
 
@@ -114,7 +114,7 @@ static string menu_ready(float op)
 {
 	if (self.rulesel == -1)	//ready menu does not apply if game_lockmode is set.
 		return 0;
-	if (op == MENU_TITLE)	
+	if (op == MENU_TITLE)
 		return "Ready";
 	if (op == MENU_VALUE)
 	{
@@ -187,7 +187,7 @@ void menu_mapvote_randomize(int first)
 		while (i < maps.length)
 		{
 			rnd = floor(random() * mappoolsize);
-		
+
 			for (j = 0; j < i; j++)
 				if (self.maps[j] == rnd)
 					break;
@@ -199,7 +199,7 @@ void menu_mapvote_randomize(int first)
 	}
 	for (; i < maps.length; i++)
 		self.maps[i++] = -1;
-	
+
 
 	self.subsel = SUBSEL_MAPS;
 	self.viewingrules = time;
@@ -312,7 +312,7 @@ static string menu_gamemode(float op)
 static string menu_gameskill(float op)
 {
 	float val;
-	
+
 	if (gmapn_gamemode != GM_COOP)
 		return 0;
 
@@ -345,7 +345,7 @@ static string menu_gameskill(float op)
 static string menu_dmm(float op)
 {
 	float val;
-	
+
 	if (gmapn_gamemode == GM_COOP && !cvar("deathmatch"))
 		return 0;
 
@@ -564,7 +564,7 @@ static string menu_rounds(float op)
 	{
 		modhasrounds = TRUE;
 	}
-	
+
 	if (op == MENU_TITLE)
 	{
 		if (modhasrounds == TRUE)
@@ -647,7 +647,7 @@ static string menu_antilag(float op)
 {
 	if (op == MENU_TITLE)
 		return "Lag Compensation";
-		
+
 	float v = cvar("sv_antilag");
 	if (op == MENU_VALUE)
 	{
@@ -708,10 +708,10 @@ static string menu_minping(float op)
 static string menu_spawnmode(float op)
 {
 	float spawnmode = getkey(spawn_mode);
-	
+
 	if (op == MENU_TITLE)
 		return "Spawn mode";
-	
+
 	if (op == MENU_VALUE)
 	{
 		return spawnname[spawnmode];
@@ -953,11 +953,11 @@ string balancestrings(string left, string separator, string right)
 string gmapn_menu_maps(float keys)
 {
 	int i;
-	int  lim, first;
+	int	 lim, first;
 	float currentsel = self.mapsel;
 	string m = 0;
 	const float showmax = 20;
-	
+
 	if (keys & KEY_RIGHT)
 	{
 		gmapn_mapvote_removevote();
@@ -968,10 +968,10 @@ string gmapn_menu_maps(float keys)
 		do
 		{
 			self.mapsel -= 1;
-			
+
 			if (self.mapsel<0)
 				self.mapsel = maps.length-1;
-			
+
 			if (self.mapsel == currentsel)
 				break;
 		} while (gmapn_map_pool_readidx(self.maps[self.mapsel]) == "");
@@ -981,7 +981,7 @@ string gmapn_menu_maps(float keys)
 		do
 		{
 			self.mapsel += 1;
-			
+
 			if (self.mapsel >= maps.length)
 				self.mapsel = 0;
 
@@ -1059,19 +1059,19 @@ string gmapn_menu_mod(float keys)
 
 	if (!gmapn_gamemaster)
 		gmapn_evaluategamemaster();
-	
+
 	if (keys & KEY_RIGHT)
 	{
 		modchangetime[self.modsel] = time + 3;
 		rules_mod[self.modsel](MENU_RIGHT);
 	}
-	
+
 	if (keys & KEY_LEFT)
 	{
 		modchangetime[self.modsel] = time + 3;
 		rules_mod[self.modsel](MENU_LEFT);
 	}
-	
+
 	if (keys & KEY_UP)
 	{
 		do
@@ -1081,7 +1081,7 @@ string gmapn_menu_mod(float keys)
 				self.modsel = rules_mod.length-1;
 		} while(!rules_mod[self.modsel](0) || (!gmapn_isgamemaster(self) && !rules_mod[self.modsel](4)));
 	}
-	
+
 	if (keys & KEY_DOWN)
 	{
 		do
@@ -1093,7 +1093,7 @@ string gmapn_menu_mod(float keys)
 	}
 
 	string m = "";
-	
+
 	if (gmapn_serverstate != gmapn_serverstate_countdown)
 	{
 		m = gmapn_menu_waitingfor(gmapn_gamemodeneedsteam(gmapn_gamemode));
@@ -1109,7 +1109,7 @@ string gmapn_menu_mod(float keys)
 			continue;
 		if (t == "")
 			continue;
-			
+
 		if (modchangetime[i] >= time)
 			t = alternate(t);
 
@@ -1125,7 +1125,7 @@ string gmapn_menu_mod(float keys)
 		m = strcat(m, balancestrings(t, mid, v), "\n");
 	}
 
-	
+
 
 	return m;
 }
@@ -1133,19 +1133,19 @@ string gmapn_menu_mod(float keys)
 string gmapn_menu_server(float keys)
 {
 	int i;
-	
+
 	if (keys & KEY_RIGHT)
 	{
 		srvchangetime[self.srvsel] = time + 3;
 		rules_srv[self.srvsel](MENU_RIGHT);
 	}
-	
+
 	if (keys & KEY_LEFT)
 	{
 		srvchangetime[self.srvsel] = time + 3;
 		rules_srv[self.srvsel](MENU_LEFT);
 	}
-	
+
 	if (keys & KEY_UP)
 	{
 		do
@@ -1155,7 +1155,7 @@ string gmapn_menu_server(float keys)
 				self.srvsel = rules_srv.length-1;
 		} while(!rules_srv[self.srvsel](0) || (!gmapn_isgamemaster(self) && !rules_srv[self.srvsel](4)));
 	}
-	
+
 	if (keys & KEY_DOWN)
 	{
 		do
@@ -1167,7 +1167,7 @@ string gmapn_menu_server(float keys)
 	}
 
 	string m = "";
-	
+
 	if (gmapn_serverstate != gmapn_serverstate_countdown)
 	{
 		m = gmapn_menu_waitingfor(gmapn_gamemodeneedsteam(gmapn_gamemode));
@@ -1183,7 +1183,7 @@ string gmapn_menu_server(float keys)
 			continue;
 		if (t == "")
 			continue;
-			
+
 		if (srvchangetime[i] >= time)
 			t = alternate(t);
 
@@ -1214,7 +1214,7 @@ string gmapn_menu_rules(float keys)
 		keys &= ~KEY_LEFT;
 		keys &= ~KEY_RIGHT;
 	}
-	
+
 	//use gmapn_gamemaster instead of getkey(game_lockrules), because we might have/be a vip
 	if (getkey(game_lockrules)>0 && !gmapn_gamemodeneedsteam(gmapn_gamemode))
 	{
@@ -1330,7 +1330,7 @@ string gmapn_menu_rules(float keys)
 			continue;
 		if (t == "")
 			continue;
-			
+
 		if (rulechangetime[i] >= time)
 			t = alternate(t);
 
@@ -1387,7 +1387,7 @@ string gmapn_menu_settings()
 		modified = icon;
 		printmodified = TRUE;
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Timelimit")), mid, goldnmbr(ftos(cvar("timelimit")))), "\n");	
+	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Timelimit")), mid, goldnmbr(ftos(cvar("timelimit")))), "\n");
 
 	modified = "";
 	if (getkey(powerups_enabled) != stof(infokey(world, "gmapn_powerups_enabled")))
@@ -1404,7 +1404,7 @@ string gmapn_menu_settings()
 		printmodified = TRUE;
 	}
 	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Spawn Mode")), mid, spawnname[getkey(spawn_mode)]), "\n");
-	
+
 	modified = "";
 	if (getkey(game_botskill) != stof(infokey(world, "gmapn_game_botskill")))
 	{
@@ -1422,7 +1422,7 @@ string gmapn_menu_settings()
 	}
 	if (getkey(game_rounds) || modified != "")
 		str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Rounds Per Game")), mid, ftos(getkey(game_rounds))), "\n");
-	
+
 	modified = "";
 	if (cvar("sv_antilag") != stof(infokey(world, "gmapn_antilag")))
 	{
@@ -1447,7 +1447,7 @@ string gmapn_menu_settings()
 	{
 		str = strcat("\n\n\n\n", str);
 	}
-	
+
 	return str;
 }
 
@@ -1506,7 +1506,7 @@ void gmapn_menu_any(float keys)
 		if (getkey(game_lockrules)>0 && !gmapn_gamemodeneedsteam(gmapn_gamemode))
 			cmd_ready();
 	}
-	
+
 	if (substring(infokey(self, "*ver"), 0, 3) == "FTE")
 		prefix = "/P";
 	else
@@ -1522,7 +1522,7 @@ void gmapn_menu_any(float keys)
 			self.movetime = time + 3;
 
 		if (gmapn_serverstate != gmapn_serverstate_countdown)
-			m = strcat(m, gmapn_menu_waitingfor((time*2) & 1));
+			m = gmapn_menu_waitingfor((time*2) & 1);
 	}
 	else if (self.subsel == SUBSEL_MAPS)
 	{
