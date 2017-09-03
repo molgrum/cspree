@@ -434,8 +434,60 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 	// Damage armor
 
 	amrdmg = ceil(victim.armortype * damage * quadmod);
-	if (victim.deathtype == DT_TEAMREFLECT)
+
+	switch (victim.deathtype)
+	{
+	case DT_TEAMREFLECT:
+
 		amrdmg = 0;
+		break;
+
+	case DT_AXE:
+
+		amrdmg *= (pentmod ? getkey(axe_absorb) : 1.0);
+		break;
+
+	case DT_BULLET:
+
+		amrdmg *= (pentmod ? getkey(shotgun_absorb) : 1.0);
+		break;
+
+	case DT_SUPER_BULLET:
+
+		amrdmg *= (pentmod ? getkey(shotgun2_absorb) : 1.0);
+		break;
+
+	case DT_NAIL:
+
+		amrdmg *= (pentmod ? getkey(spike_absorb) : 1.0);
+		break;
+
+	case DT_SUPER_NAIL:
+
+		amrdmg *= (pentmod ? getkey(spike2_absorb) : 1.0);
+		break;
+
+	case DT_GRENADE:
+
+		amrdmg *= (pentmod ? getkey(grenade_absorb) : 1.0);
+		break;
+
+	case DT_ROCKET:
+
+		amrdmg *= (pentmod ? getkey(rocket_absorb) : 1.0);
+		break;
+
+	case DT_BOLT:
+
+		amrdmg *= (pentmod ? getkey(lightning_absorb) : 1.0);
+		break;
+
+	case DT_RAILGUN:
+
+		amrdmg *= (pentmod ? getkey(rail_absorb) : 1.0);
+		break;
+	}
+
 	if (amrdmg >= victim.armorvalue)
 	{
 		amrdmg = victim.armorvalue;

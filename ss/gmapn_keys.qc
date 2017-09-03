@@ -1,25 +1,25 @@
 /*
-    gmapn_keys.qc
+	gmapn_keys.qc
 
-    Copyright (C) 2009 Andreas Nilsson
+	Copyright (C) 2009 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -55,6 +55,7 @@ string NULL = __NULL__;
 	GVF(armor3_absorb,		0.8,	NULL)\
 	GVF(armor3_amount,		200,	NULL)\
 	GVF(axe_new,			0,	"Use more predictable axe attack timings")\
+	GVF(axe_absorb,			1.0,	"Axe armor aborption")\
 	GVF(axe_damage,			80,	NULL)\
 	GVF(axe_push,			1.0,	NULL)\
 	GVF(axe_push_frozen,		3.0,	"Pushback multiplier for axe hits against frozen targets. Applies in freezetag or when the player is staring at mod menus.")\
@@ -83,15 +84,17 @@ string NULL = __NULL__;
 	GVF(game_exittele,		0,	"1 = exit teleports to info_player_start")\
 	GVF(grenade_aim_new,		0,	"0 = Old grenade aim best for old pitch limits)\n1 = New aim better for new pitch limits")\
 	GVF(grenade_aim_norandom,	1,	"0 = Add random sideways velocity to the grenade)\n1 = Don't add random velocities to the aim")\
+	GVF(grenade_absorb,		1.0,	"Grenade launcher armor absorption")\
 	GVF(grenade_damage,		120,	NULL)\
 	GVF(grenade_push,		1.0,	NULL)\
 	GVF(grenade_reload,		0.6,	NULL)\
 	GVF(grenade_velocity,		600,	NULL)\
 	GVF(laser_damage,		15,	NULL)\
 	GVF(laser_push,			1.0,	NULL)\
-	GVF(lightning_damage,		30,	NULL)\
+	GVF(lightning_absorb,	1.0,	"Lightning gun armor absorption")\
+	GVF(lightning_damage,	30,		NULL)\
 	GVF(lightning_push,		1.0,	NULL)\
-	GVF(lightning_reload,		0.2,	NULL)\
+	GVF(lightning_reload,	0.2,	NULL)\
 	GVF(respawn_ammo,		30,	NULL)\
 	GVF(respawn_armor,		20,	NULL)\
 	GVF(respawn_health,		20,	NULL)\
@@ -102,22 +105,27 @@ string NULL = __NULL__;
 	GVF(respawn_suit,		60,	"Default to 60 seconds (1 minute)")\
 	GVF(respawn_weapon_dmm1,	30,	NULL)\
 	GVF(respawn_weapon_dmm2,	5,	NULL)\
-	GVF(rocket_damage,		110,	NULL)\
+	GVF(rocket_absorb,		1.0,	"Rocket launcher armor absorption")\
+	GVF(rocket_damage,		110,	NULL)	\
 	GVF(rocket_push,		1.0,	NULL)\
 	GVF(rocket_reload,		0.8,	NULL)\
 	GVF(rocket_velocity,		1000,	NULL)\
 	GVF(coilgun_reload,		0.7,	NULL)\
+	GVF(shotgun_absorb,		1.0,	"Shotgun armor absorption")\
 	GVF(shotgun_reload,		0.5,	NULL)\
 	GVF(shotgun_spread,		0.005,	NULL)\
+	GVF(shotgun2_absorb,		1.0,	"Buckshot armor absorption")\
 	GVF(shotgun2_reload,		0.7,	NULL)\
 	GVF(shotgun2_spread,		0.015,	NULL)\
 	GVF(spawn_drop,			0,	"0 = Original position of spawns\n1 = Drop the spawn to floor")\
 	GVF(spawn_mode,			1,	"1 = Fair spawns (avoid duplicate spawn spots)\n2 = Competitive spawns (perhaps mercilessly spawn on the same spot)")\
 	GVF(spawn_telefrag,		1,	"0 = Avoid telefrags by waiting a few seconds until spawning\n1 = Telefrag merciless (original QW)")\
+	GVF(spike_absorb,		1.0,	"Nailgun armor absorption")\
 	GVF(spike_damage,		9,	NULL)\
 	GVF(spike_push,			1.0,	NULL)\
 	GVF(spike_reload,		0.2,	NULL)\
 	GVF(spike_velocity,		2000,	NULL)\
+	GVF(spike2_absorb,		1.0,	"Super nailgun armor absorption")\
 	GVF(spike2_damage,		18,	NULL)\
 	GVF(spike2_push,		1.0,	NULL)\
 	GVF(spike2_reload,		0.2,	NULL)\
@@ -127,6 +135,7 @@ string NULL = __NULL__;
 	GVF(teleport_velocity,		0,	"0 = Set a constant velocity of 300 when you teleport\n1 = Preserve all velocity, merging x and y velocity\ninto one forward velocity and preserving z velocity\nas it is. If z velocity < 0 it is set to 0.")\
 	GVF(runtests,				0,	"Run a simulation of bots playing on the server.")\
 	GVF(rail,			0,	"Specifies whether the railgun is enabled or not. Converted to lightning gun otherwise.")\
+	GVF(rail_absorb,		1.0,	"Railgun armor absorption")\
 	GVF(rail_damage,		110,	NULL)\
 	GVF(rail_push,			1.0,	NULL)\
 	GVF(rail_reload,		0.8,	NULL)\
@@ -181,12 +190,12 @@ float getkey_parseconfig(string cfgname)
 				cmd = val;
 				val = argv(2);
 			}
-			
+
 			if (cvar_type(cmd))
 				cvar_set(cmd, val);
 			else if (cvar_type(strcat("g_", cmd)))
 				cvar_set(strcat("g_", cmd), val);
-			else 
+			else
 				print("var ", cmd, " does not exist\n", cmd);
 		}
 		fclose(f);
@@ -221,7 +230,7 @@ void getkey_reset()
 	//mode-specific overrides
 	if (!getkey_parseconfig(sprintf("cfgs/rules/%s.conf", modename)))
 		dprint(sprintf("could not read cfgs/rules/%s.conf\n", modename));
-	
+
 	//map-specific overrides
 	getkey_parseconfig(sprintf("cfgs/maps/%s/default.conf", mapname));
 	//map-mode-specific settings...
