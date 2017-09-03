@@ -1,27 +1,27 @@
 /*
-    gmapn_game.qc
+	gmapn_game.qc
 
-    Copyright (C) 2007 Mark Olsen
-    Copyright (C) 2009 Andreas Nilsson
-    Copyright (C) 2013 David Walton
+	Copyright (C) 2007 Mark Olsen
+	Copyright (C) 2009 Andreas Nilsson
+	Copyright (C) 2013 David Walton
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -179,9 +179,9 @@ void gmapn_game_endpregamecountdown()
 void gmapn_game_end()
 {
 	entity disconnected_player;
-	
+
 	localcmd("serverinfo status standby\n");
-	
+
 	entity e = find(world, classname, "gmapn_round_check");
 	if (e)
 		remove(e);
@@ -209,14 +209,14 @@ void gmapn_game_end()
 	gmapn_sql_logmatch();
 	gmapn_countdown_stop();
 	gmapn_serverstate = gmapn_serverstate_intermission;
-	
+
 	//if any players are dead, clear that out so that they appear properly on the scoreboard, and don't carry their spec status over to the next map.
 	for (e = world; (e = find(e, classname, "player")); )
 	{
 		client_clearspectator(e);
 		hidepic("hc", e);
 	}
-		
+
 	execute_changelevel();
 };
 
@@ -266,7 +266,7 @@ static float duel_spawn_challenger()
 	}
 	if (!oldest)
 		return FALSE;	//err... noone left to duel...
-		
+
 	self = oldest;
 	client_clearspectator(self);
 	self.challengertime = time;
@@ -281,7 +281,7 @@ static float duel_spawn_challenger()
 static void lastmancheck()
 {
 	self.nextthink = time + 1;
-	
+
 	if (teamplay)
 	{
 		string aliveteam = 0;
@@ -298,7 +298,7 @@ static void lastmancheck()
 					aliveteam = e.teamname;
 			}
 		}
-		
+
 		if (aliveteam)
 		{
 			bprint(PRINT_HIGH, "Team ", aliveteam, " wins the round!\n");
@@ -310,7 +310,7 @@ static void lastmancheck()
 				else
 					centerprint(e, "Team ", aliveteam, " wins the round!");
 			}
-			
+
 			if (gmapn_gamemode != GM_ROVER)
 			for (entity e = world; (e = find(e, classname, "player")); )
 			{
@@ -365,7 +365,7 @@ static void duelcheck()
 			totalplayers++;
 		}
 	}
-	
+
 	//don't spam weird messages if there's only one ready player alive.
 	//note: there is some weirdness in that breaking will de-spawn you if there are two or less possible players, and will not if there are 3. both cases won't respawn you of course.
 	if (totalplayers < 2)
@@ -398,7 +398,7 @@ static void duelcheck()
 		self.cnt = TRUE;
 		return;
 	}
-	
+
 	if (self.cnt)
 	{
 		while (liveplayers < 2)	//both players may have died.
@@ -422,6 +422,7 @@ static void duelcheck()
 				else
 					centerprint(e, liveplayer.netname, " is victorious!\n", goldnmbr(ftos(liveplayer.health)), " health and ", goldnmbr(ftos(liveplayer.armorvalue)), " armor left");
 			}
+			bprint(PRINT_HIGH, liveplayer.netname, " had ", goldnmbr(ftos(liveplayer.health)), " health and ", goldnmbr(ftos(liveplayer.armorvalue)), " armor left\n");
 		}
 		else
 		{
@@ -533,7 +534,7 @@ void gmapn_hideandseek_check()
 
 		return;
 	}
-	
+
 	alldead = TRUE;
 	for (entity e = world; (e = find(e, classname, "player")); )
 	{
@@ -589,7 +590,7 @@ void gmapn_hideandseek_touch()
 {
 	if (other.teamname != gmapn_team_seekers)
 		return;
-	
+
 	stuffcmd(other, "bf\n");
 	centerprint(other, "Picked up documents, reporting to HQ...");
 	self.model = string_null;
@@ -601,12 +602,12 @@ void gmapn_hideandseek_touch()
 void gmapn_hideandseek_drop()
 {
 	entity docs;
-	
+
 	docs = spawn();
 	docs.classname = "item_documents";
 	docs.solid = SOLID_TRIGGER;
 	docs.touch = gmapn_hideandseek_touch;
-	
+
 	setorigin(docs, self.origin);
 	setmodel(docs, "progs/backpack.mdl");
 	setsize(docs, VEC_HULL_MIN, VEC_HULL_MAX);
@@ -659,13 +660,13 @@ void gmapn_round_start()
 //	gmapn_reset_entities("item_flag");
 
 	gmapn_powerups_setitems();
-	
+
 	//let clients know the correct time.
 	gmapn_matchstarttimems = 1000*time;
 
 	// was in gmapn_game_start but moved since we need to reset this between rounds
 	gmapn_serverstate = gmapn_serverstate_playing;
-	
+
 	gmapn_coop_respawntokens = getkey(coop_respawntokens);
 
 	//rover re-randomizes teams on EVERY round restart
@@ -711,7 +712,7 @@ void gmapn_round_start()
 				}
 			}
 		}
-		
+
 		//any player which isn't alive is a spectator now.
 		//make sure the guy that died is converted properly.
 		for (e = world; (e = find(e, classname, "player")); )
@@ -733,7 +734,7 @@ void gmapn_round_start()
 	}
 	else if (gmapn_gamemode == GM_HIDENSEEK)
 	{
-	  	float rnd = floor(random() * 2); // FIXME: alternate between teams
+		float rnd = floor(random() * 2); // FIXME: alternate between teams
 		if (gmapn_roundnum == 1)
 		{
 			dprintln("round 1, randomizing teams");
@@ -784,7 +785,7 @@ void gmapn_round_start()
 		}
 
 		rnd = floor(random() * count);
-	   
+
 		for (e = world; (e = find(e, classname, "player")); )
 		{
 			e.maxspeed = autocvar(sv_maxspeed, 320);
@@ -798,7 +799,7 @@ void gmapn_round_start()
 				client_clearsemispectator(self);
 				respawn_living();
 				stuffcmd(e, "bf 1 1 1 0.5 0.5\n");
-				
+
 				if (rnd == 0)
 				{
 					gmapn_flag_carrier = e;
@@ -837,6 +838,20 @@ void gmapn_round_start()
 	}
 	if (gmapn_gamemode == GM_DA)
 	{
+		entity mh = world;
+
+		// delay mega health spawn
+		while ((mh = find(mh, classname, "item_health")))
+		{
+			if (mh.spawnflags & 2)
+			{
+				mh.nextthink = time + 20;
+				mh.think = item_respawn;
+				mh.solid = SOLID_NOT;
+				mh.model = string_null;
+			}
+		}
+
 		self = spawn();
 		self.classname = "gmapn_round_check";
 		self.think = duelcheck;
@@ -850,7 +865,7 @@ void gmapn_round_start()
 		self.think = lastmancheck;
 		self.nextthink = max(5, time);	//how long does it take for people to change maps? should we wait while there are still people (down)loading?
 	}
-	
+
 	if (gmapn_roundslimit > 1)
 		bprint(PRINT_HIGH, sprintf("Round %g of %g!\n", gmapn_roundnum, gmapn_roundslimit));
 
@@ -915,7 +930,7 @@ void gmapn_round_end()
 	}
 */
 	gmapn_countdown_stop();
-	
+
 	//don't fight too much
 	other = find(world, classname, "gmapn_round_check");
 	if (other)
@@ -957,7 +972,7 @@ void gmapn_game_start()
 	timelimit = cvar("timelimit")*60;
 	teamplay = cvar("teamplay");
 	deathmatch = cvar("deathmatch");
-	
+
 	if (gmapn_gamemode == GM_COOP)
 		teamplay = TRUE;
 
@@ -1029,10 +1044,10 @@ void gmapn_game_start()
 			stuffcmd(self, "bf 1 1 1 0.3\n");	//white flash to signify the round started
 			player = find(player, classname, "player");
 		}
-*/		
+*/
 		gmapn_round_start();
 	}
-	
+
 	if (gmapn_gamemode == GM_FREEZETAG)
 		precache_sound("player/frozen1.wav");
 	if (gmapn_gamemode == GM_DOMINATION)
@@ -1044,7 +1059,7 @@ void gmapn_game_start()
 	}
 	if (gmapn_gamemode == GM_CTF)
 		ctf_enableflags(TRUE);
-	
+
 	if ((gmapn_gamemode == GM_COOP) != coop || (coop && skill != cvar("skill")))
 	{
 		cvar_set("coop", ftos(gmapn_gamemode == GM_COOP));
@@ -1053,7 +1068,7 @@ void gmapn_game_start()
 		serverflags = SV_MATCHLESS;	//also clears out any runes.
 		changelevel(mapname);
 	}
-	
+
 	if (timelimit)
 		gmapn_countdown_start(timelimit, gmapn_round_end, gmapn_countdown_style_game);
 	else
