@@ -58,7 +58,7 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 ### Chat with us
 
 ## Chat with us
-- **#gmapn** @ [Quakenet](https://webchat.quakenet.org/)
+- **#cspree** @ [Quakenet](https://webchat.quakenet.org/)
 - **#beta-testers** on [Discord](https://discordapp.com/)
 
 ## Differences from KTX
