@@ -34,7 +34,7 @@ make
 - Rename the folder to "cspree".
 - Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into cspree directory)
 - Download server [64-bit](http://triptohell.info/moodles/win64/fteqwsv64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqwsv32.exe) (put into quake directory)
-- Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into cspree directory)
+- Download optional PK3 [here](http://triptohell.info/moodles/junk/cspree.pk3) (put into cspree directory)
 - Run QCC exe and winquicker.bat
 
 Happy gibbing!
@@ -53,7 +53,7 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 - Connect with any client.
 
 ### Something is wrong?
-- [Open webchat](https://webchat.quakenet.org/) and enter the channel **#qwrookie** for general help and **#gmapn** for mod specific help
+- [Open webchat](https://webchat.quakenet.org/) and enter the channel **#qwrookie** for general help and **#cspree** for mod specific help
 
 ### Chat with us
 
