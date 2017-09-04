@@ -48,7 +48,7 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 - [nQuake](http://nquake.com/) bundles with the [ezQuake](http://ezquake.github.io/) client and is by far the most popular way to get a Quakeworld setup running with a few clicks
 
 ### Connecting to a server
-- Servers at time of writing: *quake1.de:28501* (EU) *nicotinelounge.com:28501* (US)
+- A good way to list servers: [quakeservers.net](https://www.quakeservers.net/quakeworld/servers/d=cspree/)
 - Type in console: connect quake1.de:28501
 - Connect with any client.
 
