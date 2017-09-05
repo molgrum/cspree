@@ -372,10 +372,6 @@ static void duelcheck()
 	{
 		for (entity e = world; (e = find(e, classname, "player")); )
 		{
-			if (e.ready)
-				centerprint(e, "Waiting for competitors");
-			else
-				centerprint(e, "You are not ready!");
 			if (!e.deadflag)
 			{
 				te_teleport(e.origin);
@@ -423,6 +419,8 @@ static void duelcheck()
 					centerprint(e, liveplayer.netname, " is victorious!\n", goldnmbr(ftos(liveplayer.health)), " health and ", goldnmbr(ftos(liveplayer.armorvalue)), " armor left");
 			}
 			bprint(PRINT_HIGH, liveplayer.netname, " had ", goldnmbr(ftos(liveplayer.health)), " health and ", goldnmbr(ftos(liveplayer.armorvalue)), " armor left\n");
+			if (liveplayer.health >= 100 && liveplayer.armorvalue == 200)
+				sound(self, CHAN_VOICE, "announcer/flawless.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
 		}
 		else
 		{
@@ -953,7 +951,7 @@ void gmapn_round_end()
 		other = spawn();
 		other.classname = "gmapn_round_check";
 		other.think = gmapn_round_restart;
-		other.nextthink = time + 2;
+		other.nextthink = time + 4;
 		other.cnt = 4;
 	}
 };

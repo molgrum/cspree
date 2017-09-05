@@ -3,7 +3,7 @@
 
 	main/world setup functions
 
-	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1996-1997	 Id Software, Inc.
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -50,12 +50,11 @@ World Types:
 //=======================
 void worldspawn()
 {
-	entity test;
-	
 	dbgprintln("=== worldspawn() ===");
 	gmapn_readconfig();
 	BotInit();
-	gmapn_init();
+	self.nextthink = time + 0.5;
+	self.think = gmapn_init;
 
 	lastspawn = world;
 	InitBodyQue();
@@ -75,7 +74,7 @@ void worldspawn()
 	precache_model("progs/player.mdl"); // Visible player
 	precache_model("progs/eyes.mdl");	// Invisible player
 	precache_model("progs/backpack.mdl");	// Pack
-	
+
 	// Weapons on the ground
 	precache_model("progs/g_shot.mdl"); // Super shotgun
 	precache_model("progs/g_nail.mdl"); // Nailgun
@@ -213,7 +212,7 @@ void worldspawn()
 	precache_model("progs/gib1.mdl");
 	precache_model("progs/gib2.mdl");
 	precache_model("progs/gib3.mdl");
-	
+
 	//ruleset-specific stuff
 	//freezetag
 	precache_sound("player/frozen1.wav");
@@ -239,7 +238,8 @@ void worldspawn()
 	precache_sound("announcer/2.wav");
 	precache_sound("announcer/3.wav");
 	precache_sound("announcer/fight.wav");
-	
+	precache_sound("announcer/flawless.wav");
+
 	//instagib
 	precache_model("progs/v_coil.mdl");
 	precache_sound("weapons/coilgun.wav");
@@ -263,12 +263,6 @@ void worldspawn()
 
 	gmapn_lightstyle_reset();
 
-	if (getkey(runtests) == 1) {
-		test = spawn();
-		test.think = gmapn_init_test;
-		test.nextthink = time + 0.5;
-	}
-
 	//world.nextthink = time + 0.5;
 	//world.think = gmapn_init_entities;
 
@@ -279,7 +273,7 @@ void worldspawn()
 void StartFrame()
 {
 	BotFrame();
-	
+
 	framecount+=1;
 };
 
@@ -328,4 +322,3 @@ void CopyToBodyQue(entity ent)
 	setsize (bodyque_head, ent.mins, ent.maxs);
 	bodyque_head = bodyque_head.owner;
 };
-

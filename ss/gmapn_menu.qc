@@ -633,9 +633,7 @@ static string menu_rulemaker(float op)
 	else if (op == MENU_RIGHT)
 	{
 		//don't allow it to be set to 1, because then noone can edit the rules.
-		if (gmapn_isgamemaster(self) == 0)
-			cmd_rulemaker(string_null); // elect yourself to rulemaker
-		else if (getkey(game_lockrules) < 0)
+		if (getkey(game_lockrules) < 0)
 			setkey("game_lockrules", "0");
 	}
 	else if (op == MENU_ISNONADMIN)

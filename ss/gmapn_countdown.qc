@@ -1,25 +1,25 @@
 /*
-    gmapn_countdown.qc
+	gmapn_countdown.qc
 
-    Copyright (C) 2007 Mark Olsen
+	Copyright (C) 2007 Mark Olsen
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -59,7 +59,7 @@ void gmapn_countdown_stop()
 		{
 			gmapn_lightstyle_fade_stop();
 			gmapn_lightstyle_reset();
-			
+
 			//if a countdown is abandoned, release any unready players back to their preferred teams
 			entity p = find(world, classname, "player");
 			while (p)
@@ -81,10 +81,35 @@ void gmapn_countdown_think()
 {
 	entity p;
 	string plural;
+	int totalplayers = 0;
 
-	self.cnt-= 1;
 	self.frags+= 1;
 	self.nextthink = self.frags;
+	if (gmapn_serverstate == gmapn_serverstate_playing)
+	{
+		p = world;
+		while ((p = find(p, classname, "player")))
+		{
+			if (p.ready)
+				totalplayers++;
+		}
+
+		if (totalplayers < getkey(minplayers) || totalplayers < getkey(minteamsize)*2)
+		{
+			p = world;
+			while ((p = find(p, classname, "player")))
+			{
+				if (p.ready)
+					centerprint(p, "Waiting for competitors");
+				if (!p.ready)
+					centerprint(p, "You are not ready!");
+			}
+
+			return; // do not count down a game when not enough players are available
+		}
+	}
+
+	self.cnt-= 1;
 
 	if (self.cnt)
 	{
@@ -100,7 +125,7 @@ void gmapn_countdown_think()
 					p = find(p, classname, "player");
 				}
 			}
-			
+
 			if (self.cnt == 10)
 			{
 				sound(self, CHAN_VOICE, "items/protect2.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0); // everyone hears the start of countdown
@@ -129,7 +154,7 @@ void gmapn_countdown_think()
 				plural = "s";
 			else
 				plural = "";
-			
+
 			bprint(PRINT_MEDIUM, chr2str(0x90), goldnmbr(ftos(self.cnt)), chr2str(0x91), " second", plural, "\n");
 		}
 	}

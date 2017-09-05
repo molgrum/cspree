@@ -8,7 +8,7 @@ float gmapn_ismatchless(float m)
 	case GM_DA:			return TRUE;
 	case GM_COOP:			return TRUE;
 	case GM_DUEL:			return FALSE;
-	case GM_HEADHUNTER:		return FALSE;
+	case GM_HEADHUNTER:		return TRUE;
 	case GM_TDEATHMATCH:		return FALSE;
 	case GM_2ON2:			return FALSE;
 	case GM_LASTMANSTANDING:	return FALSE;
@@ -151,14 +151,14 @@ float gmapn_gamemode_rounds(float m)
 float gmapn_gamemode_allowed(float mode)
 {
 	float modes = tokenize(getkey(allowedmodes));
-	
+
 	if (!modes)	//if none listed, anything goes.
 	{
 		if (mode == GM_1FCTF)
 			return FALSE; //NYI
 		return TRUE;
 	}
-		
+
 	while (modes --> 0)
 	{
 		if (mode == gmapn_gamemodefromstring(argv(modes)))
@@ -244,7 +244,7 @@ void gmapn_apply_gamemode(float newmode)
 void gmapn_evaluategamemaster()
 {
 	entity o = gmapn_gamemaster;
-	
+
 	gmapn_gamemaster = world;
 	if (gmapn_serverstate < gmapn_serverstate_playing)
 	{
@@ -259,7 +259,7 @@ void gmapn_evaluategamemaster()
 					gmapn_gamemaster = e;
 			}
 		}
-		
+
 		//have another look when there were no VIPs.
 		if (!gmapn_gamemaster && !getkey(game_lockrules))
 		for (entity e = world; (e = find(e, classname, "player")); )
@@ -270,7 +270,7 @@ void gmapn_evaluategamemaster()
 				gmapn_gamemaster = e;
 		}
 	}
-	
+
 	if (gmapn_gamemaster != world && gmapn_gamemaster != o)
 	{
 		bprint(PRINT_HIGH, gmapn_gamemaster.netname, " is now the rule maker\n");
@@ -318,7 +318,7 @@ void gmapn_checklastplayer(entity ignore, string theteam)
 		centerprint(player, "Your team is counting on you!");
 };
 
-void(entity killer, entity victim, float delta) gmapn_scorefrags = 
+void(entity killer, entity victim, float delta) gmapn_scorefrags =
 {
 	if (gmapn_gamemode == GM_ROVER)
 	{	//victims are moved over to the killer's team
@@ -403,7 +403,7 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 	if (teamplay)
 		gmapn_game_score_teampoint(killer.teamname, delta);
 };
-void(entity victim, float delta) gmapn_suicidefrags = 
+void(entity victim, float delta) gmapn_suicidefrags =
 {
 	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_FREEZETAG)
 	{
@@ -414,7 +414,7 @@ void(entity victim, float delta) gmapn_suicidefrags =
 	if (teamplay)
 		gmapn_game_score_teampoint(victim.teamname, delta);
 };
-void(entity killer, entity victim, float delta) gmapn_teamkillfrags = 
+void(entity killer, entity victim, float delta) gmapn_teamkillfrags =
 {
 	if (gmapn_gamemode == GM_LASTMANSTANDING || gmapn_gamemode == GM_FREEZETAG)
 	{
@@ -435,7 +435,7 @@ void controlpoint_reset()
 	self.effects = 0;
 	self.teamname = 0;	//this is the name of the team that owns the controlpoint
 	self.colormod = '0 0 0';
-	
+
 	self.pflags = 0;
 	self.light_lev = 0;
 	self.color = '0 0 0';
@@ -498,12 +498,12 @@ void info_controlpoint()
 		self.scale = 3;
 	}
 	precache_model(self.mdl);
-	
+
 	self.movetype = MOVETYPE_NOCLIP;
 	self.solid = SOLID_NOT;	//not active yet.
 	self.touch = controlpoint_touch;
 	self.think = controlpoint_think;
-	
+
 	//drop it to the floor, then make it big.
 	//biased towards mins_z so that the control points are a little more visible relative to any items that may be at the same spot
 	setsize(self, '-16 -16 -56', '16 16 0');
@@ -514,7 +514,7 @@ void info_controlpoint()
 float domination_legacycontrolpoints(string existing)
 {
 	float points = 0;
-		
+
 	entity e;
 	for (e = world; (e = find(e, classname, existing)); )
 	{
@@ -599,11 +599,11 @@ void info_altar()
 		self.effects = EF_FULLBRIGHT;
 	}
 	precache_model(self.mdl);
-	
+
 	self.movetype = MOVETYPE_NOCLIP;
 	self.solid = SOLID_NOT;	//not active yet.
 	self.touch = headhunter_altar_touch;
-	
+
 	//drop it to the floor, then make it big.
 	//biased towards mins_z so that the control points are a little more visible relative to any items that may be at the same spot
 	setsize(self, '-16 -16 -56', '16 16 0');
@@ -614,7 +614,7 @@ void info_altar()
 float headhunter_legacyaltar(string existing)
 {
 	float points = 0;
-		
+
 	entity e = find(world, classname, existing);
 	if (e)
 	{
@@ -695,7 +695,7 @@ void gmapn_rules_autojointeam()
 			else
 				blue += 1;
 		}
-		
+
 		//and put them on the smaller team
 		if (red < blue)
 			gmapn_setteamandcolour(self, "red", 4, 4);

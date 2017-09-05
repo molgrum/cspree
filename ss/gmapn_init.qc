@@ -1,25 +1,25 @@
 /*
-    gmapn_init.qc
+	gmapn_init.qc
 
-    Copyright (C) 2007 Mark Olsen
+	Copyright (C) 2007 Mark Olsen
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -141,6 +141,21 @@ void gmapn_init()
 	gmapn_latency_check_init();
 
 	vote_in_progress = FALSE;
+
+	if (getkey(game_lockrules) > 0 && gmapn_ismatchless(gmapn_gamemode))
+	{
+		// enable the flag so the first connect will start a new game instantly
+		serverflags |= SV_MATCHLESS;
+	}
+
+	if (getkey(runtests) == 1)
+	{
+		entity test;
+
+		test = spawn();
+		test.think = gmapn_init_test;
+		test.nextthink = time + 0.1;
+	}
 };
 
 void gmapn_detectserver()
@@ -222,7 +237,7 @@ void gmapn_init_entities()
 
 	deathmatch = cvar("deathmatch");
 	gmapn_powerups_setitems();
-	
+
 	ctf_enableflags(gmapn_gamemode == GM_CTF);
 
 	// to stop servers from idling in matchless mode

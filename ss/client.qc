@@ -1,26 +1,26 @@
 /*
-    client.qc
+	client.qc
 
-    Copyright (C) 1996-1997  Id Software, Inc.
-    Copyright (C) 2009       Andreas Nilsson
+	Copyright (C) 1996-1997	 Id Software, Inc.
+	Copyright (C) 2009		 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -36,7 +36,7 @@ string nextmap;
 
 float	intermission_running;
 float	intermission_exittime;
-float   intermission_mapchange;
+float	intermission_mapchange;
 
 infostring parm_string;
 
@@ -77,7 +77,7 @@ void SetChangeParms()
 		if (serverflags & SV_MATCHLESS)
 			parm_string = infoadd(parm_string, "team", self.teamname);
 		forceinfokey(self, "team", self.userteam);
-		
+
 		print(sprintf("saving %s: user=%s, game=%s\n", self.netname, self.userteam, self.teamname));
 	}
 
@@ -121,9 +121,9 @@ void DecodeLevelParms()
 
 		return;
 	}
-		
+
 	setspawnparms(self);
-	
+
 	//make sure that this stuff is actually valid (health > 0).
 	//start maps of any kind never let you carry weapons over.
 	if (parm2>0 && strstrofs(mapname, "start") < 0)
@@ -175,7 +175,7 @@ entity FindIntermission()
 	spot = find (world, classname, "info_player_start");
 	if (spot)
 		return spot;
-	
+
 	objerror ("FindIntermission: no spot");
 	return world;
 };
@@ -257,7 +257,7 @@ Take the players to the intermission spot
 void execute_changelevel()
 {
 	intermission_running = 1;
-	
+
 // enforce a wait time before allowing changelevel
 	intermission_exittime = time + 5;
 	intermission_mapchange = time + 10;
@@ -269,9 +269,9 @@ void execute_changelevel()
 		SendIntermissionToPlayer(other);
 		//and fix anything dueling may have broken.
 		forceinfokey(other, "*spectator", "");
-	
+
 		other = find(other, classname, "player");
-	}		
+	}
 };
 
 /*
@@ -292,7 +292,7 @@ void respawn()
 	CopyToBodyQue (self);
 	// set default spawn parms
 	SetNewParms ();
-	// respawn				
+	// respawn
 	client_spawn(FALSE);
 };
 
@@ -305,7 +305,7 @@ void respawn_living()
 void client_setweapon(float flag)
 {
 	int shells, nails, rockets, cells; // required ammo by the weapon
-	
+
 	if (self.newweapon == flag)
 		return;
 
@@ -409,7 +409,7 @@ void client_cycleweapon(float forward)
 			break;
 	}
 	if (i == weaponorder.length)
-	{ 	//erk
+	{	//erk
 		print(sprintf("client_cycleweapon: Weapon %x is not known\n", w));
 		i = 0;
 		w = o = weaponorder[i];
@@ -455,13 +455,13 @@ entity client_spawnpoint()
 	vector spawnpos, playerpos;
 	float ignoreoccupied;
 
-	bestspawn = world;	
+	bestspawn = world;
 	spawnmode = getkey(spawn_mode);
 	spotclass = "info_player_deathmatch";
-	
+
 	if (coop && gmapn_serverstate == gmapn_serverstate_playing)
 		spotclass = "info_player_coop";
-	
+
 	if (teamplay)
 	{
 		team1 = self.teamname;
@@ -577,11 +577,11 @@ entity client_spawnpoint()
 				tracebox(spawnp.origin, VEC_HULL_MIN, VEC_HULL_MAX, spawnp.origin, FALSE, self);
 			else
 				trace_startsolid = FALSE;
-			
+
 			spawnp.voided = trace_startsolid;
 			if (!trace_startsolid)
 				spawns = spawns + 1;
-			
+
 			// Go to the next spawn in the chain
 			spawnp = find(spawnp, classname, spotclass);
 		}
@@ -593,10 +593,10 @@ entity client_spawnpoint()
 				spawns++;
 			}
 		}
-		
+
 		// Substract a random number from the max
 		spawns = floor(random()*spawns);
-		
+
 		// Get a random spawn point
 		spawnp = find(world, classname, spotclass);
 		for(;spawnp;)
@@ -609,7 +609,7 @@ entity client_spawnpoint()
 			}
 			spawnp = find(spawnp, classname, spotclass);
 		}
-		
+
 		bestspawn = spawnp;
 	}
 	else if (0) // FIXME: furthest away is probably not a good algorithm
@@ -707,10 +707,10 @@ void client_spawn(float sameplace)
 {
 	float  f;
 	vector dir, org;
-	
+
 	// This is the place where the player spawns. It is used to set the player's origin
 	entity spawn_point;
-	
+
 	float spectatormode = stof(infokey(self, "*spectator"));	//potentially set in duels when there are 3+ players.
 
 	// Restore some attributes
@@ -776,7 +776,7 @@ void client_spawn(float sameplace)
 	if (gmapn_serverstate == gmapn_serverstate_prewar || deathmatch == 4)
 	{
 		giveallweapons();
-		
+
 		// in prewar and dmm4, give starting ammo
 		self.ammo_shells = self.max_ammo_shells;
 		self.ammo_nails = self.max_ammo_nails;
@@ -845,7 +845,7 @@ void client_spawn(float sameplace)
 		self.ammo_nails = 50;
 	if (self.ammo_shells < 25 && (self.items & (IT_SUPER_SHOTGUN | IT_SHOTGUN)))
 		self.ammo_shells = 25;
-	
+
 	//make sure armour is okay
 	if (self.items & IT_ARMOR3)
 	{
@@ -867,7 +867,7 @@ void client_spawn(float sameplace)
 	}
 
 	DecodeLevelParms();
-	
+
 	if (!sameplace)
 	{
 		if (getkey(spawn_mode) == 2 && self.my_spawn != world)
@@ -880,9 +880,9 @@ void client_spawn(float sameplace)
 			// Spawn us somewhere
 			spawn_point = client_spawnpoint();
 		}
-		
+
 		org = spawn_point.origin;
-		
+
 		if (spectatormode)
 		{
 			//no telefrag or anything
@@ -890,7 +890,7 @@ void client_spawn(float sameplace)
 		else if (gmapn_serverstate == gmapn_serverstate_prewar || !getkey(spawn_telefrag))		{
 			// Spawns (usually) never telefrag in prewar. sometimes we don't get a choice.
 			float giveup = 256;
-			
+
 //			dprint(sprintf("Spawning player %s\n", self.netname));
 
 			f = 1;
@@ -902,14 +902,14 @@ void client_spawn(float sameplace)
 					org = spawn_point.origin;
 					break;
 				}
-				
+
 //				dprint(sprintf("Trying %v\n", org));
 				tracebox(org, VEC_HULL_MIN, VEC_HULL_MAX, org, FALSE, self);
 				if (trace_fraction == 1 && !trace_startsolid)
 					break;
-				
+
 				// Occupied or unspawnable, nudge it
-			
+
 				// Change next direction, clockwise
 				if (dir == '0 0 0')
 				{
@@ -930,10 +930,10 @@ void client_spawn(float sameplace)
 				else
 				{
 					dir = '0 0 0';
-			
+
 					// move a little further out
 					f = f + 1;
-					
+
 					if (f > 2)
 					{
 						spawn_point = client_spawnpoint();
@@ -947,7 +947,7 @@ void client_spawn(float sameplace)
 				// Choose another
 				org = spawn_point.origin + (32)*floor(f)*dir;
 			}
-			
+
 			gmapn_telefrag_check(self, org);
 			}
 		else
@@ -960,14 +960,14 @@ void client_spawn(float sameplace)
 		self.angles = spawn_point.angles;	// Face the way spawn_point tells us
 		self.fixangle = TRUE;				// Turn this way immediately
 	}
-	
+
 
 	if (spectatormode)
 	{
 		setmodel(self, "");
 		setsize(self, VEC_HULL_MIN, VEC_HULL_MAX);	// Set the player size
 		self.view_ofs = '0 0 0';
-		
+
 		//spectators don't need to think
 		self.think = func_null;
 		self.nextthink = 0;
@@ -988,7 +988,7 @@ void client_spawn(float sameplace)
 		if (self.takedamage == DAMAGE_INVINCIBLE)
 			player_death(); // freeze instantly in freeze tag
 	}
-	
+
 	if (gmapn_gamemode == GM_HEADHUNTER && gmapn_serverstate == gmapn_serverstate_playing)
 		showpic("hc", sprintf("gfx/num_%g", bound(0, self.ammo_heads, 9)), 0, 0, 0, self);
 };
@@ -1000,7 +1000,7 @@ void client_clearspectator(entity player)
 	player.takedamage = DAMAGE_BLEED;
 	player.movetype = MOVETYPE_WALK;
 	forceinfokey(player, "*spectator", "");	//ezquake bug - \*spectator\0 = spectating... if you fill your userinfo its your own fault.
-	
+
 	//ezquake bug - players switching between spectator and player end up with -999 frags.
 	WriteByte(MSG_MULTICAST, SVC_UPDATEFRAGS);
 	WriteByte(MSG_MULTICAST, player.colormap-1);
@@ -1090,7 +1090,7 @@ void client_impulses()
 		return;
 
 	case 1:
-		
+
 		client_setweapon(IT_AXE);
 
 		break;
@@ -1105,13 +1105,13 @@ void client_impulses()
 		break;
 
 	case 3:
-		
+
 		client_setweapon(IT_SUPER_SHOTGUN);
 
 		break;
 
 	case 4:
-		
+
 		client_setweapon(IT_NAILGUN);
 
 		break;
@@ -1333,7 +1333,7 @@ void client_attack()
 	{
 		error("Invalid weapon\n");
 	}
-	
+
 	// Used by "fairpacks"
 	self.lastweap = self.weapon;
 };
@@ -1504,7 +1504,7 @@ void client_powerups()
 		self.quad_finished = 0;
 		self.effects = self.effects - (self.effects & EF_BLUE);
 	}
-	
+
 	if (self.items2 & IT2_RUNE_REGEN)
 	{
 		if (time > self.runetime)
@@ -1512,7 +1512,7 @@ void client_powerups()
 			if ((self.runetime*2) & 1)
 				sound(self, CHAN_BODY, "rune/rune4.wav", 1, ATTN_NORM);
 			self.runetime = time + 0.5;
-			
+
 			if (self.health < 150)
 				self.health = min(150, self.health+5);
 			else if (self.armorvalue > 0 && self.armorvalue < 250)
@@ -1587,10 +1587,10 @@ void client_content()
 void client_update_teaminfo()
 {
 	float sendlimit = 10;
-	
+
 	if (stof(infokey(self, "ti")) <= 0)	//not set or -1, then the user doesn't give a damn about their teammates
 		return;
-		
+
 	string checkteam = self.teamname;
 	for (entity e = world; (e = find(e, classname, "player")); )
 	{
@@ -1643,7 +1643,7 @@ void client_pack_touch()
 	//float bestwep = client_bestweapon();
 	float bestwep = self.weapon; // why do a bestweapon check here?
 	self = oself;
-	
+
 	item_pickup(-1, "");
 
 	self = other;
@@ -1672,7 +1672,7 @@ void client_pack_throw()
 	pack.movetype = MOVETYPE_TOSS;
 	pack.solid = SOLID_TRIGGER;
 	pack.touch = client_pack_touch;
-	
+
 	pack.nextthink = time + 60*2;
 	pack.think = (void()){remove(self);};
 
@@ -1726,7 +1726,7 @@ void client_pack_throw()
 		self.ammo_heads = 0;
 	}
 
-	
+
 	// Set the backpack model to the weapon it contains
 	if (pack.items & IT_ROCKET_LAUNCHER)
 	{
@@ -1765,7 +1765,7 @@ void client_pack_throw()
 		pack.items = 0;
 	}
 
-	
+
 	// Set the backpack model
 	if (getkey(game_visiblepacks) != 1)
 		mdl = "progs/backpack.mdl";
@@ -1773,7 +1773,7 @@ void client_pack_throw()
 
 	setorigin(pack, self.origin);
 	setsize(pack, '-16 -16 0', '16 16 56');
-	
+
 	makevectors(self.v_angle);
 	pack.velocity_x = -100 * v_forward_x;
 	pack.velocity_y = -100 * v_forward_y;
@@ -1824,7 +1824,7 @@ void NextLevel()
 			mapname = "e4m1";
 			serverflags &= ~(SV_EPISODE1|SV_EPISODE2|SV_EPISODE3|SV_EPISODE4);
 		}
- 
+
 		o = spawn();
 		o.map = mapname;
 	}
@@ -1860,7 +1860,7 @@ void PlayerDeathThink()
 		forward = forward - 20;
 		if (forward <= 0)
 			self.velocity = '0 0 0';
-		else	
+		else
 			self.velocity = forward * normalize(self.velocity);
 	}
 
@@ -1878,7 +1878,7 @@ void PlayerDeathThink()
 		return;
 	}
 
-	 //last man standing does not allow respawning, nor do duel arena.  FIXME: make spectator
+	 //last man standing does not allow respawning, nor do duel arena.	FIXME: make spectator
 	if (gmapn_gamemode == GM_LASTMANSTANDING)
 	{
 		//client_setspectator(self);
@@ -1915,7 +1915,7 @@ void PlayerDeathThink()
 
 		bprint(PRINT_HIGH, sprintf("%i spawn tokens remaining\n", gmapn_coop_respawntokens));
 	}
-		
+
 	player_headhunter_respawned();
 
 	self.button0 = 0;
@@ -1936,7 +1936,7 @@ void client_obituary(entity targ, entity attacker)
 
 	if (targ.classname == "player")
 	{
-		if (deathmatch > 3) 
+		if (deathmatch > 3)
 		{
 			if (targ.deathtype == DT_DISCHARGE)
 			{
@@ -1949,7 +1949,7 @@ void client_obituary(entity targ, entity attacker)
 		if (deathmatch == DMM_MIDAIR)
 		{
 			float midairheight = targ.origin_z - attacker.origin_z;
-			
+
 			if (targ.deathtype == DT_ROCKET && midairheight > 190)
 			{
 
@@ -1990,7 +1990,7 @@ void client_obituary(entity targ, entity attacker)
 			return;
 		}
 
-		
+
 		if (targ.deathtype == DT_TELEFRAG)
 		{
 			bprint (PRINT_MEDIUM,sprintf(_("%s was telefragged by %s\n"), targ.netname, attacker.netname));
@@ -2010,14 +2010,14 @@ void client_obituary(entity targ, entity attacker)
 		}
 
 		// double 666 telefrag (can happen often in deathmatch 4)
-		if (targ.deathtype == DT_TELEFRAG_PENT_BOTH) 
+		if (targ.deathtype == DT_TELEFRAG_PENT_BOTH)
 		{
 			bprint (PRINT_MEDIUM,sprintf(_("%s was telefragged by %s's Satan's power\n"), targ.netname, attacker.netname));
 			gmapn_suicidefrags(targ, -1);
 			logfrag (targ, targ);
 			return;
 		}
-	
+
 
 		if (targ.deathtype == DT_SQUISH)
 		{
@@ -2275,7 +2275,7 @@ void PlayerPreThink()
 		PlayerDeathThink();
 		return;
 	}
-	
+
 	if (self.deadflag == DEAD_DYING)
 		return; // dying, so do nothing
 
@@ -2287,7 +2287,7 @@ void PlayerPreThink()
 	else
 		self.flags = self.flags - (self.flags & FL_ONGROUND);
 
-// teleporters can force a non-moving pause time		
+// teleporters can force a non-moving pause time
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
@@ -2313,7 +2313,7 @@ void PlayerPostThink()
 	if (self.deadflag)
 		return;
 
-// check to see if player landed and play landing sound 
+// check to see if player landed and play landing sound
 	if ((self.fallspeed < -300) && (self.flags & FL_ONGROUND) )
 	{
 		if (self.watertype == CONTENT_WATER)
@@ -2333,8 +2333,8 @@ void PlayerPostThink()
 	client_powerups();
 
 	gmapn_detect_fast_angles();
-	
-	
+
+
 	if (self.teaminfo_update < time)
 	{
 		client_update_teaminfo();
@@ -2354,7 +2354,7 @@ void PlayerPostThink()
 			}
 		}
 	}
-	
+
 	if (gmapn_gamemode == GM_FREEZETAG)
 	{
 		if (self.thawplayer)
@@ -2469,7 +2469,7 @@ void ClientConnect()
 	self.ready = (parm11 && (serverflags & SV_MATCHLESS));
 
 	ClientInRankings();
-	
+
 	if (clienttype(self) == CLIENTTYPE_BOT && gmapn_serverstate == gmapn_serverstate_prewar)
 		dropclient(self);
 	else
@@ -2480,7 +2480,7 @@ void ClientConnect()
 	self.is_fully_connected = 1;
 
 	gmapn_aliasstuffer_start(self);
-	
+
 	if (intermission_running)
 	{
 		SendIntermissionToPlayer(self);
@@ -2572,7 +2572,7 @@ void ClientDisconnect()
 	entity e;
 
 	dbgprintln("=== ClientDisconnect() ===");
-	
+
 	// Let everyone else know
 	if (gmapn_serverstate == gmapn_serverstate_playing)
 	{
@@ -2583,7 +2583,7 @@ void ClientDisconnect()
 	{
 		bprint(PRINT_HIGH, sprintf(_("%s left the game\n"), self.netname));
 	}
-	
+
 	if (gmapn_gamemode == GM_CTF || gmapn_gamemode == GM_1FCTF)
 		ctf_player_died();
 
@@ -2640,4 +2640,3 @@ void ClientDisconnect()
 		gmapn_reset_starttimer();
 	}
 };
-
