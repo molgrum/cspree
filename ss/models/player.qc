@@ -103,7 +103,7 @@ void player_setweapon()
 
 	self.weapon = self.newweapon;
 
-	if (deathmatch < 4)
+	if (deathmatch < 6)
 		self.items = self.items - (self.items & (IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS));
 
 	if (self.weapon == IT_AXE)
