@@ -34,7 +34,7 @@ make
 - Rename the folder to "cspree".
 - Download QCC [64-bit](http://triptohell.info/moodles/win64/fteqcc64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqcc32.exe) (put into cspree directory)
 - Download server [64-bit](http://triptohell.info/moodles/win64/fteqwsv64.exe) or [32-bit](http://triptohell.info/moodles/win32/fteqwsv32.exe) (put into quake directory)
-- Download optional PK3 [here](http://triptohell.info/moodles/junk/gmapn.pk3) (put into cspree directory)
+- Download optional PK3 [here](http://triptohell.info/moodles/junk/cspree.pk3) (put into cspree directory)
 - Run QCC exe and winquicker.bat
 
 Happy gibbing!
@@ -48,17 +48,17 @@ Our wiki is located [here](https://sourceforge.net/p/gmapn/wiki/Home/).
 - [nQuake](http://nquake.com/) bundles with the [ezQuake](http://ezquake.github.io/) client and is by far the most popular way to get a Quakeworld setup running with a few clicks
 
 ### Connecting to a server
-- Servers at time of writing: *quake1.de:28501* (EU) *nicotinelounge.com:28501* (US)
+- A good way to list servers: [quakeservers.net](https://www.quakeservers.net/quakeworld/servers/d=cspree/)
 - Type in console: connect quake1.de:28501
 - Connect with any client.
 
 ### Something is wrong?
-- [Open webchat](https://webchat.quakenet.org/) and enter the channel **#qwrookie** for general help and **#gmapn** for mod specific help
+- [Open webchat](https://webchat.quakenet.org/) and enter the channel **#qwrookie** for general help and **#cspree** for mod specific help
 
 ### Chat with us
 
 ## Chat with us
-- **#gmapn** @ [Quakenet](https://webchat.quakenet.org/)
+- **#cspree** @ [Quakenet](https://webchat.quakenet.org/)
 - **#beta-testers** on [Discord](https://discordapp.com/)
 
 ## Differences from KTX
