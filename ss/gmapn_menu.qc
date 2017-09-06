@@ -1870,6 +1870,18 @@ float gmapn_display_rules()
 				self.viewingrules = time + 1;
 			}
 		}
+
+		if (gmapn_gamemode == GM_HEADHUNTER)
+		{
+			if (self.viewingrules < time && self.ammo_heads > 0)
+			{
+				if (self.ammo_heads > 1)
+					centerprint(self, sprintf("YOU HAVE %s HEADS!\nBRING THEM TO THE ALTAR!", goldnmbr(ftos(self.ammo_heads))));
+				else
+					centerprint(self, sprintf("YOU HAVE %s HEAD!\nBRING IT TO THE ALTAR!", goldnmbr(ftos(self.ammo_heads))));
+				self.viewingrules = time + 1;
+			}
+		}
 		return FALSE;
 	}
 

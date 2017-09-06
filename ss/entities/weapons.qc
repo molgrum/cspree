@@ -1,48 +1,44 @@
 /*
-    weapons.qc
+	weapons.qc
 
-    Copyright (C) 2009 Andreas Nilsson
+	Copyright (C) 2009 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
 void weapon_touch()
 {
 	float w_switch = stof(infokey(other, "w_switch"));
-	
+
 	if (other.deadflag || other.classname != "player" || gmapn_serverstate != gmapn_serverstate_playing)
 	{
 		return;				// Only live players can pickup weapons and only in a game
 	}
 
-	if (deathmatch > 2 && ((other.items & self.items) == self.items))
+	if ((other.items & self.items) == self.items)
 	{
-		return;				// Deathmatch modes 3 and 4 uses static weapons
+		return;				// Already have the weapon so don't pickup
 	}
 
-	// Get ammo if not dmm4
-	if (deathmatch < 4)
-	{
-		// Add ammo from the weapon
-		ammo_add();
-	}
+	// Add ammo from the weapon
+	ammo_add();
 
 	entity oself = self;
 	float w = self.weapon;
@@ -50,7 +46,7 @@ void weapon_touch()
 	//float bestwep = client_bestweapon();
 	float bestwep = self.weapon; // why do a bestweapon check here?
 	self = oself;
-	
+
 	if (deathmatch == 2)
 	{
 		item_pickup(getkey(respawn_weapon_dmm2), "0x302030");	 // Hide and wait for respawn
@@ -233,11 +229,10 @@ void weapon_railgun()
 	self.minsize = '-16 -16 0';
 	self.netname = "Rail Gun";			// Name of the object
 	self.weapon = IT_RAILGUN;			// Type of weapon
-	self.items = IT_RAILGUN; 			// Items stored
+	self.items = IT_RAILGUN;			// Items stored
 	self.ammo_cells = 15;				// Ammo stored
 	self.touch = weapon_touch;			// Function to call if touched
 	self.modelflags = MF_ROTATE;
 
 	setitem();
 };
-

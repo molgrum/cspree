@@ -1,26 +1,26 @@
 /*
-    player.qc
+	player.qc
 
-    Copyright (C) 1996-1997  Id Software, Inc.
-    Copyright (C) 2009       Andreas Nilsson
+	Copyright (C) 1996-1997	 Id Software, Inc.
+	Copyright (C) 2009		 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -102,7 +102,7 @@ void player_setweapon()
 	string vwep;
 
 	self.weapon = self.newweapon;
-	
+
 	if (deathmatch < 4)
 		self.items = self.items - (self.items & (IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS));
 
@@ -214,7 +214,7 @@ float hasted_reload(float base)
 			sound(self, CHAN_BODY, "rune/rune3.wav", 1, ATTN_NORM);
 			self.runetime = time + 1;
 		}
-		
+
 		base /= 2;				//double attack speed
 		return ceil(base*10)/10;	//rounded up to nearest 10th of a second, to try to keep things smoother.
 	}
@@ -415,11 +415,13 @@ void player_headhunter_touch()
 			return;
 		other.ammo_heads+=1;
 		showpic("hc", sprintf("gfx/num_%g", bound(0, other.ammo_heads, 9)), 0, 0, 0, other);
+		sound(self, CHAN_VOICE, "demon/dland2.wav", 1, ATTN_NONE);
+		stuffcmd(other, "bf\n");
 		if (other.netname == self.netname)
 			centerprint(other, "You got your own head");
 		else
 			centerprint(other, "You got ", self.netname, "'s head");
-		
+
 		if (self.classname == "player")
 		{
 			centerprint(self, "You were collected by ", other.netname);
@@ -427,7 +429,7 @@ void player_headhunter_touch()
 			self.solid = SOLID_NOT;
 			setmodel(self, "");
 			setsize(self, '0 0 0', '0 0 0');
-			
+
 			self.view2 = other;	//it'd be cool if we could reliably spectate the person that collected us, but meh, this will have to do
 		}
 		else
@@ -453,7 +455,7 @@ void player_headhunter_respawned()
 		thehead.think = self_destruct;
 		thehead.colormap = self.colormap;
 		thehead.netname = strcat(self.netname);
-		
+
 		self.touch = 0;
 	}
 };
@@ -498,7 +500,7 @@ void player_gibbed()
 void player_death()
 {
 	float rnd;
-	
+
 	if (gmapn_gamemode == GM_CTF || gmapn_gamemode == GM_1FCTF)
 		ctf_player_died();
 
@@ -550,7 +552,7 @@ void player_death()
 	{
 		// Telefrag
 		sound(self, CHAN_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
-		
+
 		player_gibbed();
 	}
 	else if (self.health < getkey(game_gibthreshhold) || gmapn_gamemode == GM_HEADHUNTER)
@@ -744,7 +746,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 {
 	float  spread;
 	vector org, dir;
-	
+
 	if (client_stopattacking())
 	{
 		player_setweapon();
@@ -760,18 +762,18 @@ void() player_shot1 = [$shotatt1, player_shot2]
 		player_run();
 		return;
 	}
-	
+
 	makevectors(self.v_angle);
-	
+
 	self.weaponframe = 1;
 	msg_entity = self;
 	dir = aim(self, 100000);
-	
+
 	org = self.origin + v_forward*10 + '0 0 16';
 	//org_z = self.absmin_z + self.size_z*0.7;
-	
+
 	if (self.weapon == IT_COILGUN)
-	{	
+	{
 		// The instagib coilgun
 		self.attack_finished = time + hasted_reload(getkey(coilgun_reload));
 
@@ -785,12 +787,12 @@ void() player_shot1 = [$shotatt1, player_shot2]
 		}
 	}
 	else if (self.ammo_shells < 2 || self.weapon == IT_SHOTGUN)
-	{	
+	{
 		// Shotgun
 
 		player_ammo_decrease(IT_SHELLS, 1);
 		self.attack_finished = time + hasted_reload(getkey(shotgun_reload));
-		
+
 		spread = getkey(shotgun_spread);
 		hazard_bullets(org, dir, "shotgun");
 
@@ -807,7 +809,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 
 		player_ammo_decrease(IT_SHELLS, 2);
 		self.attack_finished = time + hasted_reload(getkey(shotgun2_reload));
-		
+
 		spread = getkey(shotgun2_spread);
 		hazard_bullets(org, dir, "supershotgun");
 
@@ -818,7 +820,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 			self.stats_total[W_SSG] += 20 * getkey(bullet_damage);
 		}
 	}
-	
+
 	self.currentammo = self.ammo_shells;
 };
 void() player_shot2 = [$shotatt2, player_shot3] {self.weaponframe = 2;};
@@ -894,7 +896,7 @@ void() player_spike1 = [$nailatt1, player_spike2]
 			self.stats_total[W_SNG] += getkey(spike2_damage);
 		}
 	}
-	
+
 	self.currentammo = self.ammo_nails;
 };
 
@@ -964,7 +966,7 @@ void() player_spike2 = [$nailatt2, player_spike1]
 			self.stats_total[W_SNG] += getkey(spike2_damage);
 		}
 	}
-	
+
 	self.currentammo = self.ammo_nails;
 };
 
@@ -1002,7 +1004,7 @@ void() player_grenade1 = [$rockatt1, player_grenade2]
 	{
 		self.stats_total[W_GL] += getkey(grenade_damage);
 	}
-	
+
 	self.currentammo = self.ammo_rockets;
 };
 void() player_grenade2 = [$rockatt2, player_grenade3] {self.weaponframe = 2;};
@@ -1045,7 +1047,7 @@ void() player_rocket1 = [$rockatt1, player_rocket2]
 	{
 		self.stats_total[W_RL] += getkey(rocket_damage);
 	}
-	
+
 	self.currentammo = self.ammo_rockets;
 };
 void() player_rocket2 = [$rockatt2, player_rocket3] {self.weaponframe = 2;};
@@ -1081,14 +1083,14 @@ void() player_railgun1 = [$rockatt1, player_railgun2]
 	{
 		self.stats_total[W_RG] += getkey(rail_damage);
 	}
-	
+
 	self.currentammo = self.ammo_cells;
 };
 void() player_railgun2 = [$rockatt2, player_railgun3] {self.weaponframe = 2;};
 void() player_railgun3 = [$rockatt3, player_railgun4] {self.weaponframe = 3;};
 void() player_railgun4 = [$rockatt4, player_railgun5] {self.weaponframe = 4;};
 void() player_railgun5 = [$rockatt5, player_railgun6] {self.weaponframe = 5;};
-void() player_railgun6 = [$rockatt6, player_run]      {self.weaponframe = 6;};
+void() player_railgun6 = [$rockatt6, player_run]	  {self.weaponframe = 6;};
 
 #ifdef HAVE_PORTALS
 void() player_portal1 = [$rockatt1, player_rocket2]
@@ -1108,7 +1110,7 @@ void() player_portal1 = [$rockatt1, player_rocket2]
 	self.attack_finished = time + 0.6;
 
 	self.weaponframe = 1;
-	
+
 	if (self.weapon == IT_PORTALGUN)
 	{
 		if (spawnaportal(self.origin + '0 0 16', dir, self, 0))
@@ -1119,7 +1121,7 @@ void() player_portal1 = [$rockatt1, player_rocket2]
 		if (spawnaportal(self.origin + '0 0 16', dir, self, 1))
 			client_setweapon(IT_PORTALGUN);
 	}
-	
+
 };
 #endif
 
@@ -1153,9 +1155,9 @@ void() player_lightning1 = [$light1, player_lightning2]
 	else
 	{
 		player_ammo_decrease(IT_CELLS, 1);
-		
+
 		self.attack_finished = time + hasted_reload(getkey(lightning_reload));
-		
+
 		self.weaponframe = self.weaponframe + 1;
 		if (self.weaponframe == 5)
 		{
@@ -1170,7 +1172,7 @@ void() player_lightning1 = [$light1, player_lightning2]
 			self.stats_total[W_LG] += getkey(lightning_damage);
 		}
 	}
-	
+
 	self.currentammo = self.ammo_cells;
 };
 
@@ -1221,7 +1223,6 @@ void() player_lightning2 = [$light2, player_lightning1]
 			self.stats_total[W_LG] += getkey(lightning_damage);
 		}
 	}
-	
+
 	self.currentammo = self.ammo_cells;
 };
-

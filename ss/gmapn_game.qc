@@ -352,6 +352,7 @@ static void duelcheck()
 	float liveplayers = 0;
 	float totalplayers = 0;
 	entity liveplayer = world;
+	entity oself = self;
 	for (entity e = world; (e = find(e, classname, "player")); )
 	{
 		//only ready players may be selected.
@@ -385,7 +386,6 @@ static void duelcheck()
 				e.touch = 0;
 				setmodel(e, "");
 				e.deadflag = DEAD_DEAD;
-				entity oself = self;
 				self = e;
 				respawn_living();
 				self = oself;
@@ -409,7 +409,25 @@ static void duelcheck()
 
 	if (liveplayers < 2)
 	{	//find the player that has been sitting around for the longest without doing anything.
-		if (liveplayers == 1)
+		if (liveplayers == 1 && gmapn_duel_secondchance == FALSE)
+		{
+			gmapn_duel_secondchance = TRUE;
+			for (entity e = world; (e = find(e, classname, "player")); )
+			{
+				if (e == liveplayer)
+					centerprint(e, "The opponent got a second chance!");
+				else
+				{
+					self = e;
+					respawn_living();
+					self = oself;
+					centerprint(e, "Second chance!");
+				}
+			}
+
+			return; // so the round doesn't end
+		}
+		else if (liveplayers == 1)
 		{
 			for (entity e = world; (e = find(e, classname, "player")); )
 			{
@@ -688,6 +706,10 @@ void gmapn_round_start()
 	{
 		float liveplayers = 0;
 		float totalplayers = 0;
+
+		// second chance has not happened yet
+		gmapn_duel_secondchance = FALSE;
+
 		for (e = world; (e = find(e, classname, "player")); )
 		{
 			if (e.ready)

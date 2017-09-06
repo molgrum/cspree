@@ -772,8 +772,15 @@ void client_spawn(float sameplace)
 
 	self.items |= global_items;		// coop weapons+keys are shared, which stops things being annoying, or triggering things multiple times or infinite ammo.
 
+	// always spawn axe/sg on second chance so the game doesn't get unbalanced
+	if (gmapn_duel_secondchance == TRUE)
+	{	//standard deathmatch
+		self.ammo_shells = 25;				// Always start with 0 shells
+		self.items |= IT_AXE | IT_SHOTGUN;		// Starting items
+		client_setweapon(client_bestweapon());			// Starting weapon
+	}
 	// in prewar and dmm4, give everything
-	if (gmapn_serverstate == gmapn_serverstate_prewar || deathmatch == 4)
+	else if (gmapn_serverstate == gmapn_serverstate_prewar || deathmatch == 4)
 	{
 		giveallweapons();
 
@@ -2547,6 +2554,15 @@ void PutClientInServer()
 	// start the next game when the first player connects
 	if ((serverflags & SV_MATCHLESS) && gmapn_ismatchless(gmapn_gamemode))
 	{
+		// ready up on matchless games automatically
+		self.ready = TRUE;
+
+		if (gmapn_gamemode == GM_HEADHUNTER)
+		{
+			stuffcmd(self, "cl_gibFilter 0\n");
+			sprint(self, PRINT_HIGH, redify("The server turns your gib filter off\n"));
+		}
+
 		if (firsttojoin == TRUE)
 		{
 			gmapn_reset_stoptimer();
