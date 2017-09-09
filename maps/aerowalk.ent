@@ -1711,4 +1711,7 @@
 "classname" "item_artifact_super_damage"
 "origin" "-912 -898 248"
 }
-
+{
+"classname" "info_altar"
+"origin" "-64 -288 288"
+}

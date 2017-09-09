@@ -415,7 +415,7 @@ void player_headhunter_touch()
 			return;
 		other.ammo_heads+=1;
 		showpic("hc", sprintf("gfx/num_%g", bound(0, other.ammo_heads, 9)), 0, 0, 0, other);
-		sound(self, CHAN_VOICE, "demon/dland2.wav", 1, ATTN_NONE);
+		sound(self, CHAN_ITEM, "demon/dland2.wav", 1, ATTN_NORM);
 		stuffcmd(other, "bf\n");
 		if (other.netname == self.netname)
 			centerprint(other, "You got your own head");

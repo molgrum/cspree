@@ -636,6 +636,8 @@ void headhunter_startup()
 	if (!points)
 	{
 		if (!points)
+			points += headhunter_legacyaltar("item_artifact_super_damage");
+		if (!points)
 			points += headhunter_legacyaltar("item_sigil");
 		if (!points)
 			points += headhunter_legacyaltar("item_key1");

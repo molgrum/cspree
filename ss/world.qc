@@ -93,21 +93,18 @@ void worldspawn()
 	precache_model("progs/v_rock2.mdl");	// Rocket launcher
 	precache_model("progs/v_light.mdl");	// Lightning gun
 
-	if (gmapn_qsg_has_zq_vwep)
-	{
-		precache_vwep_model ("progs/vwplayer.mdl");
-		precache_vwep_model ("progs/w_axe.mdl");
-		precache_vwep_model ("progs/w_shot.mdl");
-		precache_vwep_model ("progs/w_shot2.mdl");
-		precache_vwep_model ("progs/w_nail.mdl");
-		precache_vwep_model ("progs/w_nail2.mdl");
-		precache_vwep_model ("progs/w_rock.mdl");
-		precache_vwep_model ("progs/w_rock2.mdl");
-		precache_vwep_model ("progs/w_light.mdl");
-		precache_vwep_model ("progs/w_coil.mdl");
-		precache_vwep_model ("progs/w_star.mdl");
-		precache_vwep_model ("-");
-	}
+	precache_vwep_model ("progs/vwplayer.mdl");
+	precache_vwep_model ("progs/w_axe.mdl");
+	precache_vwep_model ("progs/w_shot.mdl");
+	precache_vwep_model ("progs/w_shot2.mdl");
+	precache_vwep_model ("progs/w_nail.mdl");
+	precache_vwep_model ("progs/w_nail2.mdl");
+	precache_vwep_model ("progs/w_rock.mdl");
+	precache_vwep_model ("progs/w_rock2.mdl");
+	precache_vwep_model ("progs/w_light.mdl");
+	precache_vwep_model ("progs/w_coil.mdl");
+	precache_vwep_model ("progs/w_star.mdl");
+	precache_vwep_model ("-");
 
 	precache_sound("buttons/switch02.wav"); //countdown sound
 
@@ -247,8 +244,7 @@ void worldspawn()
 	//portal gun
 	precache_model("progs/b_portal.bsp");
 //	precache_model("progs/v_portal.mdl");
-	if (gmapn_qsg_has_zq_vwep)
-		precache_vwep_model ("progs/w_portal.mdl");
+	precache_vwep_model ("progs/w_portal.mdl");
 	particleeffectnum("portal.tr_portalgun_1");
 	particleeffectnum("portal.tr_portalgun_2");
 	particleeffectnum("portal.te_portalspawn_1");
