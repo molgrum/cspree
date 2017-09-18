@@ -174,6 +174,14 @@ void gmapn_dropspawn()
 	setsize(self, '0 0 0', '0 0 0');
 };
 
+void gmapn_sound(entity e, float channel, string file, float volume, float attn, float soundflags)
+{
+	if (getkey(reliablesounds))
+		sound(e, channel, file, volume, attn, 100, soundflags|SOUNDFLAG_RELIABLE, 0);
+	else
+		sound(e, channel, file, volume, attn, 100, soundflags|SOUNDFLAG_RELIABLE, 0);
+}
+
 float entities_touching(entity e1, entity e2)
 {
 	// Check that the entities is out of range from touching each
@@ -371,7 +379,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 		quadmod *= 2;
 		if (time > inflictor.runetime)
 		{
-			sound(inflictor, CHAN_BODY, "rune/rune2.wav", 1, ATTN_NORM);
+			gmapn_sound(inflictor, CHAN_BODY, "rune/rune2.wav", 1, ATTN_NORM, 0);
 			inflictor.runetime = time + 1;
 		}
 	}
@@ -380,7 +388,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 		quadmod *= 0.5;	//should affect armour too
 		if (time > victim.runetime)
 		{
-			sound(victim, CHAN_BODY, "rune/rune1.wav", 1, ATTN_NORM);
+			gmapn_sound(victim, CHAN_BODY, "rune/rune1.wav", 1, ATTN_NORM, 0);
 			victim.runetime = time + 1;
 		}
 	}
@@ -414,7 +422,7 @@ float gmapn_impact(entity victim, entity inflictor, float damage, float push)
 
 	if (victim.items & IT_PENT)
 	{
-		sound(victim, CHAN_ITEM, "items/protect3.wav", 1, ATTN_NORM);
+		gmapn_sound(victim, CHAN_ITEM, "items/protect3.wav", 1, ATTN_NORM, 0);
 		pentmod = 0;
 	}
 	else if (victim.items & IT_SUIT)	//FIXME: make more effective only against RL+LG

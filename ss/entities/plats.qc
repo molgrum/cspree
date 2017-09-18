@@ -1,26 +1,26 @@
 /*
-    plats.qc
+	plats.qc
 
-    Copyright (C) 1996-1997  Id Software, Inc.
-    Copyright (C) 2009       Andreas Nilsson
+	Copyright (C) 1996-1997	 Id Software, Inc.
+	Copyright (C) 2009		 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -38,7 +38,7 @@ void plat_reset()
 		setorigin(self, self.pos2);
 		self.state = STATE_BOTTOM;
 	}
-	sound(self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0);
 };
 
 //======================================================================
@@ -66,7 +66,7 @@ void plat_go_up()
 		// when the delay is over call plat_done
 		calcmove(self.pos1, self.speed, plat_done);
 		self.state = STATE_UP;
-		sound(self, CHAN_VOICE, self.noise, 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_VOICE, self.noise, 1, ATTN_NORM, 0);
 	}
 };
 
@@ -89,7 +89,7 @@ void plat_go_down()
 		// Set speed, delay and play sound.
 		calcmove(self.pos2, self.speed, plat_done);
 		self.state = STATE_DOWN;
-		sound(self, CHAN_VOICE, self.noise, 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_VOICE, self.noise, 1, ATTN_NORM, 0);
 	}
 };
 
@@ -153,7 +153,7 @@ void plat_trigger_spawn()
 
 	if (self.spawnflags & PLAT_LOW_TRIGGER)
 		tmax_z = tmin_z + 8;
- 
+
 	if (self.size_x <= 50)
 	{
 		tmin_x = (self.mins_x + self.maxs_x) / 2;
@@ -181,7 +181,7 @@ void plat_done()
 	self.velocity_z = 0;
 
 	// Play sounds with unmotivated additive channels.
-	sound(self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0);
 
 	// Reached the top, it's possible that this is only a temporary
 	// point for the lift.
@@ -242,7 +242,7 @@ void func_plat()
 	setmodel(self, self.model);
 
 	// set size(?)
-	setsize(self, self.mins, self.maxs);	
+	setsize(self, self.mins, self.maxs);
 
 	// Default medieval sounds
 	if (self.sounds == 0)
@@ -346,4 +346,3 @@ void func_plat()
 	// something is in the way for the lift to proceed
 	self.blocked = plat_crush;
 };
-

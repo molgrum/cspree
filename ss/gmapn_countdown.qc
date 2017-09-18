@@ -117,7 +117,7 @@ void gmapn_countdown_think()
 		{
 			if (self.cnt <= 5)
 			{
-				sound(self, CHAN_VOICE, "buttons/switch02.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
+				gmapn_sound(self, CHAN_VOICE, "buttons/switch02.wav", 1, ATTN_NONE, 8);
 				// Play countdown sound for each player
 				p = find(world, classname, "player");
 				while (p)
@@ -128,7 +128,7 @@ void gmapn_countdown_think()
 
 			if (self.cnt == 10)
 			{
-				sound(self, CHAN_VOICE, "items/protect2.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0); // everyone hears the start of countdown
+				gmapn_sound(self, CHAN_VOICE, "items/protect2.wav", 1, ATTN_NONE, 8); // everyone hears the start of countdown
 				p = find(world, classname, "player");
 				while (p)
 				{

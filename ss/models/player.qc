@@ -211,7 +211,7 @@ float hasted_reload(float base)
 	{
 		if (time > self.runetime)
 		{
-			sound(self, CHAN_BODY, "rune/rune3.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_BODY, "rune/rune3.wav", 1, ATTN_NORM, 0);
 			self.runetime = time + 1;
 		}
 
@@ -415,7 +415,7 @@ void player_headhunter_touch()
 			return;
 		other.ammo_heads+=1;
 		showpic("hc", sprintf("gfx/num_%g", bound(0, other.ammo_heads, 9)), 0, 0, 0, other);
-		sound(self, CHAN_ITEM, "demon/dland2.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_ITEM, "demon/dland2.wav", 1, ATTN_NORM, 0);
 		stuffcmd(other, "bf\n");
 		if (other.netname == self.netname)
 			centerprint(other, "You got your own head");
@@ -527,7 +527,7 @@ void player_death()
 			self.skin = 100;	//attempt to use global skins
 			self.vw_index = 0;
 
-			sound(self, CHAN_VOICE, "player/frozen1.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/frozen1.wav", 1, ATTN_NONE, 0);
 			stuffcmd(self, "bf 0 0.5 1 0.6 0.5\n");	//flash the screen with a blue tint, so people realise that they actually just died.
 			centerprint(self, "FROZEN!");
 			return;
@@ -551,7 +551,7 @@ void player_death()
 	if (self.deathtype == DT_TELEFRAG || self.deathtype == DT_TELEFRAG_PENT || self.deathtype == DT_TELEFRAG_PENT_BOTH)
 	{
 		// Telefrag
-		sound(self, CHAN_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		gmapn_sound(self, CHAN_VOICE, "player/teledth1.wav", 1, ATTN_NONE, 0);
 
 		player_gibbed();
 	}
@@ -559,9 +559,9 @@ void player_death()
 	{	//headhunter always gibs, so that heads can be collected.
 		rnd = floor(random() * 2);
 		if (rnd < 1)
-			sound(self, CHAN_VOICE, "player/gib.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/gib.wav", 1, ATTN_NONE, 0);
 		else
-			sound(self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NONE, 0);
 
 		player_gibbed();
 	}
@@ -569,7 +569,7 @@ void player_death()
 	{
 		// Death with axe has its own death animation
 
-		sound(self, CHAN_VOICE, "player/death1.wav", 1, ATTN_NONE);
+		gmapn_sound(self, CHAN_VOICE, "player/death1.wav", 1, ATTN_NONE, 0);
 		player_axdeth1();
 	}
 	else
@@ -580,27 +580,27 @@ void player_death()
 
 		if (rnd < 1)
 		{
-			sound(self, CHAN_VOICE, "player/death1.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/death1.wav", 1, ATTN_NONE, 0);
 			player_deatha1();
 		}
 		else if (rnd < 2)
 		{
-			sound(self, CHAN_VOICE, "player/death2.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/death2.wav", 1, ATTN_NONE, 0);
 			player_deathb1();
 		}
 		else if (rnd < 3)
 		{
-			sound(self, CHAN_VOICE, "player/death3.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/death3.wav", 1, ATTN_NONE, 0);
 			player_deathc1();
 		}
 		else if (rnd < 4)
 		{
-			sound(self, CHAN_VOICE, "player/death4.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/death4.wav", 1, ATTN_NONE, 0);
 			player_deathd1();
 		}
 		else// if (rnd < 5)
 		{
-			sound(self, CHAN_VOICE, "player/death5.wav", 1, ATTN_NONE);
+			gmapn_sound(self, CHAN_VOICE, "player/death5.wav", 1, ATTN_NONE, 0);
 			player_deathe1();
 		}
 	}
@@ -652,11 +652,11 @@ void player_pain()
 		r = random()*2;
 		if (r < 1)
 		{
-			sound(self, CHAN_VOICE, "player/drown1.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/drown1.wav", 1, ATTN_NORM, 0);
 		}
 		else
 		{
-			sound(self, CHAN_VOICE, "player/drown2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/drown2.wav", 1, ATTN_NORM, 0);
 		}
 	}
 	else if (self.deathtype == DT_SLIME || self.deathtype == DT_LAVA)
@@ -665,11 +665,11 @@ void player_pain()
 		r = random()*2;
 		if (r < 1)
 		{
-			sound(self, CHAN_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/lburn1.wav", 1, ATTN_NORM, 0);
 		}
 		else
 		{
-			sound(self, CHAN_VOICE, "player/lburn2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/lburn2.wav", 1, ATTN_NORM, 0);
 		}
 	}
 	else
@@ -678,27 +678,27 @@ void player_pain()
 		r = random()*6;
 		if (r < 1)
 		{
-			sound(self, CHAN_VOICE, "player/pain1.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/pain1.wav", 1, ATTN_NORM, 0);
 		}
 		else if (r < 2)
 		{
-			sound(self, CHAN_VOICE, "player/pain2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/pain2.wav", 1, ATTN_NORM, 0);
 		}
 		else if (r < 3)
 		{
-			sound(self, CHAN_VOICE, "player/pain3.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/pain3.wav", 1, ATTN_NORM, 0);
 		}
 		else if (r < 4)
 		{
-			sound(self, CHAN_VOICE, "player/pain4.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/pain4.wav", 1, ATTN_NORM, 0);
 		}
 		else if (r < 5)
 		{
-			sound(self, CHAN_VOICE, "player/pain5.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/pain5.wav", 1, ATTN_NORM, 0);
 		}
 		else
 		{
-			sound(self, CHAN_VOICE, "player/pain6.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_VOICE, "player/pain6.wav", 1, ATTN_NORM, 0);
 		}
 	}
 
@@ -779,7 +779,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 
 		hazard_coilgun(org, dir);
 
-		sound(self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM, 0);
 
 		if (gmapn_serverstate == gmapn_serverstate_playing)
 		{
@@ -796,7 +796,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 		spread = getkey(shotgun_spread);
 		hazard_bullets(org, dir, "shotgun");
 
-		sound(self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM, 0);
 
 		if (gmapn_serverstate == gmapn_serverstate_playing)
 		{
@@ -813,7 +813,7 @@ void() player_shot1 = [$shotatt1, player_shot2]
 		spread = getkey(shotgun2_spread);
 		hazard_bullets(org, dir, "supershotgun");
 
-		sound(self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);
+		gmapn_sound(self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM, 0);
 
 		if (gmapn_serverstate == gmapn_serverstate_playing)
 		{

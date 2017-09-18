@@ -1,26 +1,26 @@
 /*
-    doors.qc
+	doors.qc
 
-    Copyright (C) 1996-1997  Id Software, Inc.
-    Copyright (C) 2009       Andreas Nilsson
+	Copyright (C) 1996-1997	 Id Software, Inc.
+	Copyright (C) 2009		 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -46,7 +46,7 @@ void door_reset()
 //======================================================================
 // DOOR_CLOSE
 //
-// 
+//
 //======================================================================
 void door_close()
 {
@@ -54,7 +54,7 @@ void door_close()
 	{
 		calcmove(self.pos1, self.speed, door_done);
 		self.state = STATE_CLOSING;
-		sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM, 0);
 	}
 };
 
@@ -88,7 +88,7 @@ void door_open()
 
 		calcmove(self.pos2, self.speed, door_done);
 		self.state = STATE_OPENING;
-		sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM, 0);
 
 		usetargets();
 	}
@@ -123,14 +123,14 @@ void door_crush()
 //======================================================================
 // DOOR_DONE
 //
-// 
+//
 //======================================================================
 void door_done()
 {
 	if (self.state == STATE_OPENING)
 	{
 		if (!(self.spawnflags & DOOR_TOGGLE))
-		{	
+		{
 			self.nextthink = self.ltime + self.wait;
 			self.think = door_close;
 		}
@@ -139,12 +139,12 @@ void door_done()
 	else if (self.state == STATE_CLOSING)
 	{
 		//if (!(self.spawnflags & DOOR_TOGGLE) && !(self.spawnflags & DOOR_START_OPEN))
-		//{	
+		//{
 		//	self.nextthink = self.ltime + self.wait;
 		//	self.think = door_open;
 		//}
 		self.state = STATE_CLOSED;
-		
+
 		if (self.max_health)
 		{
 			self.takedamage = DAMAGE_TRIGGER;
@@ -156,13 +156,13 @@ void door_done()
 			openportal(self, FALSE);
 	}
 
-	sound(self, CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0, SOUND_RELIABLE, 0);
+	gmapn_sound(self, CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0);
 };
 
 //======================================================================
 // DOOR_USE
 //
-// 
+//
 //======================================================================
 void door_use()
 {
@@ -227,7 +227,7 @@ void door_touch()
 			else
 				other.items -= self.items;
 			self.items = 0;
-			
+
 			self.attack_finished = time + 1;
 
 			activator = other;
@@ -242,13 +242,13 @@ entity spawn_field(vector fmins, vector fmaxs)
 {
 	entity	trigger;
 	local	vector	t1, t2;
-	
+
 	trigger = spawn();
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;
 	trigger.touch = door_trigger_touch;
-	
+
 	t1 = fmins;
 	t2 = fmaxs;
 	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
@@ -271,7 +271,7 @@ void door_link()
 	{
 		return; // Don't want to link
 	}
-	
+
 	if (self.owner)
 	{
 		return; // Already linked
@@ -300,7 +300,7 @@ void door_link()
 {
 	entity	t, starte;
 	vector	cmins, cmaxs;
-	
+
 	if (self.enemy)
 	{
 		return;			// already linked by another door
@@ -310,54 +310,54 @@ void door_link()
 		self.owner = self.enemy = self;
 		return;			// don't want to link this door
 	}
-	
+
 	cmins = self.mins;
 	cmaxs = self.maxs;
-	
+
 	starte = self;
 	t = self;
-	
+
 	do
 	{
 		self.owner = starte;					// master door
-		
+
 		if (self.health)
 			starte.health = self.health;
 		if (self.targetname)
 			starte.targetname = self.targetname;
 		if (self.message != "")
 			starte.message = self.message;
-		
+
 		t = find (t, classname, self.classname);
 		if (!t)
 		{
 			self.enemy = starte;			// make the chain a loop
-			
+
 			// shootable, fired, or key doors just needed the owner/enemy links,
 			// they don't spawn a field
-			
+
 			self = self.owner;
-			
+
 			if (self.health)
 				return;
 			if (self.targetname)
 				return;
 			if (self.items)
 				return;
-			
+
 			self.owner.trigger_field = spawn_field(cmins, cmaxs);
-			
+
 			return;
 		}
-		
+
 		if (entities_touching(self,t))
 		{
 			if (t.enemy)
 				objerror ("cross connected doors");
-			
+
 			self.enemy = t;
 			self = t;
-			
+
 			if (t.mins_x < cmins_x)
 				cmins_x = t.mins_x;
 			if (t.mins_y < cmins_y)
@@ -384,7 +384,7 @@ void door_link()
 //======================================================================
 // func_door
 //
-// 
+//
 //======================================================================
 void func_door()
 {
@@ -394,7 +394,7 @@ void func_door()
 	self.movetype = MOVETYPE_PUSH;
 	setorigin(self, self.origin);
 	setmodel(self, self.model);
-	
+
 	self.max_health = self.health;
 	if (self.health > 0)
 		self.takedamage = DAMAGE_TRIGGER;
@@ -451,7 +451,7 @@ void func_door()
 	precache_sound(self.noise2);
 	precache_sound(self.noise3);
 	precache_sound(self.noise4);
-	
+
 	// Fall back on default settings
 	if (!self.dmg)
 	{
@@ -475,7 +475,7 @@ void func_door()
 		// Silver key required, add it to door items
 		self.items = IT_KEY1;
 	}
-	
+
 	if (self.spawnflags & DOOR_GOLD_KEY)
 	{
 		// Gold key required, add it to door items
@@ -528,7 +528,7 @@ void door_secret_reset()
 	}
 
 	// Make a lodging sound
-	sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM, 0);
 };
 
 void door_secret_open()
@@ -545,10 +545,10 @@ void door_secret_open()
 
 	usetargets();
 
-	sound(self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0);
 
 	// And after the first sound, this is supposed to play
-	sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM, 0);
 
 	// Move to first position
 	calcmove(self.pos1, self.speed, door_secret_pos1);
@@ -557,7 +557,7 @@ void door_secret_open()
 void door_secret_pos1()
 {
 	// Make a lodging sound
-	sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM, 0);
 
 	// Delay next move
 	self.nextthink = self.ltime + 1;
@@ -567,7 +567,7 @@ void door_secret_pos1()
 void door_secret_pos1_move()
 {
 	// Make a moving sound
-	sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM, 0);
 
 	if (self.state == STATE_OPENING)
 	{
@@ -584,7 +584,7 @@ void door_secret_pos1_move()
 void door_secret_pos2()
 {
 	// Make a lodging sound
-	sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM, 0);
 
 	self.state = STATE_OPENED;
 	// Stay open if this spawnflag is set
@@ -599,7 +599,7 @@ void door_secret_pos2()
 void door_secret_close()
 {
 	// Make a moving sound
-	sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM, 0);
 
 	self.state = STATE_CLOSING;
 	// Move to first position
@@ -609,7 +609,7 @@ void door_secret_close()
 void door_secret_done()
 {
 	// Make a lodging sound
-	sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM, 0);
 
 	self.state = STATE_CLOSED;
 	self.takedamage = DAMAGE_TRIGGER;	// Can trigger from damage again now
@@ -618,7 +618,7 @@ void door_secret_done()
 //======================================================================
 // func_door_secret
 //
-// 
+//
 //======================================================================
 void func_door_secret()
 {
@@ -706,4 +706,3 @@ void func_door_secret()
 	self.t_length = fabs(v_forward * self.size);
 	self.pos2 = self.pos1 + (v_forward * self.t_length);
 };
-

@@ -409,9 +409,8 @@ static void duelcheck()
 
 	if (liveplayers < 2)
 	{	//find the player that has been sitting around for the longest without doing anything.
-		if (liveplayers == 1 && gmapn_duel_secondchance == FALSE)
+		if (liveplayers == 1 && !gmapn_secondchancer)
 		{
-			gmapn_duel_secondchance = TRUE;
 			for (entity e = world; (e = find(e, classname, "player")); )
 			{
 				if (e == liveplayer)
@@ -419,6 +418,7 @@ static void duelcheck()
 				else
 				{
 					self = e;
+					gmapn_secondchancer = self;
 					respawn_living();
 					self = oself;
 					centerprint(e, "Second chance!");
@@ -438,7 +438,7 @@ static void duelcheck()
 			}
 			bprint(PRINT_HIGH, liveplayer.netname, " had ", goldnmbr(ftos(liveplayer.health)), " health and ", goldnmbr(ftos(liveplayer.armorvalue)), " armor left\n");
 			if (liveplayer.health >= 100 && liveplayer.armorvalue == 200)
-				sound(self, CHAN_VOICE, "announcer/flawless.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
+				gmapn_sound(self, CHAN_VOICE, "announcer/flawless.wav", 1, ATTN_NONE, 8);
 		}
 		else
 		{
@@ -590,7 +590,7 @@ void gmapn_hideandseek_check()
 				{
 					stuffcmd(e, "bf\n");
 					e.frags += 1;
-					sound(e, CHAN_ITEM, "items/r_item2.wav", 1, ATTN_NORM);
+					gmapn_sound(e, CHAN_ITEM, "items/r_item2.wav", 1, ATTN_NORM, 0);
 				}
 			}
 		}
@@ -708,7 +708,7 @@ void gmapn_round_start()
 		float totalplayers = 0;
 
 		// second chance has not happened yet
-		gmapn_duel_secondchance = FALSE;
+		gmapn_secondchancer = world;
 
 		for (e = world; (e = find(e, classname, "player")); )
 		{
@@ -917,11 +917,11 @@ void gmapn_round_restart()
 	{
 		for (entity e = world; (e = find(e, classname, "player")); )
 			centerprint(e, sprintf(_("Round %s of %s starts in "), goldnmbr(ftos(gmapn_roundnum + 1)), goldnmbr(ftos(getkey(game_rounds)))), goldnmbr(ftos(self.cnt)), " seconds");
-		sound(self, CHAN_VOICE, sprintf("announcer/%g.wav", self.cnt), 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
+		gmapn_sound(self, CHAN_VOICE, sprintf("announcer/%g.wav", self.cnt), 1, ATTN_NONE, 8);
 	}
 	else
 	{
-		sound(self, CHAN_VOICE, "announcer/fight.wav", 1, ATTN_NONE, 100, SOUNDFLAG_RELIABLE|8, 0);
+		gmapn_sound(self, CHAN_VOICE, "announcer/fight.wav", 1, ATTN_NONE, 8);
 		remove(self);
 
 		//lets have 1-based rounds

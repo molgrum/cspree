@@ -1,25 +1,25 @@
 /*
-    teleports.qc
+	teleports.qc
 
-    Copyright (C) 2009 Andreas Nilsson
+	Copyright (C) 2009 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -59,7 +59,7 @@ void teleport_sound()
 		sound_value = "";
 
 	// Play the sound
-	sound(self, CHAN_VOICE, sound_value, 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_VOICE, sound_value, 1, ATTN_NORM, 0);
 
 	// Remove the entity, it's unneeded now
 	remove(self);
@@ -126,19 +126,19 @@ void teleport_touch()
 	// Move to next position, set new angles
 	// Add velocity argument and absolute to new velocity
 	vel = vlen(other.velocity);
-	
+
 	// Minimum 300 speed
 	if (vel < 300)
 	{
 		vel = 300;
 	}
-	
+
 	// Make teleporting effect at the entering spot
 	teleport_effect(other.origin);
-	
+
 	// Move the teleporting object to the destination
 	setorigin(other, destination.origin);
-	
+
 	// Telefrag check for players
 	if (other.classname == "player")
 	{
@@ -215,7 +215,7 @@ void trigger_teleport()
 	setmodel(self, self.model);		// set size and link into world
 	self.model = "";
 	self.touch = teleport_touch;
-	
+
 	if (self.targetname)
 	{
 		self.solid = SOLID_NOT;
@@ -234,4 +234,3 @@ void trigger_teleport()
 		};
 	}
 };
-

@@ -243,7 +243,7 @@ void info_player_deathmatch()
 		self.nextthink = self.ltime + 0.3;
 		self.think = gmapn_dropspawn;
 	}
-	
+
 	// Spawn weight
 	self.cnt = SP_WEIGHT;
 };
@@ -429,7 +429,7 @@ void misc_explobox()
 	setsize(self, '0 0 0', '32 32 64');		// This is large box size
 
 	item_drop();
-	
+
 	self.movetype = MOVETYPE_NONE;			// Doesn't move at all
 };
 
@@ -475,7 +475,7 @@ void misc_fireball()
 		other.nextthink = time + 5;
 
 //		other.traileffectnum = particleeffectnum("tr_lavaball");
-		
+
 		other.think = (void())
 		{
 			remove(self);
@@ -560,7 +560,7 @@ void trigger_push_touch()
 		if (other.fly_sound < time)
 		{
 			other.fly_sound = time + 1.5;
-			sound(other, CHAN_AUTO, "ambience/windfly.wav", 1, ATTN_NORM);
+			gmapn_sound(other, CHAN_AUTO, "ambience/windfly.wav", 1, ATTN_NORM, 0);
 		}
 	}
 

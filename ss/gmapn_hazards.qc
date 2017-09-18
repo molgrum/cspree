@@ -1,25 +1,25 @@
 /*
-    gmapn_hazards.qc
+	gmapn_hazards.qc
 
-    Copyright (C) 2009 Andreas Nilsson
+	Copyright (C) 2009 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -27,7 +27,7 @@
  * @file gmapn_hazards.qc
  * @author Andreas Nilsson
  * @brief Projectiles and tracelines from weapons, traps and monsters.
- * 
+ *
  * Hazards are seperated into functions and calls gmapn_impact or gmapn_explosion
  * for damage calculations. Invoking a hazard spawns the object (grenade, spike, etc)
  * and sets a touch method for missiles or a traceline for hitscans.
@@ -36,14 +36,14 @@
 #ifdef HAVE_PORTALS
 void traceline_portal(vector start, vector end, float flags, entity ignore)
 {
- 	traceline(start, end, flags, ignore);
+	traceline(start, end, flags, ignore);
 
 	float portals = 4;
 	while (trace_ent.solid == SOLID_PORTAL)
 	{
 		if (vlen(trace_endpos - start) > 64)	//if the trace travelled a decent length, allow the trace to hit the original ent. allowing you to shoot yourself in the back.
 			ignore = world;
-		
+
 		//don't walk through too many portals
 		if (portals-- == 0)
 			return;
@@ -78,13 +78,13 @@ void SpawnMeatSpray(vector org, vector vel)
 	missile.velocity_z = missile.velocity_z + 250 + 50*random();
 
 	missile.avelocity = '3000 1000 2000';
-	
+
 // set missile duration
 	missile.nextthink = time + 1;
 	missile.think = SUB_Remove;
 
 	setmodel (missile, "progs/zom_gib.mdl");
-	setsize (missile, '0 0 0', '0 0 0');            
+	setsize (missile, '0 0 0', '0 0 0');
 	setorigin (missile, org);
 };
 
@@ -112,15 +112,15 @@ void hazard_axehit(vector org, vector dir)
 			WriteCoord(MSG_MULTICAST, trace_endpos_y);
 			WriteCoord(MSG_MULTICAST, trace_endpos_z);
 			multicast(trace_endpos, MULTICAST_PHS);
-			sound(self, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM, 0);
 		}
 		else
 		{
 			SpawnBlood(org, trace_plane_normal, 20);
-			
+
 			trace_ent.deathtype = DT_AXE;
 			damage = getkey(axe_damage);
-			
+
 			if (trace_ent.classname == "player" && trace_ent.maxspeed == 0)
 				push = getkey(axe_push_frozen);
 			else
@@ -140,7 +140,7 @@ void hazard_axehit(vector org, vector dir)
 				gmapn_impact(trace_ent, self, damage, push);
 			}
 
-			sound(self, CHAN_WEAPON, "player/axhit1.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_WEAPON, "player/axhit1.wav", 1, ATTN_NORM, 0);
 		}
 	}
 };
@@ -162,7 +162,7 @@ void hazard_bullet(vector org, vector dir)
 	/* float  damage; */
 	/* float  f; */
 	/* float  push; */
-	
+
 	dir = normalize(dir);
 	traceline_portal(org, org + dir*2048, FALSE|MOVE_LAGGED, self);
 	if (trace_fraction >= 1.0)
@@ -202,26 +202,26 @@ void hazard_bullet(vector org, vector dir)
 	}
 	/* else if (trace_ent.takedamage) */
 	/* { */
-	/* 	damage = getkey(bullet_damage); */
-	/* 	push = getkey(bullet_push); */
+	/*	damage = getkey(bullet_damage); */
+	/*	push = getkey(bullet_push); */
 
-	/* 	if (gmapn_serverstate == gmapn_serverstate_playing && self.weapon == IT_SHOTGUN) */
-	/* 	{ */
-	/* 		trace_ent.deathtype = DT_BULLET; */
-	/* 		f = gmapn_impact(trace_ent, self, damage, push); */
-	/* 		self.stats_hit[W_SG] += f; */
-	/* 	} */
-	/* 	else if (gmapn_serverstate == gmapn_serverstate_playing && self.weapon == IT_SUPER_SHOTGUN) */
-	/* 	{ */
-	/* 		trace_ent.deathtype = DT_SUPER_BULLET; */
-	/* 		f = gmapn_impact(trace_ent, self, damage, push); */
-	/* 		self.stats_hit[W_SSG] += f; */
-	/* 	} */
-	/* 	else */
-	/* 	{ */
-	/* 		trace_ent.deathtype = DT_BULLET; */
-	/* 		gmapn_impact(trace_ent, self, damage, push); */
-	/* 	} */
+	/*	if (gmapn_serverstate == gmapn_serverstate_playing && self.weapon == IT_SHOTGUN) */
+	/*	{ */
+	/*		trace_ent.deathtype = DT_BULLET; */
+	/*		f = gmapn_impact(trace_ent, self, damage, push); */
+	/*		self.stats_hit[W_SG] += f; */
+	/*	} */
+	/*	else if (gmapn_serverstate == gmapn_serverstate_playing && self.weapon == IT_SUPER_SHOTGUN) */
+	/*	{ */
+	/*		trace_ent.deathtype = DT_SUPER_BULLET; */
+	/*		f = gmapn_impact(trace_ent, self, damage, push); */
+	/*		self.stats_hit[W_SSG] += f; */
+	/*	} */
+	/*	else */
+	/*	{ */
+	/*		trace_ent.deathtype = DT_BULLET; */
+	/*		gmapn_impact(trace_ent, self, damage, push); */
+	/*	} */
 	/* } */
 };
 
@@ -290,10 +290,10 @@ void hazard_bullets(vector org, vector dir, string type)
 			}
 		}
 		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*1*spread  + v_up*2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*2*spread  + v_up*1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*2*spread  + v_up*-1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*1*spread  + v_up*-2*spread); */
+		/* dmg += hazard_bullet(org, dir + v_right*1*spread	 + v_up*2*spread); */
+		/* dmg += hazard_bullet(org, dir + v_right*2*spread	 + v_up*1*spread); */
+		/* dmg += hazard_bullet(org, dir + v_right*2*spread	 + v_up*-1*spread); */
+		/* dmg += hazard_bullet(org, dir + v_right*1*spread	 + v_up*-2*spread); */
 		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*-2*spread); */
 		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*-1*spread); */
 		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*1*spread); */
@@ -320,7 +320,7 @@ void hazard_bullets(vector org, vector dir, string type)
 		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*-3*spread); */
 		/* dmg += hazard_bullet(org, dir + v_right*-3*spread + v_up*-1*spread); */
 		/* dmg += hazard_bullet(org, dir + v_right*-3*spread + v_up*1*spread); */
-			
+
 		/* // Outer pattern */
 		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*5*spread); */
 		/* dmg += hazard_bullet(org, dir + v_right*2*spread + v_up*5*spread); */
@@ -343,7 +343,7 @@ void hazard_coilgun(vector org, vector dir)
 	float  damage;
 	float  f;
 	float  push;
-	
+
 	dir = normalize(dir);
 	traceline_portal(org, org + dir*2048, FALSE|MOVE_LAGGED, self);
 	if (trace_fraction >= 1.0)
@@ -376,7 +376,7 @@ void hazard_coilgun(vector org, vector dir)
 		}
 		else
 		{
-			
+
 			gmapn_impact(trace_ent, self, damage, push);
 		}
 	}
@@ -390,7 +390,7 @@ void hazard_spike_touch()
 	float  push;
 
 	attacker = self.owner;
-	
+
 	if (other == attacker)
 	{
 		return;
@@ -451,7 +451,7 @@ void hazard_spike(vector org, vector dir, float vel)
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);
 	if (!(self.flags & FL_MONSTER))
 	sound(self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
-	
+
 	// Only write this if a client fired the spike
 
 	if (self.flags & FL_CLIENT)
@@ -469,7 +469,7 @@ void hazard_spike2_touch()
 	float  push;
 
 	attacker = self.owner;
-	
+
 	if (other == attacker)
 	{
 		return;
@@ -529,7 +529,7 @@ void hazard_spike2(vector org, vector dir, float vel)
 	setmodel(newmis, "progs/s_spike.mdl");
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);
 	sound(self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
-	
+
 	// Only write this if a client fired the spike
 
 	if (self.flags & FL_CLIENT)
@@ -547,7 +547,7 @@ void hazard_grenade_explode()
 	float  push;
 
 	attacker = self.owner;
-	
+
 	// Explosion
 
 	WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
@@ -616,7 +616,7 @@ void hazard_grenade_touch()
 	if (other.takedamage == DAMAGE_BLEED)
 	{
 		hazard_grenade_explode();
-		return; 
+		return;
 	}
 
 	sound (self, CHAN_WEAPON, "weapons/bounce.wav", 1, ATTN_NORM);
@@ -630,6 +630,7 @@ void hazard_grenade(vector org, vector dir, float vel)
 
 	newmis.angles = vectoangles(dir);
 	newmis.classname = "grenade";
+	newmis.flags = FL_LAGGEDMOVE;
 	newmis.nextthink = time + 2.5;
 	newmis.owner = self;
 	newmis.think = hazard_grenade_explode;
@@ -677,7 +678,7 @@ void hazard_grenade(vector org, vector dir, float vel)
 
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_SMALLKICK);
-	sound(self, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM, 0);
 };
 /*
 void hazard_rocket_touch()
@@ -688,7 +689,7 @@ void hazard_rocket_touch()
 	float  push;
 
 	attacker = self.owner;
-	
+
 	// Explosion
 	WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
 	WriteByte(MSG_MULTICAST, TE_EXPLOSION);
@@ -696,7 +697,7 @@ void hazard_rocket_touch()
 	WriteCoord(MSG_MULTICAST, self.origin_y);
 	WriteCoord(MSG_MULTICAST, self.origin_z);
 	multicast(self.origin, MULTICAST_PHS);
-	
+
 	damage = getkey(rocket_damage);
 	push = getkey(rocket_push);
 
@@ -776,8 +777,8 @@ void hazard_lightning(vector org, vector dir)
 	float  push;
 	float portals = 3;
 	float isshambler = self.classname == "monster_shambler";
-	
-	
+
+
 	if (isshambler)
 	{
 		damage = 10;
@@ -867,10 +868,10 @@ void hazard_lightning(vector org, vector dir)
 			trace_ent.velocity_z += 400;
 		}
 	}
-	
+
 	if (time > self.beam_finished)
 	{
-		sound(self, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM, 0);
 		self.beam_finished = time + 0.6;
 	}
 };
@@ -919,11 +920,11 @@ void hazard_railgun(vector org, vector dir)
 		multicast(org, MULTICAST_PHS);
 	}
 #endif
-	
+
 	damage = getkey(rail_damage);
 	push = getkey(rail_push);
 
-	traceline(org,  trace_endpos, MOVE_ENTCHAIN|MOVE_LAGGED, self);
+	traceline(org,	trace_endpos, MOVE_ENTCHAIN|MOVE_LAGGED, self);
 	for (; trace_ent; trace_ent = trace_ent.chain)
 	{
 		if (trace_ent.takedamage)
@@ -952,10 +953,10 @@ void hazard_railgun(vector org, vector dir)
 			}
 		}
 	}
-	
+
 	if (time > self.beam_finished)
 	{
-		sound(self, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM, 0);
 		self.beam_finished = time + 0.6;
 	}
 };
@@ -967,7 +968,7 @@ void hazard_laser_touch()
 	float  push;
 
 	attacker = self.owner;
-	
+
 	if (other == attacker)
 	{
 		return;
@@ -991,7 +992,7 @@ void hazard_laser_touch()
 		gmapn_impact(other, self, damage, push);
 	}
 
-	sound(self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	gmapn_sound(self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC, 0);
 
 	remove(self);
 };
@@ -1011,7 +1012,7 @@ void hazard_laser(vector org, vector dir, float vel)
 	setmodel(newmis, "progs/laser.mdl");
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);
 
-	sound(newmis, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
+	gmapn_sound(newmis, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM, 0);
 };
 
 void hazard_discharge()
@@ -1035,7 +1036,7 @@ void hazard_discharge()
 
 	gmapn_explosion(self, damage, push, world, self.deathtype);
 
-	sound(self, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM, 0);
 	self.beam_finished = time + 0.6;
 };
 
@@ -1047,7 +1048,7 @@ void hazard_missile_touch()
 	float  push;
 
 	attacker = self.owner;
-	
+
 	if (other == attacker)
 	{
 		return;
@@ -1076,7 +1077,7 @@ void hazard_missile_touch()
 		WriteCoord(MSG_MULTICAST, self.origin_z);
 		multicast(self.origin, MULTICAST_PHS);
 	}
-	
+
 	if (self.classname == "spike") {
 		if (other != world) {
 			other.deathtype = DT_NAIL;
@@ -1120,12 +1121,12 @@ void hazard_missile_touch()
 	}
 
 	f = gmapn_impact(other, self, damage, push);
-		
+
 	if (self.classname == "rocket") {
 		//damage += 10; // modifier for original QW behaviour
 		f += gmapn_explosion(self, damage, push, other, DT_ROCKET);
 	}
-			
+
 	if (other != world && gmapn_serverstate == gmapn_serverstate_playing)
 	{
 		// Save stats during match
@@ -1145,6 +1146,7 @@ void hazard_missile(vector org, vector dir, float vel, string type)
 	newmis = spawn(); // Create a spike entity
 	newmis.angles = vectoangles(dir);
 	newmis.classname = type;
+	newmis.flags = FL_LAGGEDMOVE;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.owner = self;
 	newmis.solid = SOLID_BBOX;
@@ -1161,19 +1163,19 @@ void hazard_missile(vector org, vector dir, float vel, string type)
 
 	if (newmis.classname == "spike") {
 		setmodel(newmis, "progs/spike.mdl");
-		sound(self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM, 0);
 	}
 	else if (newmis.classname == "superspike") {
 		setmodel(newmis, "progs/s_spike.mdl");
-		sound(self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM, 0);
 	}
 	else if (newmis.classname == "rocket") {
 		setmodel(newmis, "progs/missile.mdl");
-		sound(self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM, 0);
 	}
-	
+
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);
-	
+
 	// Only write this if a client fired the spike
 
 	if (self.flags & FL_CLIENT)

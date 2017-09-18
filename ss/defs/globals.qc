@@ -86,7 +86,7 @@ float gmapn_roundnum;
 float gmapn_gamemode;
 
 int gmapn_coop_respawntokens;
-int gmapn_duel_secondchance;
+entity gmapn_secondchancer; // for duel arena's "second chance"
 entity gmapn_monarchofthemound;
 //The current king-of-the-hill. only this player's kills/deaths reward frags (and killers of the king become the new king)
 entity gmapn_gamemaster;	//this is the player that is currently in charge of the game rules.

@@ -773,7 +773,7 @@ void client_spawn(float sameplace)
 	self.items |= global_items;		// coop weapons+keys are shared, which stops things being annoying, or triggering things multiple times or infinite ammo.
 
 	// always spawn axe/sg on second chance so the game doesn't get unbalanced
-	if (gmapn_duel_secondchance == TRUE)
+	if (gmapn_secondchancer == self)
 	{	//standard deathmatch
 		self.ammo_shells = 25;				// Always start with 0 shells
 		self.items |= IT_AXE | IT_SHOTGUN;		// Starting items
@@ -1239,7 +1239,7 @@ void client_attack()
 	// If quaded, play quad sound
 	if (self.items & IT_QUAD)
 	{
-		sound(self, CHAN_BODY, "items/damage3.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_BODY, "items/damage3.wav", 1, ATTN_NORM, 0);
 	}
 
 	makevectors(self.v_angle);
@@ -1251,7 +1251,7 @@ void client_attack()
 
 		self.attack_finished = time + getkey(axe_reload);
 
-		sound(self, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM);
+		gmapn_sound(self, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM, 0);
 		if (getkey(axe_new) == 0)
 		{
 			rnd = random()*4;
@@ -1318,7 +1318,7 @@ void client_attack()
 	{
 		if (self.ammo_cells >= 1 && (self.waterlevel < 2 || self.waterlevel >= 2 && time > self.beam_finished))
 		{
-			sound(self, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM, 0);
 		}
 		player_lightning1();
 	}
@@ -1380,11 +1380,11 @@ void client_jump()
 		// Make some swimming noise in water
 		if (rint(random()) == 1)
 		{
-			sound(self, CHAN_BODY, "misc/water1.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_BODY, "misc/water1.wav", 1, ATTN_NORM, 0);
 		}
 		else
 		{
-			sound(self, CHAN_BODY, "misc/water2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_BODY, "misc/water2.wav", 1, ATTN_NORM, 0);
 		}
 
 		// Make the next noise after one second
@@ -1428,7 +1428,7 @@ void client_jump()
 	}
 
 	// Play jumping sound
-	sound(self, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
+	gmapn_sound(self, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM, 0);
 };
 
 void client_powerups()
@@ -1438,7 +1438,7 @@ void client_powerups()
 		if (self.ring_time == 0)
 		{
 			sprintln(self, PRINT_MEDIUM, _("Ring of Shadows magic is fading"));
-			sound(self, CHAN_AUTO, "items/inv2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_AUTO, "items/inv2.wav", 1, ATTN_NORM, 0);
 		}
 		if (time >= self.ring_time)
 		{
@@ -1451,7 +1451,7 @@ void client_powerups()
 		if (self.pent_time == 0)
 		{
 			sprintln(self, PRINT_MEDIUM, _("Protection is almost burned out"));
-			sound(self, CHAN_AUTO, "items/protect2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_AUTO, "items/protect2.wav", 1, ATTN_NORM, 0);
 		}
 		if (time >= self.pent_time)
 		{
@@ -1464,7 +1464,7 @@ void client_powerups()
 		if (self.suit_time == 0)
 		{
 			sprintln(self, PRINT_MEDIUM, _("Air supply in Biosuit expiring"));
-			sound(self, CHAN_AUTO, "items/suit2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_AUTO, "items/suit2.wav", 1, ATTN_NORM, 0);
 		}
 		if (time >= self.suit_time)
 		{
@@ -1477,7 +1477,7 @@ void client_powerups()
 		if (self.quad_time == 0)
 		{
 			sprintln(self, PRINT_MEDIUM, _("Quad Damage is wearing off"));
-			sound(self, CHAN_AUTO, "items/damage2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_AUTO, "items/damage2.wav", 1, ATTN_NORM, 0);
 		}
 		if (time >= self.quad_time)
 		{
@@ -1517,7 +1517,7 @@ void client_powerups()
 		if (time > self.runetime)
 		{
 			if ((self.runetime*2) & 1)
-				sound(self, CHAN_BODY, "rune/rune4.wav", 1, ATTN_NORM);
+				gmapn_sound(self, CHAN_BODY, "rune/rune4.wav", 1, ATTN_NORM, 0);
 			self.runetime = time + 0.5;
 
 			if (self.health < 150)
@@ -1541,7 +1541,7 @@ void client_content()
 		{
 			// flag is outdated, now outside of water
 			self.flags = self.flags - (self.flags & FL_INWATER);
-			sound(self, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM, 0);
 		}
 		return;
 	}
@@ -1557,15 +1557,15 @@ void client_content()
 
 		if (self.watertype == CONTENT_WATER)
 		{
-			sound(self, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM, 0);
 		}
 		else if (self.watertype == CONTENT_SLIME)
 		{
-			sound(self, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM, 0);
 		}
 		else if (self.watertype == CONTENT_LAVA)
 		{
-			sound(self, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
+			gmapn_sound(self, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM, 0);
 		}
 	}
 
@@ -2603,7 +2603,7 @@ void ClientDisconnect()
 	if (gmapn_gamemode == GM_CTF || gmapn_gamemode == GM_1FCTF)
 		ctf_player_died();
 
-	sound(self, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE);
+	gmapn_sound(self, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE, 0);
 
 	// Nullify disconnected player
 	self.classname = 0;

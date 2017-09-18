@@ -320,6 +320,11 @@ void gmapn_checklastplayer(entity ignore, string theteam)
 
 void(entity killer, entity victim, float delta) gmapn_scorefrags =
 {
+	if (gmapn_gamemode == GM_DA)
+	{
+		if (victim != gmapn_secondchancer)
+			return; // only award points for killing the second chancer
+	}
 	if (gmapn_gamemode == GM_ROVER)
 	{	//victims are moved over to the killer's team
 		bprint(PRINT_HIGH, victim.netname, " was killed by ", killer.netname, "\n");
