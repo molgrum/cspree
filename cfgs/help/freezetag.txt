@@ -1,0 +1,8 @@
+Shoot every player in the other team to
+freeze them, your team wins the round
+when all enemies are frozen.
+
+If you get shot frozen signal it to a
+team mate so he can thaw you. If you see
+a mate standing still he is probably
+in need of thawing.

@@ -1,0 +1,6 @@
+Gib other players, every shot gibs in
+this mode. Collect their head and stay
+alive bringing the head(s) to the altar.
+
+You will get a bonus every time you
+collect heads as well as score.

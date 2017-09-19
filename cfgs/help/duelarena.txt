@@ -1,0 +1,9 @@
+You play two at a time, more players
+than two can be in queue to play.
+
+Start with a stacked loadout with
+limited ammo, try to frag the other
+opponent while exploiting the items
+laying around.
+
+The map resets and you both try again.

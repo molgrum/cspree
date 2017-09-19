@@ -102,9 +102,13 @@ entity gmapn_flag_carrier;
 var float gmapn_matchstarttimems;	//global stat that marks the time that the match started at, for more reliable client-side gameclocks.
 
 float  vote_in_progress; // 0 = no voting, ok to start a vote, else don't
-entity evoter;            // set a think function that executes if a vote passes
+entity evoter;			  // set a think function that executes if a vote passes
 
 string gmapn_demoname;
+
+float gmapn_prestate; // before a game starts
+float gmapn_prestate_prewar = 0; // just a menu with prewar
+float gmapn_prestate_lockready = 1; // when there are enough players to start
 /*
 var float default_game_loadout = 0;
 var float default_game_botskill = 0;

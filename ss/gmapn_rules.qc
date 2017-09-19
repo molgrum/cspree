@@ -713,8 +713,23 @@ void gmapn_rules_autojointeam()
 
 void gmapn_rules_cliententered()
 {
+	entity p = world;
+	int pcount = 0;
+
 	if (clienttype(self) == CLIENTTYPE_BOT)
 		self.ready = TRUE; // bots are always ready on join
+
+	while ((p = find(p, classname, "player")))
+		pcount++;
+
+	int playersneeded = getkey(minplayers);
+	if (gmapn_gamemodeneedsteam(gmapn_gamemode) == TRUE)
+	{
+		playersneeded = getkey(minteamsize)*2;
+	}
+
+	if (pcount >= playersneeded)
+		gmapn_prestate = gmapn_prestate_lockready;
 
 	client_spawn(FALSE);
 }
@@ -732,9 +747,6 @@ void gmapn_rules_handleconnect()
 	//in case they're a VIP really
 	gmapn_evaluategamemaster();
 
-	if (gmapn_serverstate != gmapn_serverstate_playing)
-		return;
-
 	totalplayers = -1; // subtract the client that is about to join
 	p = find(world, classname, "player");
 	while (p)
@@ -742,6 +754,30 @@ void gmapn_rules_handleconnect()
 		totalplayers++;
 		p = find(p, classname, "player");
 	}
+
+	// if not spectating initialize some server settings
+	if (self.classname == "player" && (serverflags & SV_MATCHLESS) && gmapn_ismatchless(gmapn_gamemode))
+	{
+		// ready up on matchless games automatically
+		self.ready = TRUE;
+
+		if (gmapn_gamemode == GM_HEADHUNTER)
+		{
+			stuffcmd(self, "cl_gibFilter 0\n");
+			sprint(self, PRINT_HIGH, redify("The server turns your gib filter off\n"));
+		}
+
+		// start the next game when the first player connects
+		if (totalplayers == 0)
+		{
+			gmapn_reset_stoptimer();
+			gmapn_game_start();
+		}
+	}
+
+	if (gmapn_serverstate != gmapn_serverstate_playing)
+		return;
+
 	switch(gmapn_gamemode)
 	{
 	case GM_KING:	//joining players become plebs

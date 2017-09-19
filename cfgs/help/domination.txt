@@ -1,0 +1,13 @@
+There are control points that lay around
+the map, in the shape of a purple
+spikeball.
+
+Right at the time of writing, the
+control points are mimiced to weapon
+positions on the map.
+
+Either play like that or go help us
+out to place controlpoints on
+interesting places on this map.
+
+Hold the points to win.

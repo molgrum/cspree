@@ -25,7 +25,6 @@ string gmapn_menu_maplist(float keys);
 .float mapquery;
 
 .float oldmkeys;
-.float viewingrules;	//timer when it should next be resent
 .float subsel; // current submenu or main menu
 .float rulesel;	//main option on the menu
 .float mapsel;	//map or election
@@ -70,7 +69,7 @@ static string menu_readyteam(float op)
 		{
 			string t = self.teamname;
 			if (t != "red" && t != "blue")
-				return "Please pick a team";
+				return "Pick a team";
 		}
 		return "NOT ready";
 	}
@@ -839,7 +838,6 @@ static string menu_spacer(float op)
 
 static string(float op) rules[] =
 {
-	menu_readyteam,
 	menu_mapvote,
 	menu_rulemaker,
 	menu_gamemode,
@@ -853,7 +851,6 @@ static string(float op) rules[] =
 
 static string rules_desc[] =
 {
-	"Ready to play\n ",
 	"Displays a list of maps\nto vote from",
 	"The rulemaker can modify\nthe settings",
 	"",
@@ -1034,7 +1031,7 @@ string gmapn_menu_waitingfor(float highlightself)
 		m = strcat(m, "Waiting for: ");
 		for(;;)
 		{
-			if (unready == self && !self.rulesel && highlightself)
+			if (unready == self && highlightself)
 				m = strcat(m, redify(unready.netname));
 			else
 				m = strcat(m, unready.netname);
@@ -1200,6 +1197,75 @@ string gmapn_menu_server(float keys)
 	return m;
 }
 
+string gmapn_menu_ready(float keys)
+{
+	string m = "";
+
+	if (gmapn_gamemodeneedsteam(gmapn_gamemode))
+	{
+		int rows = 4;
+		string left, right;
+
+		left = " RED";
+		right = "BLUE";
+
+		if (!self.rulesel)
+		{
+			if (self.teamname == "red" && self.ready)
+				left = redify(left);
+			else if (self.teamname == "blue" && self.ready)
+				right = redify(right);
+			else
+			{
+				left = alternate(left);
+				right = alternate(right);
+			}
+		}
+
+		m = strcat(m, balancestrings(left, " : ", right), "\n");
+
+		entity redplayer = findreadyteamplayer(world, "red");
+		entity blueplayer = findreadyteamplayer(world, "blue");
+
+		while(rows-- > 0)
+		{
+			if (redplayer == self && !self.rulesel)
+				left = redify(redplayer.netname);
+			else if (redplayer)
+				left = redplayer.netname;
+			else
+				left = "---";
+
+			if (blueplayer == self && !self.rulesel)
+				right = redify(blueplayer.netname);
+			else if (blueplayer)
+				right = blueplayer.netname;
+			else
+				right= "----";
+
+			m = strcat(m, balancestrings(left, " : ", right), "\n");
+
+			if (redplayer)
+				redplayer = findreadyteamplayer(redplayer, "red");
+			if (blueplayer)
+				blueplayer = findreadyteamplayer(blueplayer, "blue");
+			if (!redplayer && !blueplayer)
+				break;
+		}
+
+		m = strcat(m, "\n");
+	}
+
+	if (keys & KEY_LEFT)
+		menu_readyteam(MENU_LEFT);
+	if (keys & KEY_RIGHT)
+		menu_readyteam(MENU_RIGHT);
+
+	m = strcat(m, balancestrings(menu_readyteam(MENU_TITLE), ":", menu_readyteam(MENU_VALUE)));
+
+	return m;
+}
+
 string gmapn_menu_rules(float keys)
 {
 	int i;
@@ -1258,65 +1324,6 @@ string gmapn_menu_rules(float keys)
 	{
 		m = gmapn_menu_waitingfor(gmapn_gamemodeneedsteam(gmapn_gamemode));
 		m = strcat(m, "\n\n");
-	}
-	if (gmapn_gamemodeneedsteam(gmapn_gamemode))
-	{
-		int rows = 4;
-		string left, right;
-
-		left = " RED";
-		right = "BLUE";
-
-		if (!self.rulesel)
-		{
-			if (self.teamname == "red" && self.ready)
-				left = redify(left);
-			else if (self.teamname == "blue" && self.ready)
-				right = redify(right);
-			else
-			{
-				left = alternate(left);
-				right = alternate(right);
-			}
-		}
-
-		m = strcat(m, balancestrings(left, " : ", right), "\n");
-
-		entity redplayer = findreadyteamplayer(world, "red");
-		entity blueplayer = findreadyteamplayer(world, "blue");
-
-		while(rows-- > 0)
-		{
-			if (redplayer == self && !self.rulesel)
-				left = redify(redplayer.netname);
-			else if (redplayer)
-				left = redplayer.netname;
-			else
-				left = "---";
-
-			if (blueplayer == self && !self.rulesel)
-				right = redify(blueplayer.netname);
-			else if (blueplayer)
-				right = blueplayer.netname;
-			else
-				right= "---";
-
-			m = strcat(m, balancestrings(left, " : ", right), "\n");
-
-			if (redplayer)
-				redplayer = findreadyteamplayer(redplayer, "red");
-			if (blueplayer)
-				blueplayer = findreadyteamplayer(blueplayer, "blue");
-			if (!redplayer && !blueplayer)
-				break;
-		}
-
-		i = 1;
-		m = strcat(m, "\n");
-	}
-	else
-	{
-		i = 0;
 	}
 
 	for (; i < rules.length; i++)
@@ -1477,8 +1484,6 @@ void gmapn_menu_any(float keys)
 		if (city != "" || region != "" || nation != "")
 			m = strcat(m, "\n");
 
-		m = strcat(m, sprintf("\n%s %s\n", NAME, redify(VERSION)));
-		m = strcat(m, sprintf("(%s)\n", redify(DATE)));
 		if (!gmapn_gamemaster)
 			m = strcat(m, sprintf(_("\nNobody is %s\n"), redify("the Rulemaker")));
 		else if (self == gmapn_gamemaster)
@@ -1514,6 +1519,12 @@ void gmapn_menu_any(float keys)
 		m = strcat(prefix, m, gmapn_menu_matchlist(keys));
 	else if (self.mapquery != 0) // -1 for URI GET
 		m = strcat(prefix, m, gmapn_menu_maplist(keys));
+	else if (gmapn_prestate == gmapn_prestate_lockready && self.movetime < time - 3)
+	{
+		m = flash("There are enough players to start\n\n");
+		m = strcat(prefix, m, gmapn_menu_waitingfor((time*2) & 1), "\n\n");
+		m = strcat(prefix, m, gmapn_menu_ready(keys));
+	}
 	else if (self.ready || self.movetime >= time)
 	{	//menu is temporarily hidden because the player is moving.
 		if (self.ready || self.movement || self.button0 || self.button2)
@@ -1545,257 +1556,71 @@ void gmapn_menu_any(float keys)
 	centerprint(self, m);
 };
 
-const string welcome_main[] =
+void gmapn_display_welcome()
 {
-	"Greetings peasant, welcome to\n\bChilling Spree\n\n",
-	"Contributors: bigfoot, molgrum, mushi,\nspike\n\n",
-	"Project page: https://git.io/vSGFe\n\n",
-	"Features seven modes apart from the\n",
-	"classical ones. Modes are variations of\n",
-	"the gameplay.\n\n",
-	"To skip this introduction, simply \bFIRE\b.\n"
-};
-
-const string welcome_domination[] =
-{
-	"\bDomination\n\n",
-	"There are control points that lay around\n",
-	"the map, in the shape of a purple\n",
-	"spikeball.\n\n",
-	"Right at the time of writing, the\n",
-	"control points are mimiced to weapon\n",
-	"positions on the map.\n\n",
-	"Either play like that or go help us\n",
-	"out to place controlpoints on\n",
-	"interesting places on this map.\n\n",
-	"Hold the points to win.\n"
-};
-
-const string welcome_duelarena[] =
-{
-	"\bDuel arena\n\n",
-	"You play two at a time, more players\n",
-	"than two can be in queue to play.\n\n",
-	"Start with a stacked loadout with\n",
-	"limited ammo, try to frag the other\n",
-	"opponent while exploiting the items\n",
-	"laying around.\n\n",
-	"The map resets and you both try again.\n"
-};
-
-const string welcome_freezetag[] =
-{
-	"\bFreeze tag\n\n",
-	"Shoot every player in the other team to\n",
-	"freeze them, your team wins the round\n",
-	"when all enemies are frozen.\n\n",
-	"If you get shot frozen signal it to a\n",
-	"team mate so he can thaw you. If you see\n",
-	"a mate standing still he is probably\n",
-	"in need of thawing.\n"
-};
-
-const string welcome_headhunters[] =
-{
-	"\bHead hunters\n\n",
-	"Gib other players, every shot gibs in\n",
-	"this mode. Collect their head and stay\n",
-	"alive bringing the head(s) to the altar.\n\n",
-	"You will get a bonus every time you\n",
-	"collect heads as well as score.\n\n",
-	"TIP: cl_gibfilter 0\n"
-};
-
-const string welcome_killtheking[] =
-{
-	"\bKill the king\b\n\n",
-	"Frag the player that is king to become\n",
-	"the king. Only the king gets frags for\n",
-	"kills.\n"
-};
-
-const string welcome_lastmanstanding[] =
-{
-	"\bLast man standing\n\n",
-	"Kill every player in the other team to\n",
-	"win the round.\n"
-};
-
-const string welcome_rover[] =
-{
-	"\bRover\n\n",
-	"Kill players in the other team,\n",
-	"capturing them into your own team. You\n",
-	"win the round when everyone is in your\n",
-	"team.\n"
-};
-
-const string welcome_end[] =
-{
-	"\bUsage\n\n",
-	"To use the menu: MOVEMENT KEYS\n",
-	"To disable the menu: JUMP or READY UP\n\n",
-	"If you joined without any players on the\n",
-	"server, you are the RULEMAKER meaning\n",
-	"only you can modify the game settings.\n",
-	"You may allow anyone to modify them by\n",
-	"changing the rulemaker setting in the\n",
-	"menu.\n\n",
-	"Now experiment with the settings, open\n",
-	"the console and .qw in some players!\n"
-};
-
-float gmapn_display_welcome()
-{
+	filestream helpfile = -1;
 	string msg = "";
-	float done = FALSE;
-	int i = 0;
 
-	while (done == FALSE)
+	switch (gmapn_gamemode)
 	{
-		switch (self.menustate)
-		{
-		case MENU_WELCOME:
+	case GM_DOMINATION:
 
-			if (i < welcome_main.length)
-			{
-				msg = strcat(msg, welcome_main[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_DOMINATION;
-			}
+		helpfile = fopen("cfgs/help/domination.txt", FILE_READ);
+		break;
 
-			break;
+	case GM_DA:
 
-		case MENU_DOMINATION:
+		helpfile = fopen("cfgs/help/duelarena.txt", FILE_READ);
+		break;
 
-			if (i < welcome_domination.length)
-			{
-				msg = strcat(msg, welcome_domination[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_DUELARENA;
-			}
+	case GM_FREEZETAG:
 
-			break;
+		helpfile = fopen("cfgs/help/freezetag.txt", FILE_READ);
+		break;
 
-		case MENU_DUELARENA:
+	case GM_HEADHUNTER:
 
-			if (i < welcome_duelarena.length)
-			{
-				msg = strcat(msg, welcome_duelarena[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_FREEZETAG;
-			}
+		helpfile = fopen("cfgs/help/headhunters.txt", FILE_READ);
+		break;
 
-			break;
+	case GM_KING:
 
-		case MENU_FREEZETAG:
+		helpfile = fopen("cfgs/help/killtheking.txt", FILE_READ);
+		break;
 
-			if (i < welcome_freezetag.length)
-			{
-				msg = strcat(msg, welcome_freezetag[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_HEADHUNTERS;
-			}
+	case GM_LASTMANSTANDING:
 
-			break;
+		helpfile = fopen("cfgs/help/lastmanstanding.txt", FILE_READ);
+		break;
 
-		case MENU_HEADHUNTERS:
+	case GM_ROVER:
 
-			if (i < welcome_headhunters.length)
-			{
-				msg = strcat(msg, welcome_headhunters[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_KILLTHEKING;
-			}
+		helpfile = fopen("cfgs/help/rover.txt", FILE_READ);
+		break;
 
-			break;
+	default:
 
-		case MENU_KILLTHEKING:
-
-			if (i < welcome_killtheking.length)
-			{
-				msg = strcat(msg, welcome_killtheking[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_LASTMANSTANDING;
-			}
-
-			break;
-
-		case MENU_LASTMANSTANDING:
-
-			if (i < welcome_lastmanstanding.length)
-			{
-				msg = strcat(msg, welcome_lastmanstanding[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_ROVER;
-			}
-
-			break;
-
-		case MENU_ROVER:
-
-			if (i < welcome_rover.length)
-			{
-				msg = strcat(msg, welcome_rover[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_END;
-			}
-
-			break;
-
-		case MENU_END:
-
-			if (i < welcome_end.length)
-			{
-				msg = strcat(msg, welcome_end[i]);
-			}
-			else
-			{
-				done = TRUE;
-				self.menustate = MENU_SHOW;
-			}
-
-			break;
-
-		case MENU_SHOW:
-
-			return FALSE;
-		}
-
-		i += 1;
+		helpfile = fopen("cfgs/help/motd.txt", FILE_READ);
+		break;
 	}
 
-	// Rows in a centerprint times this determines how long they stay printed
-	const float multiple = 1.5;
+	if (helpfile >= 0)
+	{
+		string s;
 
-	gmapn_centerprint(self, msg, i*multiple);
-	self.menutime = time + i*multiple;
-	self.viewingrules = 0;
-	return TRUE;
+		// title of MOTD is the current game mode
+		msg = strcat("\b", gmapn_gamemodefullname(gmapn_gamemode), "\n\n");
+
+		while ((s = fgets(helpfile)))
+		{
+			msg = strcat(msg, s, "\n");
+		}
+
+		fclose(helpfile);
+	}
+
+	centerprint(self, msg);
+	self.viewingrules = time + 0.25;
 }
 
 float gmapn_display_rules()
@@ -1805,19 +1630,17 @@ float gmapn_display_rules()
 	if (time < 1)	//can do weird things on loading screens
 		return TRUE;
 
-	// Skip introduction
-	if (self.button0 && self.menustate != MENU_SHOW)
+	// display a MOTD when connected
+	if (self.connectedtime >= time - 8)
 	{
-		self.viewingrules = time;
-		self.menustate = MENU_SHOW;
-		self.menutime = time;
-		if (self.ready || self.movement || self.button2)
-			self.movetime = time + 3;
-		gmapn_centerprint_clear();
+		gmapn_display_welcome();
+		return FALSE;
 	}
 
-	if (time < self.menutime)
-		return TRUE;
+	if (self.maxspeed && self.movement || self.button2)
+	{
+		self.movetime = time + 3;
+	}
 
 	newkeys = 0;
 
@@ -1844,10 +1667,7 @@ float gmapn_display_rules()
 		self.movetime = time + 3;
 	}
 
-	if (gmapn_display_welcome())
-		return TRUE;
-
-	if (self.ready || self.movetime > time)
+	if (self.movetime > time)
 	{
 		if (gmapn_serverstate < gmapn_serverstate_playing)
 			self.maxspeed = 320;
@@ -1882,6 +1702,7 @@ float gmapn_display_rules()
 				self.viewingrules = time + 1;
 			}
 		}
+
 		return FALSE;
 	}
 
@@ -1895,7 +1716,7 @@ float gmapn_display_rules()
 	}
 
 	//don't spam centerprints if there's no need.
-	if (!keys && self.viewingrules > time)
+	if (!keys && self.viewingrules > time || self.menutime > time)
 		return TRUE;
 
 	self.viewingrules = time + 0.25;

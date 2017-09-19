@@ -1,0 +1,3 @@
+Frag the player that is king to become
+the king. Only the king gets frags for
+kills.

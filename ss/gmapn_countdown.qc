@@ -99,9 +99,9 @@ void gmapn_countdown_think()
 			p = world;
 			while ((p = find(p, classname, "player")))
 			{
-				if (p.ready)
+				if (p.viewingrules < time && p.ready)
 					centerprint(p, "Waiting for competitors");
-				if (!p.ready)
+				if (p.viewingrules < time && !p.ready)
 					centerprint(p, "You are not ready!");
 			}
 

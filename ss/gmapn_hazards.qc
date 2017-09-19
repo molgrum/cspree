@@ -638,15 +638,20 @@ void hazard_grenade(vector org, vector dir, float vel)
 	newmis.velocity = v_forward * vel;
 
 	// FIXME: this was for ODE physics
-	//newmis.mass = 10;
-	//newmis.movetype = MOVETYPE_PHYSICS;
-	//newmis.solid = SOLID_PHYSICS_SPHERE;
-	//setsize(newmis, '-4 -4 -4', '4 4 4');
-
-	// ...and this is for default physics
-	newmis.movetype = MOVETYPE_BOUNCE;
-	newmis.solid = SOLID_BBOX;
-	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);
+	if (getkey(odephysics))
+	{
+		newmis.mass = 10;
+		newmis.friction = 0;
+		newmis.movetype = MOVETYPE_PHYSICS;
+		newmis.solid = SOLID_PHYSICS_SPHERE;
+		setsize(newmis, '-4 -4 -4', '4 4 4');
+	}
+	else
+	{
+		newmis.movetype = MOVETYPE_BOUNCE;
+		newmis.solid = SOLID_BBOX;
+		setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);
+	}
 
 	if (self.items & IT_QUAD == IT_QUAD)
 	{

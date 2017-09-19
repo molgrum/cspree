@@ -2506,12 +2506,7 @@ void ClientConnect()
 //======================================================================
 void PutClientInServer()
 {
-	float firsttojoin = FALSE;
-
 	dbgprintln("=== PutClientInServer() ===");
-
-	if (clienttype(self) == CLIENTTYPE_REAL && find(world, classname, "player") == world)
-		firsttojoin = TRUE;
 
 	// Standard attributes for the client
 	self.classname = "player";			// The client is a player, always
@@ -2541,6 +2536,7 @@ void PutClientInServer()
 	}
 	else
 	{
+		gmapn_print_welcome();
 		gmapn_print_tipoftheday();
 		gmapn_sql_welcome();
 	}
@@ -2550,30 +2546,6 @@ void PutClientInServer()
 	// delay for a bit so the sound plays
 	self.nextthink = time + 0.01;
 	self.think = gmapn_rules_cliententered;
-
-	// start the next game when the first player connects
-	if ((serverflags & SV_MATCHLESS) && gmapn_ismatchless(gmapn_gamemode))
-	{
-		// ready up on matchless games automatically
-		self.ready = TRUE;
-
-		if (gmapn_gamemode == GM_HEADHUNTER)
-		{
-			stuffcmd(self, "cl_gibFilter 0\n");
-			sprint(self, PRINT_HIGH, redify("The server turns your gib filter off\n"));
-		}
-
-		if (firsttojoin == TRUE)
-		{
-			gmapn_reset_stoptimer();
-			gmapn_game_start();
-		}
-	}
-
-	if (gmapn_serverstate == gmapn_serverstate_prewar)
-		self.menustate = MENU_WELCOME; // Display an explanation of the modes
-	else
-		self.menustate = MENU_SHOW;
 };
 
 /*
@@ -2636,6 +2608,7 @@ void ClientDisconnect()
 		gmapn_monarchofthemound = world;
 		cvar_set("teamplay", "0");	//need to clear teamplay to rework clientside enemyskin forcing so everyone appears as a valid target.
 	}
+	gmapn_prestate = gmapn_prestate_prewar; // someone left so a game cannot start
 
 	/* Stop match if no players are left */
 

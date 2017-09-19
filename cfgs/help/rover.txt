@@ -1,0 +1,4 @@
+Kill players in the other team,
+capturing them into your own team. You
+win the round when everyone is in your
+team.

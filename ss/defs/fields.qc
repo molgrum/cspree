@@ -1,32 +1,32 @@
 /*
-    fields.qc
+	fields.qc
 
-    Copyright (C) 1996-1997  Id Software, Inc.
-    Copyright (C) 2007       Mark Olsen
-    Copyright (C) 2009       Andreas Nilsson
+	Copyright (C) 1996-1997	 Id Software, Inc.
+	Copyright (C) 2007		 Mark Olsen
+	Copyright (C) 2009		 Andreas Nilsson
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
 ///////////////////////////////////////////////////////////////////////////////
-//                          Q U A K E   F I E L D S                          //
+//							Q U A K E	F I E L D S							 //
 ///////////////////////////////////////////////////////////////////////////////
 
 noref .float  light_lev;
@@ -37,7 +37,7 @@ noref .string wad;
 //
 .string map;
 .float	worldtype;			// 0=medieval 1=metal 2=base
-.float  style;
+.float	style;
 .float	count;				// for counting triggers
 .string killtarget;
 .entity oldenemy;			// mad at this player before taking damage
@@ -67,7 +67,7 @@ noref .string wad;
 
 .float	fallspeed;			// Player fall speed from previous frame
 .float	deathtype;			// keeps track of how the player died
-.float  newweapon;			// weapon selected to change to after firing current
+.float	newweapon;			// weapon selected to change to after firing current
 
 //
 // Additional client attributes
@@ -88,7 +88,7 @@ noref .string wad;
 .float	suit_finished;
 .float	quad_finished;
 .float	teaminfo_update;	//timer for teaminfo resends
-.float	topcolor, bottomcolor;  // for saving color info on disconnects
+.float	topcolor, bottomcolor;	// for saving color info on disconnects
 
 //
 // items
@@ -125,13 +125,13 @@ noref .string wad;
 //
 
 .float	dmg;					// damage done by door when hit
-	
+
 //
 // misc
 //
 
 .float	cnt;					// misc flag
-	
+
 //
 // subs
 //
@@ -157,12 +157,12 @@ noref .string wad;
 .float	channel;
 
 ///////////////////////////////////////////////////////////////////////////////
-//                          G M A P N   F I E L D S                          //
+//							G M A P N	F I E L D S							 //
 ///////////////////////////////////////////////////////////////////////////////
 
-.float  latency;
+.float	latency;
 .float	ready;
-.float	menustate; // introduction text before showing the menu
+.float viewingrules;	//timer when the menu should next be resent
 .float	vote_rpickup;
 
 // String field to hold whatever
@@ -171,11 +171,11 @@ noref .string wad;
 .float	vote;
 enum
 {
-	VOTE_NULL,    // no vote yet
+	VOTE_NULL,	  // no vote yet
 	VOTE_ABSTAIN, // don't care
-	VOTE_YES,     // sounds good
-	VOTE_NO,      // no thanks
-	VOTE_TOTAL    // for reference
+	VOTE_YES,	  // sounds good
+	VOTE_NO,	  // no thanks
+	VOTE_TOTAL	  // for reference
 };
 
 // Selected spawn with spawn_mode 2
@@ -223,11 +223,11 @@ string wnames[] = {"axe", "sg", "ssg", "ng", "sng", "gl", "rl", "lg", "rg", "cg"
 .float stats_sent[wnames.length];	//used as a cache to avoid spamming them (//wps foo is resent if it doesn't match the total)
 
 // Efficiency
-.float  stats_kills;	  // Number of enemies killed
-.float  stats_deaths;	  // Number of times this player died
+.float	stats_kills;	  // Number of enemies killed
+.float	stats_deaths;	  // Number of times this player died
 
-.float  stats_life_kills;
-.float  stats_life_deaths;
+.float	stats_life_kills;
+.float	stats_life_deaths;
 
 // Midair
 enum
@@ -243,8 +243,8 @@ string mnames[] = {"midair", "silver", "gold", "diamond"};
 
 .float	is_fully_connected;
 
-.float	connectedtime;    // the time the player connected. may be negative if they joined on the previous map.
-.float	challengertime;   // the player with the lowest value here will be selected for the next duel challenger.
+.float	connectedtime;	  // the time the player connected. may be negative if they joined on the previous map.
+.float	challengertime;	  // the player with the lowest value here will be selected for the next duel challenger.
 
 .entity thawplayer;	//the player that we're currently trying to thaw, or the control point that we're trying to capture.
 .float	thawtime;	//the timestamp that the thawed player will thaw at.
