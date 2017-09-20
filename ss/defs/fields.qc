@@ -162,6 +162,7 @@ noref .string wad;
 
 .float	latency;
 .float	ready;
+.float rulesel;	//main option on the menu
 .float viewingrules;	//timer when the menu should next be resent
 .float	vote_rpickup;
 

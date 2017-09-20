@@ -1,25 +1,25 @@
 /*
-    gmapn_usercmd.qc
+	gmapn_usercmd.qc
 
-    Copyright (C) 2007 Mark Olsen
+	Copyright (C) 2007 Mark Olsen
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation; either version 2
-    of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to:
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
-        Free Software Foundation, Inc.
-        59 Temple Place - Suite 330
-        Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA	02111-1307, USA
 
 */
 
@@ -40,12 +40,12 @@ vector VelocityForDamage(float dm)
 
 	if (dm > -50)
 	{
-	//      dprint ("level 1\n");
+	//		dprint ("level 1\n");
 		v = v * 0.7;
 	}
 	else if (dm > -200)
 	{
-	//      dprint ("level 3\n");
+	//		dprint ("level 3\n");
 		v = v * 2;
 	}
 	else
@@ -83,8 +83,12 @@ void cmd_ready()
 	float count_red, count_blue, count_other;
 
 	playersneeded = 0;
-	if (gmapn_serverstate == gmapn_serverstate_prewar || gmapn_serverstate == gmapn_serverstate_forcestart)
+	switch (gmapn_serverstate)
 	{
+	case gmapn_serverstate_prewar:
+	case gmapn_serverstate_forcestart:
+	case gmapn_serverstate_lockready:
+
 		if (cvar("teamplay"))
 		{
 			if (gmapn_gamemode == GM_COOP)
@@ -102,7 +106,7 @@ void cmd_ready()
 		count_red = 0;
 		count_blue = 0;
 		count_other = 0;
-		
+
 		player = find(world, classname, "player");
 		while(player)
 		{
@@ -144,11 +148,11 @@ void cmd_ready()
 		case GM_CTF:
 		case GM_HIDENSEEK:
 			if (count_red+count_blue+count_other > getkey(maxteamsize)*2)
-				sprint(self, PRINT_HIGH, _("There are too many people to begin a game.\n"));	
+				sprint(self, PRINT_HIGH, _("There are too many people to begin a game.\n"));
 			else if (count_red > getkey(maxteamsize))
 				sprint(self, PRINT_HIGH, sprintf(_("There are too many people on %s team.\n"), gmapn_team_red));
 			else if (count_blue > getkey(maxteamsize))
-				sprint(self, PRINT_HIGH, sprintf(_("There are too many people on %s team.\n"), gmapn_team_blue));	
+				sprint(self, PRINT_HIGH, sprintf(_("There are too many people on %s team.\n"), gmapn_team_blue));
 			else
 			{
 				break;
@@ -205,15 +209,19 @@ void cmd_ready()
 			}
 			gmapn_game_beginpregamecountdown(getkey(prewar_countdown));
 		}
-	}
-	else if (gmapn_serverstate == gmapn_serverstate_playing)
-	{
+
+		break;
+
+	case gmapn_serverstate_playing:
+
 		if (self.ready == 0)
 		{
 			bprint(PRINT_HIGH, self.netname, _(" withdraws his vote for stopping the match\n"));
 
 			self.ready = 1;
 		}
+
+		break;
 	}
 };
 
@@ -222,8 +230,12 @@ void cmd_break()
 	entity player;
 	float playersready;
 
-	if (gmapn_serverstate == gmapn_serverstate_prewar || gmapn_serverstate == gmapn_serverstate_forcestart)
+	switch (gmapn_serverstate)
 	{
+	case gmapn_serverstate_prewar:
+	case gmapn_serverstate_forcestart:
+	case gmapn_serverstate_lockready:
+
 		if (self.ready)
 		{
 			bprint(PRINT_HIGH, self.netname, _(" is not ready\n"));
@@ -232,9 +244,11 @@ void cmd_break()
 		{
 			sprint(self, PRINT_HIGH, _("You're not ready yet, cannot break\n"));
 		}
-	}
-	else if (gmapn_serverstate == gmapn_serverstate_countdown)
-	{
+
+		break;
+
+	case gmapn_serverstate_countdown:
+
 		if (getkey(game_lockrules) > 0)
 		{
 			sprintln(self, PRINT_HIGH, _("Cannot break, the mode is forced."));
@@ -244,9 +258,11 @@ void cmd_break()
 		self.ready = 0;
 
 		gmapn_game_endpregamecountdown();
-	}
-	else if (gmapn_serverstate == gmapn_serverstate_playing)
-	{
+
+		break;
+
+	case gmapn_serverstate_playing:
+
 		if (self.ready)
 		{
 			playersready = 0;
@@ -278,10 +294,12 @@ void cmd_break()
 				serverflags &= ~SV_MATCHLESS;	//make sure the menus come back
 			}
 		}
+
+		break;
 	}
 
 	self.ready = 0;
-	
+
 	if (gmapn_serverstate == gmapn_serverstate_prewar)
 	{	//if they used the menu to switch team, or the game forced their team then reset them back to their preferred team.
 		self.teamname = self.userteam;
@@ -531,7 +549,7 @@ void cmd_setcontrol()
 		remove(pointer);
 		return;
 	}
-	sprintln(self, PRINT_HIGH, "No spot exists, place with /cmd placespot");	
+	sprintln(self, PRINT_HIGH, "No spot exists, place with /cmd placespot");
 }
 
 void cmd_writeconfig()
@@ -698,10 +716,10 @@ float gmapn_handle_usercmd(float argc)
 		else
 		{
 			float newmode = gmapn_gamemodefromstring(argv(1));
-			
+
 			if (newmode < 0 || newmode >= GM_MODES)
 				return 1;
-				
+
 			if (gmapn_serverstate == gmapn_serverstate_prewar)
 			{
 				gmapn_apply_gamemode(newmode);
@@ -727,7 +745,7 @@ float gmapn_handle_usercmd(float argc)
 
 		cmd_kick(argv(1));
 		return 1;
-		
+
 	}
 	if (cmd == "ban")
 	{
@@ -739,7 +757,7 @@ float gmapn_handle_usercmd(float argc)
 
 		cmd_ban(argv(1));
 		return 1;
-		
+
 	}
 	if (cmd == "mute")
 	{
@@ -751,7 +769,7 @@ float gmapn_handle_usercmd(float argc)
 
 		cmd_mute(argv(1));
 		return 1;
-		
+
 	}
 	if (cmd == "rulemaker")
 	{
@@ -780,7 +798,7 @@ float gmapn_handle_usercmd(float argc)
 					if (cvar("deathmatch") != dmm)
 					{
 						if (dmm == DMM_INSTAGIB)
-							bprint(PRINT_HIGH, self.netname, " changes deathmatch to instagib.\n");	
+							bprint(PRINT_HIGH, self.netname, " changes deathmatch to instagib.\n");
 						else if (dmm == DMM_MIDAIR)
 							bprint(PRINT_HIGH, self.netname, " changes deathmatch to midair.\n");
 						else
@@ -790,7 +808,7 @@ float gmapn_handle_usercmd(float argc)
 							cvar_set("coop", "0");
 						else
 							cvar_set("coop", "1");
-							
+
 						gmapn_powerups_setitems();
 					}
 					else
@@ -864,14 +882,14 @@ float gmapn_handle_usercmd(float argc)
 			if (cmd == "1on1")
 			   localcmd(ftos(gmapn_gametype_1on1));
 			else if (cmd == "2on2")
-			     localcmd(ftos(gmapn_gametype_2on2));
+				 localcmd(ftos(gmapn_gametype_2on2));
 			else if (cmd == "3on3")
-			     localcmd(ftos(gmapn_gametype_3on3));
+				 localcmd(ftos(gmapn_gametype_3on3));
 			else
 			   localcmd(ftos(gmapn_gametype_4on4));
 
 			localcmd("\n");
-			
+
 			gmapn_config_load();
 
 			bprint(PRINT_HIGH, self.netname, " activated ", cmd, " config.\n");
@@ -888,7 +906,7 @@ float gmapn_handle_usercmd(float argc)
 	{
 		if (argc != 2)
 		{
-			sprint(self, PRINT_HIGH, "Usage: /cmd time <time limit in minutes>\n"); 
+			sprint(self, PRINT_HIGH, "Usage: /cmd time <time limit in minutes>\n");
 		}
 		else
 		{
@@ -970,4 +988,3 @@ float gmapn_handle_usercmd(float argc)
 
 	return 0;
 };
-

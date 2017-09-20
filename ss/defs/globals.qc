@@ -72,6 +72,7 @@ float gmapn_serverstate;
    float gmapn_serverstate_intermission = 3;
    float gmapn_serverstate_forcestart = 4;
    float gmapn_serverstate_breather = 5;
+   float gmapn_serverstate_lockready = 6;
 
 float gmapn_recording;
 
@@ -106,9 +107,6 @@ entity evoter;			  // set a think function that executes if a vote passes
 
 string gmapn_demoname;
 
-float gmapn_prestate; // before a game starts
-float gmapn_prestate_prewar = 0; // just a menu with prewar
-float gmapn_prestate_lockready = 1; // when there are enough players to start
 /*
 var float default_game_loadout = 0;
 var float default_game_botskill = 0;

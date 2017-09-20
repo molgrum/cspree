@@ -26,7 +26,6 @@ string gmapn_menu_maplist(float keys);
 
 .float oldmkeys;
 .float subsel; // current submenu or main menu
-.float rulesel;	//main option on the menu
 .float mapsel;	//map or election
 .float modsel;	//mod submenu
 .float srvsel;	//advanced submenu
@@ -1519,7 +1518,7 @@ void gmapn_menu_any(float keys)
 		m = strcat(prefix, m, gmapn_menu_matchlist(keys));
 	else if (self.mapquery != 0) // -1 for URI GET
 		m = strcat(prefix, m, gmapn_menu_maplist(keys));
-	else if (gmapn_prestate == gmapn_prestate_lockready && self.movetime < time - 3)
+	else if (gmapn_serverstate == gmapn_serverstate_lockready)
 	{
 		m = flash("There are enough players to start\n\n");
 		m = strcat(prefix, m, gmapn_menu_waitingfor((time*2) & 1), "\n\n");
@@ -1637,9 +1636,16 @@ float gmapn_display_rules()
 		return FALSE;
 	}
 
+	if (gmapn_serverstate == gmapn_serverstate_lockready)
+	{
+		self.maxspeed = 0;
+		self.rulesel = 0;
+	}
+
 	if (self.maxspeed && self.movement || self.button2)
 	{
-		self.movetime = time + 3;
+		if (gmapn_serverstate < gmapn_serverstate_playing)
+			self.movetime = time + 3;
 	}
 
 	newkeys = 0;
@@ -1660,7 +1666,7 @@ float gmapn_display_rules()
 
 	keys = newkeys & ~self.oldmkeys;	//changed keys
 
-	if (newkeys & KEY_JUMP)
+	if (newkeys & KEY_JUMP && gmapn_serverstate < gmapn_serverstate_playing)
 	{
 		if (self.movetime < time)
 			self.viewingrules = time;

@@ -2608,7 +2608,14 @@ void ClientDisconnect()
 		gmapn_monarchofthemound = world;
 		cvar_set("teamplay", "0");	//need to clear teamplay to rework clientside enemyskin forcing so everyone appears as a valid target.
 	}
-	gmapn_prestate = gmapn_prestate_prewar; // someone left so a game cannot start
+
+	gmapn_serverstate = gmapn_serverstate_prewar; // someone left so a game cannot start
+	entity p = world;
+	while ((p = find(p, classname, "player")))
+	{
+		p.maxspeed = 320;
+		p.rulesel = 0;
+	}
 
 	/* Stop match if no players are left */
 

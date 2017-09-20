@@ -722,14 +722,10 @@ void gmapn_rules_cliententered()
 	while ((p = find(p, classname, "player")))
 		pcount++;
 
-	int playersneeded = getkey(minplayers);
-	if (gmapn_gamemodeneedsteam(gmapn_gamemode) == TRUE)
-	{
-		playersneeded = getkey(minteamsize)*2;
-	}
+	int playersneeded = (gmapn_gamemodeneedsteam(gmapn_gamemode) ? getkey(minteamsize)*2 : getkey(minplayers));
 
 	if (pcount >= playersneeded)
-		gmapn_prestate = gmapn_prestate_lockready;
+		gmapn_serverstate = gmapn_serverstate_lockready;
 
 	client_spawn(FALSE);
 }
