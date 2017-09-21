@@ -1048,9 +1048,9 @@ void hazard_discharge()
 void hazard_missile_touch()
 {
 	entity attacker;
-	float  damage;
+	float  damage = 0;
 	float  f;
-	float  push;
+	float  push = 0.0f;
 
 	attacker = self.owner;
 
@@ -1059,23 +1059,31 @@ void hazard_missile_touch()
 		return;
 	}
 
-	if (other.takedamage == DAMAGE_NOT || self.classname == "rocket")
+	if (other.takedamage == DAMAGE_NOT)
 	{
 		WriteByte(MSG_MULTICAST, SVC_TEMPENTITY);
-		if (self.classname == "spike") {
+
+		switch (self.classname)
+		{
+		case "spike":
 			WriteByte(MSG_MULTICAST, TE_SPIKE);
-		}
-		else if (self.classname == "superspike") {
+			break;
+
+		case "superspike":
 			WriteByte(MSG_MULTICAST, TE_SUPERSPIKE);
-		}
-		else if (self.classname == "wizspike") {
+			break;
+
+		case "wizspike":
 			WriteByte(MSG_MULTICAST, TE_WIZSPIKE);
-		}
-		else if (self.classname == "knightspike") {
+			break;
+
+		case "knightspike":
 			WriteByte(MSG_MULTICAST, TE_KNIGHTSPIKE);
-		}
-		else if (self.classname == "rocket") {
+			break;
+
+		case "rocket":
 			WriteByte(MSG_MULTICAST, TE_EXPLOSION);
+			break;
 		}
 		WriteCoord(MSG_MULTICAST, self.origin_x);
 		WriteCoord(MSG_MULTICAST, self.origin_y);
@@ -1083,52 +1091,59 @@ void hazard_missile_touch()
 		multicast(self.origin, MULTICAST_PHS);
 	}
 
-	if (self.classname == "spike") {
+	switch (self.classname)
+	{
+	case "spike":
 		if (other != world) {
 			other.deathtype = DT_NAIL;
 		}
 		damage = getkey(spike_damage);
 		push = getkey(spike_push);
-	}
-	else if (self.classname == "superspike") {
+		break;
+
+	case "superspike":
 		if (other != world) {
 			other.deathtype = DT_SUPER_NAIL;
 		}
 		damage = getkey(spike2_damage);
 		push = getkey(spike2_push);
-	}
-	else if (self.classname == "rocket") {
+		break;
+
+	case "rocket":
 		if (other != world) {
 			other.deathtype = DT_ROCKET;
 		}
 		damage = getkey(rocket_damage);
 		push = getkey(rocket_push);
-	}
-	else if (self.classname == "wizspike") {
+		break;
+
+	case "wizspike":
 		if (other != world) {
 			other.deathtype = DT_MONSTER;
 		}
 		damage = 9;
 		push = 1;
-	}
-	else if (self.classname == "knightspike") {
+		break;
+
+	case "knightspike":
 		if (other != world) {
 			other.deathtype = DT_MONSTER;
 		}
 		damage = 9;
 		push = 1;
-	}
-	else {
+		break;
+
+	default:
 		// unknown missile type, use some default values
 		other.deathtype = DT_NULL;
 		damage = 0;
 		push = 0;
+		break;
 	}
 
 	f = gmapn_impact(other, self, damage, push);
 
 	if (self.classname == "rocket") {
-		//damage += 10; // modifier for original QW behaviour
 		f += gmapn_explosion(self, damage, push, other, DT_ROCKET);
 	}
 
@@ -1136,7 +1151,20 @@ void hazard_missile_touch()
 	{
 		// Save stats during match
 
-		attacker.stats_hit[W_SNG] += f;
+		switch (self.classname)
+		{
+		case "spike":
+			attacker.stats_hit[W_NG] =+ f;
+			break;
+
+		case "superspike":
+			attacker.stats_hit[W_SNG] += f;
+			break;
+
+		case "rocket":
+			attacker.stats_hit[W_RL] += f;
+			break;
+		}
 	}
 
 	remove(self);
@@ -1166,17 +1194,22 @@ void hazard_missile(vector org, vector dir, float vel, string type)
 
 	setorigin(newmis, org);
 
-	if (newmis.classname == "spike") {
+	switch (newmis.classname)
+	{
+	case "spike":
 		setmodel(newmis, "progs/spike.mdl");
 		gmapn_sound(self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM, 0);
-	}
-	else if (newmis.classname == "superspike") {
+		break;
+
+	case "superspike":
 		setmodel(newmis, "progs/s_spike.mdl");
 		gmapn_sound(self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM, 0);
-	}
-	else if (newmis.classname == "rocket") {
+		break;
+
+	case "rocket":
 		setmodel(newmis, "progs/missile.mdl");
 		gmapn_sound(self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM, 0);
+		break;
 	}
 
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);
