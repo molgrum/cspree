@@ -1095,6 +1095,7 @@ void gmapn_game_start()
 		bprint(PRINT_HIGH, "WARNING: no timelimit set\n");
 
 	self = oldself;
+	self.matchtime = time;
 };
 
 void gmapn_forcestart_check()

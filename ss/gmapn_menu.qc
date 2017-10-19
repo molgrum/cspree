@@ -1629,8 +1629,8 @@ float gmapn_display_rules()
 	if (time < 1)	//can do weird things on loading screens
 		return TRUE;
 
-	// display a MOTD when connected
-	if (self.connectedtime >= time - 8)
+	// display a help text when match is started
+	if (self.matchtime > max(0, time - 12))
 	{
 		gmapn_display_welcome();
 		return FALSE;

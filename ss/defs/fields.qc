@@ -246,6 +246,7 @@ string mnames[] = {"midair", "silver", "gold", "diamond"};
 
 .float	connectedtime;	  // the time the player connected. may be negative if they joined on the previous map.
 .float	challengertime;	  // the player with the lowest value here will be selected for the next duel challenger.
+.float	matchtime;		  // the time of the match start
 
 .entity thawplayer;	//the player that we're currently trying to thaw, or the control point that we're trying to capture.
 .float	thawtime;	//the timestamp that the thawed player will thaw at.

@@ -811,6 +811,8 @@ void gmapn_rules_handleconnect()
 
 		sprint(self, PRINT_HIGH, "Game is already in progress\n");
 	}
+
+	self.matchtime = time;
 };
 
 #endif
