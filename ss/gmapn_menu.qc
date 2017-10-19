@@ -796,7 +796,7 @@ static string menu_modoptions(float op)
 				self.modsel = rules_mod.length - 1;
 				break;
 			}
-		} while(!rules_mod[self.modsel](0) || (!gmapn_isgamemaster(self) && !rules_mod[self.modsel](4)));
+		} while(!rules_mod[self.modsel](4));
 	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";
@@ -823,7 +823,7 @@ static string menu_srvoptions(float op)
 				self.srvsel = rules_srv.length - 1;
 				break;
 			}
-		} while(!rules_srv[self.srvsel](0) || (!gmapn_isgamemaster(self) && !rules_srv[self.srvsel](4)));
+		} while(!rules_srv[self.srvsel](4));
 	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";
