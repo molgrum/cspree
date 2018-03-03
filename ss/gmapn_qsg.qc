@@ -60,8 +60,21 @@ void SV_ParseClientCommand(string str)
 	{
 		if (argv(0) == "say")
 		{
-			numargs = tokenize(argv(1));
-			if (argv(0) == ".menu" && argv(1) == "bind")
+			string s1, s2;
+
+			if (numargs < 3)
+			{
+				numargs = tokenize(argv(1));
+				s1 = argv(0);
+				s2 = argv(1);
+			}
+			else
+			{
+				s1 = argv(1);
+				s2 = argv(2);
+			}
+			dprint(s1, " ", s2, "\n");
+			if (s1 == ".menu" && s2 == "bind")
 			{
 				stuffcmd(self, "bind enter cmd menu show\n");
 				return;

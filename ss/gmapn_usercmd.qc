@@ -580,8 +580,8 @@ void cmd_writeconfig()
 
 void cmd_menushow()
 {
-	self.movetime = -1;
-	self.menutime = -1;
+	self.menutime = time;
+	self.movetime = time;
 }
 
 float gmapn_handle_setinfo(string key, string value)

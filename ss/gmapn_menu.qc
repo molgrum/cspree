@@ -1373,6 +1373,11 @@ void gmapn_menu_any(float keys)
 			p.viewingrules = time;
 	}
 
+	if (keys & (KEY_RIGHT|KEY_LEFT|KEY_UP|KEY_DOWN))
+	{
+		self.menutime = time;
+	}
+
 	string host = getkey(info_hostname), city = getkey(info_city), region = getkey(info_state), nation = getkey(info_country);
 
 	string m = "";
@@ -1555,7 +1560,7 @@ float gmapn_display_rules()
 			self.movetime = time + 3;
 	}
 
-	if (self.menutime > time)
+	if (self.menutime > time || self.menutime < time - 3)
 	{
 		self.menutime = time + 3;
 		self.movetime = time + 3;
@@ -1599,6 +1604,14 @@ float gmapn_display_rules()
 
 	self.oldmkeys = newkeys;
 
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
+	{
+		if (self.menutime > time)
+		{
+			centerprint(self, sprintf("Type %s to bind ENTER\n\nPress ENTER to show the menu", redify(".menu bind")));
+		}
+	}
+
 	if (gmapn_serverstate == gmapn_serverstate_playing)
 	{
 		if (gmapn_gamemode == GM_FREEZETAG)
@@ -1632,14 +1645,6 @@ float gmapn_display_rules()
 		// breathers prints the time until the next round starts
 
 		return FALSE;
-	}
-
-	if (gmapn_serverstate == gmapn_serverstate_prewar)
-	{
-		if (self.menutime > time)
-		{
-			centerprint(self, sprintf("Type %s to bind ENTER\n\nPress ENTER to show the menu", redify(".menu bind")));
-		}
 	}
 
 	//don't spam centerprints if there's no need.
