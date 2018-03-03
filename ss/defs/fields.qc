@@ -166,6 +166,10 @@ noref .string wad;
 .float viewingrules;	//timer when the menu should next be resent
 .float	vote_rpickup;
 
+.float csqcactive;	//our csprogs is running on this client. yay.
+.float movetime;	//the time until the menu remains mostly hidden.
+.float menutime;	//for hiding the menu completely
+
 // String field to hold whatever
 .string str;
 

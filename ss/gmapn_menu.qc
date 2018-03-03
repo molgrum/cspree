@@ -32,10 +32,6 @@ string gmapn_menu_maplist(float keys);
 .float maps[11]; // list of maps displayed. randomizedish per player. FIXME: should probably just make this a string array, or tokens string.
 string gmapn_menuarg;
 
-.float csqcactive;	//our csprogs is running on this client. yay.
-.float movetime;	//the time until the menu remains mostly hidden.
-.float menutime;	//for hiding the menu completely
-
 entity gmapn_gamemaster;	//this is the player who is currently nominated to be the leader.
 entity gmapn_monarchofthemound;	//this player is currently the king, the only player that rewards frags.
 
@@ -106,73 +102,6 @@ static string menu_readyteam(float op)
 		return ".";	//anything not null
 	return 0;
 };
-
-/*
-static string menu_ready(float op)
-{
-	if (self.rulesel == -1)	//ready menu does not apply if game_lockmode is set.
-		return 0;
-	if (op == MENU_TITLE)
-		return "Ready";
-	if (op == MENU_VALUE)
-	{
-		if (self.ready)
-			return "You are ready!";
-		if (gmapn_gamemodeneedsteam())
-		{
-			string t = self.teamname;
-			if (t != "red" && t != "blue")
-				return "Please pick a team";
-		}
-		return "NOT ready";
-	}
-	if (op == MENU_LEFT)
-		cmd_break();
-	else if (op == MENU_RIGHT)
-		cmd_ready();
-	else if (op == MENU_ISNONADMIN)
-		return ".";	//anything not null
-	else if (op == MENU_CLIENTCMD)
-	{
-		if (stof(gmapn_menuarg))
-			cmd_ready();
-		else
-			cmd_break();
-	}
-	return 0;
-};
-
-static string menu_team(float op)
-{
-	if (!cvar("teamplay"))
-		return 0;
-	if (op == MENU_TITLE)
-		return "Team";
-	if (op == MENU_VALUE)
-	{
-		string t = self.teamname;
-		if (t == "")
-			return "<NO TEAM>";
-		else if (((time*4) & 1) && t != "red" && t != "blue")
-			return redify(t);
-		return t;
-	}
-	if (op == MENU_LEFT && !self.ready)
-		gmapn_setteamandcolour(self, "red", 4);
-	else if (op == MENU_RIGHT && !self.ready)
-		gmapn_setteamandcolour(self, "blue", 13);
-	else if (op == MENU_ISNONADMIN)
-		return ".";	//anything not null
-	else if (op == MENU_CLIENTCMD)
-	{
-		if (gmapn_menuarg == "red")
-			gmapn_setteamandcolour(self, "red", 4);
-		else if (gmapn_menuarg == "blue")
-			gmapn_setteamandcolour(self, "blue", 13);
-	}
-	return 0;
-};
-*/
 
 void menu_mapvote_randomize(int first)
 {
@@ -352,19 +281,6 @@ static string menu_dmm(float op)
 	else if (op == MENU_VALUE)
 	{
 		return dmmname[cvar("deathmatch")];
-		/*
-		switch(cvar("deathmatch"))
-		{
-		case 0:		return "Coop";
-		default:
-		case 1:		return "Normal";
-		case 2:		return "Unplayed"; // :D
-		case 3:		return "Weaponstay";
-		case 4:		return "Stacked";
-		case 5:		return "Midair";
-		case 6:		return "Instagib";
-		}
-		*/
 	}
 	else if (op == MENU_LEFT)
 	{
@@ -534,15 +450,6 @@ static string menu_botskill(float op)
 	}
 	else if (op == MENU_VALUE)
 	{
-		/* switch(val-1) */
-		/* { */
-		/* case -1: return "No bots"; */
-		/* case 0: return "Clay Pidgin"; */
-		/* case 1: return "Joke"; */
-		/* case 2: return "Noobs"; */
-		/* case 3: return "Mobile Victims"; */
-		/* default: return "Glitch"; */
-		/* } */
 		return botskillname[val];
 	}
 	else if (op == MENU_LEFT)
@@ -1648,6 +1555,12 @@ float gmapn_display_rules()
 			self.movetime = time + 3;
 	}
 
+	if (self.menutime > time)
+	{
+		self.menutime = time + 3;
+		self.movetime = time + 3;
+	}
+
 	newkeys = 0;
 
 	if (self.movement_x > 100*frametime)
@@ -1719,6 +1632,14 @@ float gmapn_display_rules()
 		// breathers prints the time until the next round starts
 
 		return FALSE;
+	}
+
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
+	{
+		if (self.menutime > time)
+		{
+			centerprint(self, sprintf("Type %s to bind ENTER\n\nPress ENTER to show the menu", redify(".menu bind")));
+		}
 	}
 
 	//don't spam centerprints if there's no need.

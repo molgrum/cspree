@@ -578,6 +578,12 @@ void cmd_writeconfig()
 	sprintln(self, PRINT_HIGH, "Wrote config.");
 }
 
+void cmd_menushow()
+{
+	self.movetime = -1;
+	self.menutime = -1;
+}
+
 float gmapn_handle_setinfo(string key, string value)
 {
 	if (key == "team")
@@ -872,36 +878,6 @@ float gmapn_handle_usercmd(float argc)
 	{	SV_ParseClientCommand("gamemode tdm"); SV_ParseClientCommand("teamsize 3"); return 1; }
 	if (cmd == "4on4")
 	{	SV_ParseClientCommand("gamemode tdm"); SV_ParseClientCommand("teamsize 4"); return 1; }
-/*
-	if (cmd == "ffa" || cmd == "1on1" || cmd == "2on2" || cmd == "3on3" || cmd == "4on4")
-	{
-		if (gmapn_serverstate == gmapn_serverstate_prewar)
-		{
-			localcmd("localinfo gmapn_gametype ");
-
-			if (cmd == "1on1")
-			   localcmd(ftos(gmapn_gametype_1on1));
-			else if (cmd == "2on2")
-				 localcmd(ftos(gmapn_gametype_2on2));
-			else if (cmd == "3on3")
-				 localcmd(ftos(gmapn_gametype_3on3));
-			else
-			   localcmd(ftos(gmapn_gametype_4on4));
-
-			localcmd("\n");
-
-			gmapn_config_load();
-
-			bprint(PRINT_HIGH, self.netname, " activated ", cmd, " config.\n");
-		}
-		else
-		{
-			sprint(self, PRINT_HIGH, "Cannot change gametype while game is in progress.\n");
-		}
-
-		return 1;
-	}
-*/
 	if (cmd == "time")
 	{
 		if (argc != 2)
@@ -985,6 +961,18 @@ float gmapn_handle_usercmd(float argc)
 		cmd_writeconfig();
 		return 1;
 	}
-
+	if (cmd == "menu")
+	{
+		if (argc < 2)
+		{
+			sprint(self, PRINT_HIGH, _("Usage: menu show\n"));
+			return 1;
+		}
+		if (argv(1) == "show")
+		{
+			cmd_menushow();
+			return 1;
+		}
+	}
 	return 0;
 };
