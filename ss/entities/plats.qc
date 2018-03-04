@@ -181,7 +181,7 @@ void plat_done()
 	self.velocity_z = 0;
 
 	// Play sounds with unmotivated additive channels.
-	gmapn_sound(self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0);
+	gmapn_sound(self, CHAN_VOICE, self.noise1, 1, ATTN_NORM, 0);
 
 	// Reached the top, it's possible that this is only a temporary
 	// point for the lift.

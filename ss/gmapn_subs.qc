@@ -179,7 +179,7 @@ void gmapn_sound(entity e, float channel, string file, float volume, float attn,
 	if (getkey(reliablesounds))
 		sound(e, channel, file, volume, attn, 100, soundflags|SOUNDFLAG_RELIABLE, 0);
 	else
-		sound(e, channel, file, volume, attn, 100, soundflags|SOUNDFLAG_RELIABLE, 0);
+		sound(e, channel, file, volume, attn, 100, soundflags, 0);
 }
 
 float entities_touching(entity e1, entity e2)
