@@ -725,7 +725,9 @@ void gmapn_rules_cliententered()
 	int playersneeded = (gmapn_gamemodeneedsteam(gmapn_gamemode) ? getkey(minteamsize)*2 : getkey(minplayers));
 
 	if (pcount >= playersneeded)
-		gmapn_serverstate = gmapn_serverstate_lockready;
+		if (gmapn_serverstate == gmapn_serverstate_prewar)
+			if (!(serverflags & SV_MATCHLESS))
+				gmapn_serverstate = gmapn_serverstate_lockready;
 
 	client_spawn(FALSE);
 }
