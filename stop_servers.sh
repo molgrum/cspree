@@ -1,45 +1,40 @@
 #!/bin/bash
 
-for f in ./run/port*.sh; do
-	if [ -f $f ] && [[ $f =~ \./run/port([0-9]+)\.sh ]]; then
-		port=${BASH_REMATCH[1]}
-		timeout=false
-		printf "* Stopping ftesv (port %s)..." $port
-		pid=`ps ax | grep -v grep | grep "/bin/sh ./run/port$port.sh" | awk '{print $1}'`
-		if [ "$pid" != "" ]; then
-			count=0
-			while kill $pid 2> /dev/null; do
-				if [ $count -eq 10 ]; then
-					timeout=true
-					break
-				fi
-			sleep 1
-			let count=count+1
-			done
-		fi
-		pid=`ps ax | grep -v grep | grep "fteqw.sv -game cspree -port $port +set port $port" | awk '{print $1}'`
-		if [ "$pid" != "" ]; then
-			count=0
-			while kill $pid 2> /dev/null; do
-				if [ $count -eq 10 ]; then
-					timeout=true
-					break
-				fi
-				sleep 1
-				let count=count+1
-			done
-		fi
-		if [ timeout == true ]; then
-			echo "[TIMED OUT]"
-		else
-			echo "[OK]"
-		fi
-		let port=port+1
-	fi
-done
+SERVER_BINARY_MATCH="fteqw.sv"
+GREP="ps -ef | grep -v 'grep' | grep '${SERVER_BINARY_MATCH}' | awk '{print \$1}' | xargs echo"
+GREP="pgrep ${SERVER_BINARY_MATCH}"
 
-# Kill QTV
-pid=`ps ax | grep -v grep | grep "/bin/sh ./run/qtv.*.sh" | awk '{print $1}'`
-if [ "$pid" != "" ]; then kill -9 $pid; fi;
-pid=`ps ax | grep -v grep | grep "qtv.bin +exec qtv.cfg" | awk '{print $1}'`
-if [ "$pid" != "" ]; then kill -9 $pid; fi;
+stop_servers () {
+	PIDS=`$GREP`
+	for PID in $PIDS; do
+		printf "Stopping PID %s.\n" $PID
+		nohup kill $PID > /dev/null 2>&1 &
+	done
+}
+
+if [ -z "`$GREP`" ]; then
+	echo "All servers already stopped."
+else
+	echo "Stopping servers..."
+	stop_servers
+	printf "Waiting... "
+	TIMEOUT=10
+	while [ $TIMEOUT -gt 0 ]; do
+		PIDS=`$GREP`
+		if [ -z "`$GREP`" ]; then
+			echo "[DONE]"
+			TIMEOUT=-1
+		else
+			stop_servers
+			TIMEOUT=`expr $TIMEOUT - 1`
+			sleep 1
+		fi
+	done
+	if [ $TIMEOUT -eq 0 ]; then
+		echo "[TIMED OUT]"
+	fi
+fi
+
+echo "Cleaning up..."
+pkill -f -9 'sh .*/start_servers.sh'
+pkill -f -9 'sh .*/run_one_port.sh'
