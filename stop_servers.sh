@@ -17,12 +17,11 @@ if [ -z "`$GREP`" ]; then
 else
 	echo "Stopping servers..."
 	stop_servers
-	printf "Waiting... "
 	TIMEOUT=10
 	while [ $TIMEOUT -gt 0 ]; do
 		PIDS=`$GREP`
 		if [ -z "`$GREP`" ]; then
-			echo "[DONE]"
+			echo "Done."
 			TIMEOUT=-1
 		else
 			stop_servers
@@ -31,7 +30,7 @@ else
 		fi
 	done
 	if [ $TIMEOUT -eq 0 ]; then
-		echo "[TIMED OUT]"
+		echo "Timed out."
 	fi
 fi
 
