@@ -142,7 +142,10 @@ void gmapn_mapvote_countvotes()
 	player = find(world, classname, "player");
 	while(player)
 	{
-		numplayers = numplayers + 1;
+		if (player.ishuman == TRUE)
+		{
+			numplayers = numplayers + 1;
+		}
 		player = find(player, classname, "player");
 	}
 
