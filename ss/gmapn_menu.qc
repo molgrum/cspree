@@ -1261,97 +1261,73 @@ string gmapn_menu_rules(float keys)
 	return m;
 }
 
-string gmapn_menu_settings()
+string gmapn_menu_addentry(string name, string value)
 {
-	string str, mid, modified, icon, tmp;
+	string ret;
+
+	ret = strcat(balancestrings(name, ":", value), "\n");
+	return ret;
+}
+
+string gmapn_menu_countdown()
+{
+	string str, mid, tmp;
 	int i, n;
-	float printmodified;
 
 	str = "";
 	mid = ":";
-	icon = chr2str(0x88);
-	printmodified = FALSE;
 
 	n = getkey(game_loadout);
 	for (i = 0; i < loadouts.length; i++)
 		if (n == loadouts[i].fl)
 			break;
 	tmp = (n ? sprintf("axe + sg + %s", loadouts[i].name) : "axe + sg");
-	modified = "";
-	if (getkey(game_loadout) != stof(infokey(world, "gmapn_game_loadout")))
+	if (getkey(game_loadout) && getkey(game_loadout) != stof(infokey(world, "gmapn_game_loadout")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Loadout", tmp));
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Loadout")), mid, tmp), "\n");
 
-	modified = "";
-	if (cvar("deathmatch") != stof(infokey(world, "gmapn_deathmatch")))
+	if (cvar("deathmatch") && cvar("deathmatch") != stof(infokey(world, "gmapn_deathmatch")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Deathmatch Mode", goldnmbr(dmmname[cvar("deathmatch")])));
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Deathmatch Mode")), mid, goldnmbr(dmmname[cvar("deathmatch")])), "\n");
 
-	modified = "";
-	if (cvar("timelimit") != stof(infokey(world, "gmapn_timelimit")))
+	if (cvar("timelimit") && cvar("timelimit") != stof(infokey(world, "gmapn_timelimit")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Timelimit", goldnmbr(ftos(cvar("timelimit")))));
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Timelimit")), mid, goldnmbr(ftos(cvar("timelimit")))), "\n");
 
-	modified = "";
-	if (getkey(powerups_enabled) != stof(infokey(world, "gmapn_powerups_enabled")))
+	if (getkey(powerups_enabled) && getkey(powerups_enabled) != stof(infokey(world, "gmapn_powerups_enabled")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Powerups", (getkey(powerups_enabled) ? "Enabled" : "Disabled")));
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Powerups")), mid, (getkey(powerups_enabled) ? "Enabled" : "Disabled")), "\n");
 
-	modified = "";
 	if (getkey(spawn_mode) != stof(infokey(world, "gmapn_spawn_mode")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Spawn Mode", (spawnname[getkey(spawn_mode)])));
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Spawn Mode")), mid, spawnname[getkey(spawn_mode)]), "\n");
 
-	modified = "";
-	if (getkey(game_botskill) != stof(infokey(world, "gmapn_game_botskill")))
+	if (getkey(game_botskill) && getkey(game_botskill) != stof(infokey(world, "gmapn_game_botskill")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Bot Difficulty", botskillname[getkey(game_botskill)]));
 	}
-	if (getkey(game_botskill) || modified != "")
-		str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Bot Difficulty")), mid, botskillname[getkey(game_botskill)]), "\n");
 
-	modified = "";
-	if (getkey(game_rounds) != stof(infokey(world, "gmapn_game_rounds")))
+	if (getkey(game_rounds) && getkey(game_rounds) != stof(infokey(world, "gmapn_game_rounds")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Rounds Per Game", ftos(getkey(game_rounds))));
 	}
-	if (getkey(game_rounds) || modified != "")
-		str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Rounds Per Game")), mid, ftos(getkey(game_rounds))), "\n");
 
-	modified = "";
-	if (cvar("sv_antilag") != stof(infokey(world, "gmapn_antilag")))
+	if (cvar("sv_antilag") && cvar("sv_antilag") != stof(infokey(world, "gmapn_antilag")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Lag Compensation", (cvar("sv_antilag") ? "On" : "Off")));
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Lag Compensation")), mid, (cvar("sv_antilag") ? "On" : "Off")), "\n");
 
-	modified = "";
-	if (cvar("sv_minping") != stof(infokey(world, "gmapn_minping")))
+	if (cvar("sv_minping") && cvar("sv_minping") != stof(infokey(world, "gmapn_minping")))
 	{
-		modified = icon;
-		printmodified = TRUE;
+		str = strcat(str, gmapn_menu_addentry("Min Ping", ftos(cvar("sv_minping"))));
 	}
-	str = strcat(str, balancestrings(sprintf("%s%s", modified, redify("Min Ping")), mid, ftos(cvar("sv_minping"))), "\n");
 
-	if (printmodified == TRUE)
+	if (str != "")
 	{
 		str = strcat(flash("\nSome modified settings are used\n\n"), str);
 	}
@@ -1406,7 +1382,7 @@ void gmapn_menu_any(float keys)
 	else if (gmapn_serverstate == gmapn_serverstate_countdown)
 	{
 		m = sprintf("%s starts in %s\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
-		m = strcat(m, gmapn_menu_settings());
+		m = strcat(m, gmapn_menu_countdown());
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)
 		m = strcat(m, flash("\nREADY UP NOW\n"));
