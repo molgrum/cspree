@@ -222,6 +222,7 @@ void gmapn_apply_gamemode(float newmode)
 		cvar_set("deathmatch", "3");
 		cvar_set("teamplay", "0");
 		cvar_set("timelimit", "10");
+		setkey("minteamsize", "1");
 		setkey("minplayer", gmapn_ismatchless(newmode) ? "1" : "2");
 		setkey("maxplayers", gmapn_ismatchless(newmode) ? maxplayers : "2");
 		break;
@@ -232,14 +233,25 @@ void gmapn_apply_gamemode(float newmode)
 		cvar_set("deathmatch", "3");
 		cvar_set("teamplay", "2");
 		cvar_set("timelimit", "10");
+		setkey("minteamsize", "2");
 		setkey("minplayers", gmapn_ismatchless(newmode) ? "1" : "4");
 		setkey("maxplayers", gmapn_ismatchless(newmode) ? maxplayers : "4");
 		break;
-	default:	//other game modes are team games
+	case GM_TDEATHMATCH:
 		cvar_set("deathmatch", "1");
-		cvar_set("teamplay", "1");
+		cvar_set("teamplay", "2");
 		cvar_set("timelimit", "20");
-		setkey("maxplayers", "8");
+		setkey("minteamsize", "3");
+		setkey("minplayers", "6");
+		setkey("maxplayers", gmapn_ismatchless(newmode) ? maxplayers : "8");
+		break;
+	default:	//other game modes
+		cvar_set("deathmatch", "3");
+		cvar_set("teamplay", "1");
+		cvar_set("timelimit", "10");
+		setkey("minteamsize", "1");
+		setkey("minplayers", "2");
+		setkey("maxplayers", maxplayers);
 		break;
 	}
 
