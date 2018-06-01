@@ -12,10 +12,7 @@
 #define KEY_LEFT 8
 #define KEY_JUMP 16
 
-#define SUBSEL_MAIN 0
-#define SUBSEL_MAPS 1
-#define SUBSEL_MOD 2
-#define SUBSEL_SERVER 3
+#define SUBSEL_MAPS -2
 
 string gmapn_menu_matchlist(float keys);
 string gmapn_menu_maplist(float keys);
@@ -25,10 +22,6 @@ string gmapn_menu_maplist(float keys);
 .float mapquery;
 
 .float oldmkeys;
-.float subsel; // current submenu or main menu
-.float mapsel;	//map or election
-.float modsel;	//mod submenu
-.float srvsel;	//advanced submenu
 .float maps[11]; // list of maps displayed. randomizedish per player. FIXME: should probably just make this a string array, or tokens string.
 string gmapn_menuarg;
 
@@ -659,23 +652,18 @@ static string menu_back(float op)
 	else if (op == MENU_VALUE)
 		return "";
 	else if (op == MENU_LEFT)
-		self.subsel = SUBSEL_MAIN;
+		self.subsel = -1;
 	else if (op == MENU_ISNONADMIN)
 		return ".";
 	return 0;
 }
 
-static string(float op) rules_mod[] =
+static string(float op) rules_misc[] =
 {
 	menu_maxplayers,
 	menu_minplayers,
 	menu_rounds,
 	menu_loadout,
-	menu_back
-};
-
-static string(float op) rules_srv[] =
-{
 	menu_antilag,
 	menu_minping,
 	menu_botskill,
@@ -683,54 +671,26 @@ static string(float op) rules_srv[] =
 	menu_back
 };
 
-static string menu_modoptions(float op)
+static string menu_miscoptions(float op)
 {
 	if (op == MENU_TITLE)
-		return "Mod options";
+		return "Misc options";
 	else if (op == MENU_VALUE)
 		return "";
 	else if (op == MENU_LEFT)
 		;
 	else if (op == MENU_RIGHT)
 	{
-		self.subsel = SUBSEL_MOD;
-		self.modsel = -1;
+		self.subsel = -1;
 		do
 		{
-			self.modsel += 1;
-			if (self.modsel >= rules_mod.length)
+			self.subsel += 1;
+			if (self.subsel >= rules_misc.length)
 			{
-				self.modsel = rules_mod.length - 1;
+				self.subsel = rules_misc.length - 1;
 				break;
 			}
-		} while(!rules_mod[self.modsel](4));
-	}
-	else if (op == MENU_ISNONADMIN)
-		return ".";
-	return 0;
-}
-
-static string menu_srvoptions(float op)
-{
-	if (op == MENU_TITLE)
-		return "Server options";
-	else if (op == MENU_VALUE)
-		return "";
-	else if (op == MENU_LEFT)
-		;
-	else if (op == MENU_RIGHT)
-	{
-		self.subsel = SUBSEL_SERVER;
-		self.srvsel = -1;
-		do
-		{
-			self.srvsel += 1;
-			if (self.srvsel >= rules_srv.length)
-			{
-				self.srvsel = rules_srv.length - 1;
-				break;
-			}
-		} while(!rules_srv[self.srvsel](4));
+		} while(!rules_misc[self.subsel](4));
 	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";
@@ -751,8 +711,7 @@ static string(float op) rules[] =
 	menu_time,
 	menu_powerups,
 	menu_pastmatches,
-	menu_modoptions,
-	menu_srvoptions
+	menu_miscoptions
 };
 
 static string rules_desc[] =
@@ -768,17 +727,12 @@ static string rules_desc[] =
 	"Options for the server.\n<right>"
 };
 
-static string rules_mod_desc[] =
+static string rules_misc_desc[] =
 {
 	"Maximum clients to be playing\n ",
 	"Minimum clients for\nthe game to start",
 	"Rounds per match\n ",
 	"Starting weapons and items\n ",
-	"Back to main menu <left>\n "
-};
-
-static string rules_srv_desc[] =
-{
 	"Aka antilag vastly increases\naccuracy",
 	"Force a simulated lag for all\nplayers",
 	"Set a skill for bots that autojoin\n ",
@@ -821,19 +775,13 @@ string gmapn_menu_rules_describe(float rulesel)
 		return rules_desc[bound(0, rulesel, rules_desc.length)];
 }
 
-string gmapn_menu_mod_describe(float modsel)
+string gmapn_menu_misc_describe(float subsel)
 {
-	return rules_mod_desc[bound(0, modsel, rules_mod_desc.length)];
-}
-
-string gmapn_menu_server_describe(float srvsel)
-{
-	return rules_srv_desc[bound(0, srvsel, rules_srv_desc.length)];
+	return rules_misc_desc[bound(0, subsel, rules_misc_desc.length)];
 }
 
 static float rulechangetime[rules.length];
-static float modchangetime[rules_mod.length];
-static float srvchangetime[rules_srv.length];
+static float miscchangetime[rules_misc.length];
 
 string balancestrings(string left, string separator, string right)
 {
@@ -919,7 +867,7 @@ string gmapn_menu_maps(float keys)
 	}
 	if (keys & (KEY_RIGHT|KEY_LEFT))
 	{
-		self.subsel = SUBSEL_MAIN;
+		self.subsel = -1;
 		self.viewingrules = time;
 	}
 
@@ -953,119 +901,42 @@ string gmapn_menu_waitingfor(float highlightself)
 	}
 
 	return m;
-};
-
-string gmapn_menu_mod(float keys)
-{
-	int i;
-
-	if (!gmapn_gamemaster)
-		gmapn_evaluategamemaster();
-
-	if (keys & KEY_RIGHT)
-	{
-		modchangetime[self.modsel] = time + 3;
-		rules_mod[self.modsel](MENU_RIGHT);
-	}
-
-	if (keys & KEY_LEFT)
-	{
-		modchangetime[self.modsel] = time + 3;
-		rules_mod[self.modsel](MENU_LEFT);
-	}
-
-	if (keys & KEY_UP)
-	{
-		do
-		{
-			self.modsel -= 1;
-			if (self.modsel < 0)
-				self.modsel = rules_mod.length-1;
-		} while(!rules_mod[self.modsel](0) || (!gmapn_isgamemaster(self) && !rules_mod[self.modsel](4)));
-	}
-
-	if (keys & KEY_DOWN)
-	{
-		do
-		{
-			self.modsel += 1;
-			if (self.modsel >= rules_mod.length)
-				self.modsel = 0;
-		} while(!rules_mod[self.modsel](0) || (!gmapn_isgamemaster(self) && !rules_mod[self.modsel](4)));
-	}
-
-	string m = "";
-
-	if (gmapn_serverstate != gmapn_serverstate_countdown)
-	{
-		m = gmapn_menu_waitingfor(gmapn_gamemodeneedsteam(gmapn_gamemode));
-		m = strcat(m, "\n\n");
-	}
-
-	for (i = 0; i < rules_mod.length; i++)
-	{
-		string t, mid, v;
-
-		t = rules_mod[i](MENU_TITLE);
-		if not (t)
-			continue;
-		if (t == "")
-			continue;
-
-		if (modchangetime[i] >= time)
-			t = alternate(t);
-
-		mid = ":";
-		v = rules_mod[i](MENU_VALUE);
-
-		if (self.modsel == i)
-		{
-			t = redify(t);
-			mid = redify(mid);
-		}
-
-		m = strcat(m, balancestrings(t, mid, v), "\n");
-	}
-
-
-
-	return m;
 }
 
-string gmapn_menu_server(float keys)
+string gmapn_menu_misc(float keys)
 {
 	int i;
 
 	if (keys & KEY_RIGHT)
 	{
-		srvchangetime[self.srvsel] = time + 3;
-		rules_srv[self.srvsel](MENU_RIGHT);
+		miscchangetime[self.subsel] = time + 3;
+		rules_misc[self.subsel](MENU_RIGHT);
 	}
 
 	if (keys & KEY_LEFT)
 	{
-		srvchangetime[self.srvsel] = time + 3;
-		rules_srv[self.srvsel](MENU_LEFT);
+		miscchangetime[self.subsel] = time + 3;
+		rules_misc[self.subsel](MENU_LEFT);
 	}
 
 	if (keys & KEY_UP)
 	{
 		do
 		{
-			self.srvsel -= 1;
-			if (self.srvsel < 0)
-				self.srvsel = rules_srv.length-1;
-		} while(!rules_srv[self.srvsel](0) || (!gmapn_isgamemaster(self) && !rules_srv[self.srvsel](4)));
+			self.subsel -= 1;
+			if (self.subsel < 0)
+				self.subsel = rules_misc.length-1;
+		} while(!rules_misc[self.subsel](0) || (!gmapn_isgamemaster(self) && !rules_misc[self.subsel](4)));
 	}
 
 	if (keys & KEY_DOWN)
 	{
 		do
 		{
-			self.srvsel += 1;
-			if (self.srvsel >= rules_srv.length)
-				self.srvsel = 0;
-		} while(!rules_srv[self.srvsel](0) || (!gmapn_isgamemaster(self) && !rules_srv[self.srvsel](4)));
+			self.subsel += 1;
+			if (self.subsel >= rules_misc.length)
+				self.subsel = 0;
+		} while(!rules_misc[self.subsel](0) || (!gmapn_isgamemaster(self) && !rules_misc[self.subsel](4)));
 	}
 
 	string m = "";
@@ -1076,23 +947,23 @@ string gmapn_menu_server(float keys)
 		m = strcat(m, "\n\n");
 	}
 
-	for (i = 0; i < rules_srv.length; i++)
+	for (i = 0; i < rules_misc.length; i++)
 	{
 		string t, mid, v;
 
-		t = rules_srv[i](MENU_TITLE);
+		t = rules_misc[i](MENU_TITLE);
 		if not (t)
 			continue;
 		if (t == "")
 			continue;
 
-		if (srvchangetime[i] >= time)
+		if (miscchangetime[i] >= time)
 			t = alternate(t);
 
 		mid = ":";
-		v = rules_srv[i](MENU_VALUE);
+		v = rules_misc[i](MENU_VALUE);
 
-		if (self.srvsel == i)
+		if (self.subsel == i)
 		{
 			t = redify(t);
 			mid = redify(mid);
@@ -1425,15 +1296,10 @@ void gmapn_menu_any(float keys)
 	{
 		m = strcat(prefix, m, gmapn_menu_maps(keys));
 	}
-	else if (self.subsel == SUBSEL_MOD)
+	else if (self.subsel >= 0)
 	{
-		m = strcat(prefix, m, gmapn_menu_mod(keys));
-		m = strcat(m, "\n", gmapn_menu_mod_describe(self.modsel));
-	}
-	else if (self.subsel == SUBSEL_SERVER)
-	{
-		m = strcat(prefix, m, gmapn_menu_server(keys));
-		m = strcat(m, "\n", gmapn_menu_server_describe(self.srvsel));
+		m = strcat(prefix, m, gmapn_menu_misc(keys));
+		m = strcat(prefix, m, gmapn_menu_misc_describe(self.subsel));
 	}
 	else
 	{

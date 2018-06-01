@@ -847,6 +847,11 @@ void gmapn_rules_handleconnect()
 		}
 	}
 
+	if (gmapn_serverstate == gmapn_serverstate_prewar)
+	{
+		self.subsel = -1;
+	}
+
 	if (gmapn_serverstate != gmapn_serverstate_playing)
 		return;
 
