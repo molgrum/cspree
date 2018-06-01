@@ -91,6 +91,8 @@ void gmapn_config_load()
 
 	localcmd(strcat("serverinfo config ", gametype, "\n"));
 
+	gmapn_serverstate = gmapn_serverstate_prewar;
+
 	/* We need to wait for the server to actually load the config... */
 	e = spawn();
 	e.nextthink = time + 0.001;
