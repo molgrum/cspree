@@ -18,6 +18,7 @@ float gmapn_ismatchless(float m)
 	case GM_CTF:			return FALSE;
 	case GM_1FCTF:			return FALSE;
 	case GM_HIDENSEEK:		return FALSE;
+	case GM_COUNTERQUAKE:		return TRUE;
 
 	default:			return FALSE;
 	}
@@ -43,6 +44,7 @@ float gmapn_gamemodeneedsteam(float m)
 	case GM_CTF:			return TRUE;
 	case GM_1FCTF:			return TRUE;
 	case GM_HIDENSEEK:		return TRUE;
+	case GM_COUNTERQUAKE:		return FALSE;
 	}
 };
 
@@ -59,13 +61,14 @@ string gmapn_gamemodetostring(float m)
 	case GM_DUEL:			return "duel";
 	case GM_TDEATHMATCH:		return "tdm";
 	case GM_2ON2:			return "2on2";
-	case GM_LASTMANSTANDING:	return "lms";
-	case GM_FREEZETAG:		return "freeze";
+	case GM_LASTMANSTANDING:	return "last";
+	case GM_FREEZETAG:		return "ftag";
 	case GM_DOMINATION:		return "dom";
 	case GM_ROVER:			return "rover";
 	case GM_CTF:			return "ctf";
 	case GM_1FCTF:			return "1fctf";
-	case GM_HIDENSEEK:			return "hide";
+	case GM_HIDENSEEK:		return "hide";
+	case GM_COUNTERQUAKE:		return "csqw";
 	}
 };
 string gmapn_gamemodefullname(float m)
@@ -88,6 +91,7 @@ string gmapn_gamemodefullname(float m)
 	case GM_CTF:			return _("Capture The Flag");
 	case GM_1FCTF:			return _("One-Flag CTF");
 	case GM_HIDENSEEK:		return _("Hide & Seek");
+	case GM_COUNTERQUAKE:		return _("Counter Quake");
 	}
 };
 
@@ -101,7 +105,7 @@ float gmapn_gamemodefromstring(string m)
 		return GM_TDEATHMATCH;
 	else if (m == "2on2")
 		return GM_2ON2;
-	else if (m == "darena")
+	else if (m == "darena" || m == "da")
 		return GM_DA;
 	else if (m == "coop")
 		return GM_COOP;
@@ -111,7 +115,7 @@ float gmapn_gamemodefromstring(string m)
 		return GM_KING;
 	else if (m == "lastmanstanding" || m == "lms")
 		return GM_LASTMANSTANDING;
-	else if (m == "freezetag" || m == "ft" || m == "freeze")
+	else if (m == "freezetag" || m == "ft" || m == "freeze" || m == "ftag")
 		return GM_FREEZETAG;
 	else if (m == "headhunter" || m == "hh" || m == "headhunt")
 		return GM_HEADHUNTER;
@@ -125,6 +129,8 @@ float gmapn_gamemodefromstring(string m)
 		return GM_1FCTF;
 	else if (m == "hide")
 		return GM_HIDENSEEK;
+	else if (m == "csqw")
+		return GM_COUNTERQUAKE;
 	else
 	{
 		float r = stof(m);
@@ -201,6 +207,8 @@ void gmapn_updatemaxclients()
 
 void gmapn_apply_gamemode(float newmode)
 {
+	const string maxplayers = "24";
+
 	setkey("game_mode", gmapn_gamemodetostring(newmode));
 	gmapn_gamemode = newmode;
 	switch(gmapn_gamemode)
@@ -209,23 +217,23 @@ void gmapn_apply_gamemode(float newmode)
 	case GM_KING:	//initially off, at least.
 	case GM_DA:
 	case GM_HEADHUNTER:
+	case GM_COUNTERQUAKE:
 	case GM_DUEL:
 		cvar_set("deathmatch", "3");
 		cvar_set("teamplay", "0");
 		cvar_set("timelimit", "10");
-		setkey("maxplayers", "2");
+		setkey("minplayer", gmapn_ismatchless(newmode) ? "1" : "2");
+		setkey("maxplayers", gmapn_ismatchless(newmode) ? maxplayers : "2");
 		break;
+	case GM_FREEZETAG:
+	case GM_LASTMANSTANDING:
+	case GM_HIDENSEEK:
 	case GM_2ON2:
 		cvar_set("deathmatch", "3");
-		cvar_set("teamplay", "1");
+		cvar_set("teamplay", "2");
 		cvar_set("timelimit", "10");
-		setkey("maxplayers", "4");
-		break;
-	case GM_HIDENSEEK:
-		cvar_set("deathmatch", "6");
-		cvar_set("teamplay", "1");
-		cvar_set("timelimit", "2");
-		setkey("maxplayers", "8");
+		setkey("minplayers", gmapn_ismatchless(newmode) ? "1" : "4");
+		setkey("maxplayers", gmapn_ismatchless(newmode) ? maxplayers : "4");
 		break;
 	default:	//other game modes are team games
 		cvar_set("deathmatch", "1");
@@ -324,6 +332,59 @@ void(entity killer, entity victim, float delta) gmapn_scorefrags =
 	{
 		if (victim != gmapn_secondchancer)
 			return; // only award points for killing the second chancer
+	}
+	if (gmapn_gamemode == GM_COUNTERQUAKE)
+	{
+		if (victim.classname == "player")
+		{
+			bprint(PRINT_HIGH, victim.netname, " accepts the defeat of ", killer.netname, "s superiority!\n");
+			delta = 100;
+			gmapn_game_end();
+		}
+		else if (victim.model == "progs/ogre.mdl")
+		{
+			bprint(PRINT_HIGH, killer.netname, " kills off an ogre\n");
+		}
+		else if (victim.model == "progs/soldier.mdl")
+		{
+			bprint(PRINT_HIGH, killer.netname, " snipes a soldier down\n");
+		}
+		else if (victim.model == "progs/tarbaby.mdl")
+		{
+			bprint(PRINT_HIGH, "A tarbaby explodes from ", killer.netname, "s weaponry\n");
+		}
+		else if (victim.model == "progs/dog.mdl")
+		{
+			bprint(PRINT_HIGH, killer.netname, " is not nice to dogs\n");
+		}
+		else if (victim.model == "progs/enforcer.mdl")
+		{
+			bprint(PRINT_HIGH, "An enforcer tastes ", killer.netname, "s shots\n");
+		}
+		else if (victim.model == "progs/knight.mdl")
+		{
+			bprint(PRINT_HIGH, killer.netname, " wins a duel with a knight\n");
+		}
+		else if (victim.model == "progs/dknight.mdl")
+		{
+			bprint(PRINT_HIGH, killer.netname, " exorcises a death knight\n");
+		}
+		else if (victim.model == "progs/shambler.mdl")
+		{
+			bprint(PRINT_HIGH, "A shambler loses his ground to ", killer.netname, "s fatal wish");
+		}
+		else if (victim.model == "progs/fish.mdl")
+		{
+			bprint(PRINT_HIGH, killer.netname, " puts down a fish\n");
+		}
+		else if (victim.model == "progs/vore.mdl")
+		{
+			bprint(PRINT_HIGH, killer.netname, " loads a vore full of holes\n");
+		}
+		else
+		{
+			bprint(PRINT_HIGH, killer.netname, " kills a monster\n");
+		}
 	}
 	if (gmapn_gamemode == GM_ROVER)
 	{	//victims are moved over to the killer's team

@@ -478,6 +478,7 @@ enum
 	GM_CTF,			//regular CTF
 	GM_1FCTF,		//CTF with 1 flag for both players to fight over
 	GM_HIDENSEEK,		// one team hides, another tries to find them
+	GM_COUNTERQUAKE,
 	GM_MODES
 };
 

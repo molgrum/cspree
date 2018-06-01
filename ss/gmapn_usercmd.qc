@@ -130,6 +130,13 @@ void cmd_ready()
 		case GM_DUEL:
 		case GM_2ON2:
 		case GM_TDEATHMATCH:
+		case GM_DA:
+		case GM_KING:
+		case GM_HEADHUNTER:
+		case GM_FREEZETAG:
+		case GM_ROVER:
+		case GM_LASTMANSTANDING:
+		case GM_COUNTERQUAKE:
 			playersneeded = getkey(minplayers) * !getkey(game_botskill);
 			playersneeded += playerstotal * !!getkey(game_botskill);
 			break;

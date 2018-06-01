@@ -802,7 +802,8 @@ static string gamemode_desc[] =
 	"You frag people, they come to your team",
 	"Get the enemy flag to your base",
 	"1FCTF",
-	"It sucks"
+	"It sucks",
+	"Kill monsters"
 };
 
 string gmapn_menu_rules_describe(float rulesel)
