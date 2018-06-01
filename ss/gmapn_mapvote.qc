@@ -228,11 +228,6 @@ void gmapn_mapvote_addvote(string mapstr)
 		print(sprintf("Hey, Server Admin, %s wants to play on map %s, please install it!\n", self.netname, mapstr));
 		return;
 	}
-	if (gmapn_mapvote_getvote() == mapstr)
-	{
-		sprintln(self, PRINT_HIGH, _("You have already vote for that map"));
-		return;
-	}
 
 	bprintln(PRINT_HIGH, sprintf(_("%s votes for map %s."), self.netname, mapstr));
 
