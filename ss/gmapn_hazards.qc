@@ -1048,9 +1048,12 @@ void hazard_discharge()
 void hazard_missile_touch()
 {
 	entity attacker;
-	float  damage = 0;
-	float  f;
-	float  push = 0.0f;
+	float damage = 0;
+	float f;
+	float push = 0.0f;
+	float dmgdiv;
+
+	dmgdiv = (self.cnt + 1) / 3;
 
 	attacker = self.owner;
 
@@ -1141,6 +1144,9 @@ void hazard_missile_touch()
 		break;
 	}
 
+	damage = damage * dmgdiv;
+	self.cnt = dmgdiv; // number of times bounced off walls
+
 	f = gmapn_impact(other, self, damage, push);
 
 	if (self.classname == "rocket") {
@@ -1167,8 +1173,16 @@ void hazard_missile_touch()
 		}
 	}
 
-	remove(self);
-
+	// allow for healing missiles... set self.cnt to -1
+	if (other != world || self.cnt == 0 || self.cnt < -5)
+	{
+		remove(self);
+	}
+	else
+	{
+		self.movetype = MOVETYPE_BOUNCE;
+		self.cnt = self.cnt - 1;
+	}
 }
 
 /**
@@ -1194,19 +1208,23 @@ void hazard_missile(vector org, vector dir, float vel, string type)
 
 	setorigin(newmis, org);
 
+	// set self.cnt to number of times to bounce...
 	switch (newmis.classname)
 	{
 	case "spike":
+		newmis.cnt = 2;
 		setmodel(newmis, "progs/spike.mdl");
 		gmapn_sound(self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM, 0);
 		break;
 
 	case "superspike":
+		newmis.cnt = 2;
 		setmodel(newmis, "progs/s_spike.mdl");
 		gmapn_sound(self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM, 0);
 		break;
 
 	case "rocket":
+		newmis.cnt = 0;
 		setmodel(newmis, "progs/missile.mdl");
 		gmapn_sound(self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM, 0);
 		break;
