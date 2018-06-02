@@ -1132,81 +1132,121 @@ string gmapn_menu_rules(float keys)
 	return m;
 }
 
-string gmapn_menu_addentry(string name, string value)
+string gmapn_menu_addentry(string name, string sep, string value)
 {
-	string ret;
+	string ret, left, mid, right;
 
-	ret = strcat(balancestrings(name, ":", value), "\n");
+	if (name != __NULL__)
+		left = name;
+	else
+		left = "";
+
+	if (value != __NULL__)
+		right = value;
+	else
+		right = "";
+
+	if (sep != __NULL__)
+		mid = sep;
+	else
+		mid = "";
+
+	ret = balancestrings(left, mid, right);
+	ret = strcat(ret, "\n");
 	return ret;
 }
 
 string gmapn_menu_countdown()
 {
-	string str, mid, tmp;
-	int i, n;
+	string str, litem, ritem, set[64];
+	int i;
 
 	str = "";
-	mid = ":";
+	litem = "";
+	ritem = "";
 
-	n = getkey(game_loadout);
-	for (i = 0; i < loadouts.length; i++)
-		if (n == loadouts[i].fl)
-			break;
-	tmp = (n ? sprintf("axe + sg + %s", loadouts[i].name) : "axe + sg");
+	for (i = 0; i < set.length; i++)
+	{
+		set[i] = "";
+	}
+
 	if (getkey(game_loadout) && getkey(game_loadout) != stof(infokey(world, "gmapn_game_loadout")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Loadout", tmp));
+		set[0] = "Loadout";
 	}
 
 	if (cvar("deathmatch") && cvar("deathmatch") != stof(infokey(world, "gmapn_deathmatch")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Deathmatch Mode", goldnmbr(dmmname[cvar("deathmatch")])));
+		set[1] = "Deathmatch";
 	}
 
 	if (cvar("timelimit") && cvar("timelimit") != stof(infokey(world, "gmapn_timelimit")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Timelimit", goldnmbr(ftos(cvar("timelimit")))));
+		set[2] = "Timelimit";
 	}
 
 	if (getkey(powerups_enabled) && getkey(powerups_enabled) != stof(infokey(world, "gmapn_powerups_enabled")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Powerups", (getkey(powerups_enabled) ? "Enabled" : "Disabled")));
+		set[3] = "Powerups";
 	}
 
 	if (getkey(spawn_mode) != stof(infokey(world, "gmapn_spawn_mode")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Spawn Mode", (spawnname[getkey(spawn_mode)])));
+		set[4] = "Spawn Mode";
 	}
 
 	if (getkey(game_botskill) && getkey(game_botskill) != stof(infokey(world, "gmapn_game_botskill")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Bot Difficulty", botskillname[getkey(game_botskill)]));
+		set[5] = "Bot Skill";
 	}
 
 	if (getkey(game_rounds) && getkey(game_rounds) != stof(infokey(world, "gmapn_game_rounds")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Rounds Per Game", ftos(getkey(game_rounds))));
+		set[6] = "Game Rounds";
 	}
 
 	if (cvar("sv_antilag") && cvar("sv_antilag") != stof(infokey(world, "gmapn_antilag")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Lag Compensation", (cvar("sv_antilag") ? "On" : "Off")));
+		set[7] = "Lag Compensation";
 	}
 
 	if (cvar("sv_minping") && cvar("sv_minping") != stof(infokey(world, "gmapn_minping")))
 	{
-		str = strcat(str, gmapn_menu_addentry("Min Ping", ftos(cvar("sv_minping"))));
+		set[8] = "Min Ping";
+	}
+
+	for (i = 0; i < set.length; i++)
+	{
+		if (set[i] != "")
+		{
+			if (litem == "")
+			{
+				litem = set[i];
+			}
+			else if (ritem == "")
+			{
+				ritem = set[i];
+				str = strcat(str, gmapn_menu_addentry(litem, "   ", ritem));
+				litem = ritem = "";
+			}
+		}
+	}
+
+	if (litem != "")
+	{
+		str = strcat(str, litem, "\n");
 	}
 
 	if (str != "")
 	{
-		str = strcat(flash("\nSome modified settings are used\n\n"), str);
+		str = strcat("\n", alternate("Some settings are modified"), "\n\n", str);
 	}
 	else
 	{
 		str = strcat("\n\n\n\n", str);
 	}
 
+	str = strcat(sprintf("%s starts in %s\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time)))), str);
 	return str;
 }
 
@@ -1249,11 +1289,6 @@ void gmapn_menu_any(float keys)
 			m = strcat(m, sprintf(_("\nYou are %s\n"), redify("the Rulemaker")));
 		else
 			m = strcat(m, sprintf(_("\n%s is %s\n"), gmapn_gamemaster.netname, redify("the Rulemaker")));
-	}
-	else if (gmapn_serverstate == gmapn_serverstate_countdown)
-	{
-		m = sprintf("%s starts in %s\n", redify(gmapn_gamemodefullname(gmapn_gamemode)), goldnmbr(ftos(ceil((gmapn_matchstarttimems/1000) - time))));
-		m = strcat(m, gmapn_menu_countdown());
 	}
 	else if (gmapn_serverstate == gmapn_serverstate_forcestart && !self.ready)
 		m = strcat(m, flash("\nREADY UP NOW\n"));
@@ -1452,10 +1487,15 @@ float gmapn_display_rules()
 		if (self.menutime > time)
 		{
 			centerprint(self, sprintf("Type %s to bind ENTER\n\nPress ENTER to show the menu", redify(".menu bind")));
+			return FALSE;
 		}
 	}
-
-	if (gmapn_serverstate == gmapn_serverstate_playing)
+	else if (gmapn_serverstate == gmapn_serverstate_countdown)
+	{
+		centerprint(self, gmapn_menu_countdown());
+		return FALSE;
+	}
+	else if (gmapn_serverstate == gmapn_serverstate_playing)
 	{
 		if (gmapn_gamemode == GM_FREEZETAG)
 		{
@@ -1480,8 +1520,7 @@ float gmapn_display_rules()
 
 		return FALSE;
 	}
-
-	if (gmapn_serverstate == gmapn_serverstate_breather)
+	else if (gmapn_serverstate == gmapn_serverstate_breather)
 	{
 		// FIXME: move serverstate logic into gmapn_menu_any and centerprint info
 		// about health/armor/round countdown/frozen/etc there
@@ -1491,7 +1530,7 @@ float gmapn_display_rules()
 	}
 
 	//don't spam centerprints if there's no need.
-	if (!keys && self.viewingrules > time || self.menutime > time)
+	if (!keys && self.viewingrules > time)
 		return TRUE;
 
 	self.viewingrules = time + 0.25;
