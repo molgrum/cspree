@@ -1053,7 +1053,7 @@ void hazard_missile_touch()
 	float push = 0.0f;
 	float dmgdiv;
 
-	dmgdiv = (self.cnt + 1) / 3;
+	dmgdiv = (self.cnt + 1) / self.frags;
 
 	attacker = self.owner;
 
@@ -1145,7 +1145,6 @@ void hazard_missile_touch()
 	}
 
 	damage = damage * dmgdiv;
-	self.cnt = dmgdiv; // number of times bounced off walls
 
 	f = gmapn_impact(other, self, damage, push);
 
@@ -1239,4 +1238,6 @@ void hazard_missile(vector org, vector dir, float vel, string type)
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SMALLKICK);
 	}
+
+	newmis.frags = newmis.cnt + 1;
 };
