@@ -97,6 +97,7 @@ string NULL = __NULL__;
 	GVF(lightning_damage,	30,		NULL)\
 	GVF(lightning_push,		1.0,	NULL)\
 	GVF(lightning_reload,	0.2,	NULL)\
+	GVF(lightning_shortreach,	0,	"Lightning beam length decrease")\
 	GVF(respawn_ammo,		30,	NULL)\
 	GVF(respawn_armor,		20,	NULL)\
 	GVF(respawn_health,		20,	NULL)\

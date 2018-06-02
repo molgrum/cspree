@@ -1164,7 +1164,7 @@ void() player_lightning1 = [$light1, player_lightning2]
 			self.weaponframe = 1;
 		}
 		org = self.origin + '0 0 16';
-		dir = org + v_forward*600;
+		dir = org + v_forward * (getkey(lightning_shortreach) ? 600 : 1000); // increased LG reach
 		hazard_lightning(org, dir);
 
 		if (gmapn_serverstate == gmapn_serverstate_playing)
