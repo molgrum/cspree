@@ -803,6 +803,8 @@ void gmapn_rules_cliententered()
 			if (!(serverflags & SV_MATCHLESS))
 				gmapn_serverstate = gmapn_serverstate_lockready;
 
+	self.menutime = time;
+
 	client_spawn(FALSE);
 }
 

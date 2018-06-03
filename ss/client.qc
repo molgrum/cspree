@@ -2545,8 +2545,6 @@ void PutClientInServer()
 
 	gmapn_rules_handleconnect();
 
-	self.menutime = time + 3;
-
 	// delay for a bit so the sound plays
 	self.nextthink = time + 0.01;
 	self.think = gmapn_rules_cliententered;

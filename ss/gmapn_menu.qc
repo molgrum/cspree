@@ -1253,10 +1253,7 @@ string gmapn_menu_countdown()
 
 void gmapn_menu_any(float keys)
 {
-	entity p;
 	string prefix;
-
-	self.menutime = time;
 
 	string host = getkey(info_hostname), city = getkey(info_city), region = getkey(info_state), nation = getkey(info_country);
 
@@ -1430,12 +1427,6 @@ float gmapn_display_rules()
 			self.movetime = time + 3;
 	}
 
-	if (self.menutime > time || self.menutime < time - 3)
-	{
-		self.menutime = time + 3;
-		self.movetime = time + 3;
-	}
-
 	newkeys = 0;
 
 	if (self.movement_x > 100*frametime)
@@ -1454,7 +1445,7 @@ float gmapn_display_rules()
 
 	keys = newkeys & ~self.oldmkeys;	//changed keys
 
-	if (newkeys & KEY_JUMP && gmapn_serverstate < gmapn_serverstate_playing)
+	if (newkeys & KEY_JUMP && gmapn_serverstate == gmapn_serverstate_prewar)
 	{
 		if (self.movetime < time)
 			self.viewingrules = time;
@@ -1476,8 +1467,9 @@ float gmapn_display_rules()
 
 	if (gmapn_serverstate == gmapn_serverstate_prewar)
 	{
-		if (self.menutime > time)
+		if (self.menutime < time - 3)
 		{
+			self.movetime = time + 3;
 			centerprint(self, sprintf("Type %s to bind ENTER\n\nPress ENTER to show the menu", redify(".menu bind")));
 			return FALSE;
 		}
@@ -1525,6 +1517,8 @@ float gmapn_display_rules()
 	if (!keys && self.viewingrules > time)
 		return TRUE;
 
+	if (keys & ~0 == keys)
+		self.menutime = time; // pressed key holds the menu visible
 	self.viewingrules = time + 0.25;
 
 	gmapn_menu_any(keys);
