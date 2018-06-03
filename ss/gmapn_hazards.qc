@@ -159,10 +159,6 @@ struct
 int numbullethits;
 void hazard_bullet(vector org, vector dir)
 {
-	/* float  damage; */
-	/* float  f; */
-	/* float  push; */
-
 	dir = normalize(dir);
 	traceline_portal(org, org + dir*2048, FALSE|MOVE_LAGGED, self);
 	if (trace_fraction >= 1.0)
@@ -200,29 +196,6 @@ void hazard_bullet(vector org, vector dir)
 		bullethits[numbullethits].damage = dmg;
 		numbullethits++;
 	}
-	/* else if (trace_ent.takedamage) */
-	/* { */
-	/*	damage = getkey(bullet_damage); */
-	/*	push = getkey(bullet_push); */
-
-	/*	if (gmapn_serverstate == gmapn_serverstate_playing && self.weapon == IT_SHOTGUN) */
-	/*	{ */
-	/*		trace_ent.deathtype = DT_BULLET; */
-	/*		f = gmapn_impact(trace_ent, self, damage, push); */
-	/*		self.stats_hit[W_SG] += f; */
-	/*	} */
-	/*	else if (gmapn_serverstate == gmapn_serverstate_playing && self.weapon == IT_SUPER_SHOTGUN) */
-	/*	{ */
-	/*		trace_ent.deathtype = DT_SUPER_BULLET; */
-	/*		f = gmapn_impact(trace_ent, self, damage, push); */
-	/*		self.stats_hit[W_SSG] += f; */
-	/*	} */
-	/*	else */
-	/*	{ */
-	/*		trace_ent.deathtype = DT_BULLET; */
-	/*		gmapn_impact(trace_ent, self, damage, push); */
-	/*	} */
-	/* } */
 };
 
 float shotgun_pattern[] =
@@ -289,14 +262,6 @@ void hazard_bullets(vector org, vector dir, string type)
 				self.stats_hit[W_SG] += g;
 			}
 		}
-		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*1*spread	 + v_up*2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*2*spread	 + v_up*1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*2*spread	 + v_up*-1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*1*spread	 + v_up*-2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*-2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*-1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*1*spread); */
 	}
 	else if (type == "supershotgun") {
 		spread = getkey(shotgun2_spread);
@@ -311,32 +276,8 @@ void hazard_bullets(vector org, vector dir, string type)
 				self.stats_hit[W_SSG] += g;
 			}
 		}
-		/* // Inner pattern */
-		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*3*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*1*spread + v_up*3*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*3*spread + v_up*1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*3*spread + v_up*-1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*1*spread + v_up*-3*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-1*spread + v_up*-3*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-3*spread + v_up*-1*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-3*spread + v_up*1*spread); */
-
-		/* // Outer pattern */
-		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*5*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*2*spread + v_up*5*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*4*spread + v_up*4*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*5*spread + v_up*2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*5*spread + v_up*-2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*4*spread + v_up*-4*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*2*spread + v_up*-5*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-2*spread + v_up*-5*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-4*spread + v_up*-4*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-5*spread + v_up*-2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-5*spread + v_up*2*spread); */
-		/* dmg += hazard_bullet(org, dir + v_right*-4*spread + v_up*4*spread); */
 	}
-
-};
+}
 
 void hazard_coilgun(vector org, vector dir)
 {
