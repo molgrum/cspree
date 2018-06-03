@@ -639,7 +639,10 @@ static string menu_pastmatches(float op)
 	if (op == MENU_LEFT)
 		;
 	if (op == MENU_RIGHT)
+	{
 		gmapn_menu_showmatches();
+		self.viewingrules = time;
+	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";	//anything not null
 	return 0;
@@ -652,7 +655,10 @@ static string menu_back(float op)
 	else if (op == MENU_VALUE)
 		return "";
 	else if (op == MENU_LEFT)
+	{
 		self.subsel = -1;
+		self.viewingrules = time;
+	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";
 	return 0;
@@ -691,6 +697,7 @@ static string menu_miscoptions(float op)
 				break;
 			}
 		} while(!rules_misc[self.subsel](4));
+		self.viewingrules = time;
 	}
 	else if (op == MENU_ISNONADMIN)
 		return ".";
@@ -1051,12 +1058,6 @@ string gmapn_menu_rules(float keys)
 	if (!gmapn_gamemaster)
 		gmapn_evaluategamemaster();
 
-	if (time - self.connectedtime <= 3)
-	{
-		keys &= ~KEY_LEFT;
-		keys &= ~KEY_RIGHT;
-	}
-
 	//use gmapn_gamemaster instead of getkey(game_lockrules), because we might have/be a vip
 	if (getkey(game_lockrules)>0 && !gmapn_gamemodeneedsteam(gmapn_gamemode))
 	{
@@ -1255,16 +1256,7 @@ void gmapn_menu_any(float keys)
 	entity p;
 	string prefix;
 
-	if (keys & (KEY_RIGHT|KEY_LEFT))
-	{
-		for (p = world; (p = find(p, classname, "player")); )
-			p.viewingrules = time;
-	}
-
-	if (keys & (KEY_RIGHT|KEY_LEFT|KEY_UP|KEY_DOWN))
-	{
-		self.menutime = time;
-	}
+	self.menutime = time;
 
 	string host = getkey(info_hostname), city = getkey(info_city), region = getkey(info_state), nation = getkey(info_country);
 
