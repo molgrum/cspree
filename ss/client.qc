@@ -1104,11 +1104,14 @@ void client_impulses()
 
 	case 2:
 
-		client_setweapon(IT_COILGUN); // try coilgun first
-
-		if (self.newweapon != IT_COILGUN)
+		if (client_weaponokay(IT_COILGUN))
+		{
+			client_setweapon(IT_COILGUN); // try coilgun first
+		}
+		else
+		{	
 			client_setweapon(IT_SHOTGUN); // fall back on shotgun
-
+		}
 		break;
 
 	case 3:
@@ -1150,17 +1153,16 @@ void client_impulses()
 	case 9:
 
 		// If railgun is disabled, set to Coilgun instead
-		if (getkey(rail) == 0)
+		if (getkey(rail) == 0 && client_weaponokay(IT_COILGUN))
 		{
 			client_setweapon(IT_COILGUN);
 		}
-		else
+		else if (client_weaponokay(IT_RAILGUN))
 		{
 			client_setweapon(IT_RAILGUN);
 		}
-
 		// fall back on portalgun
-		if (self.newweapon != IT_COILGUN && self.newweapon != IT_RAILGUN)
+		else
 		{
 			client_setweapon(IT_PORTALGUN);
 		}
